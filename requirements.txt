@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+scipy
+matplotlib
+plotly
+reportlab
+pingouin
+openpyxl
+streamlit-cookies-controller
