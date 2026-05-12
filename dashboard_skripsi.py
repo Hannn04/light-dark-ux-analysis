@@ -883,86 +883,276 @@ def render_delete_button(file_path, label, columns, default_value=0, key_suffix=
 
 
 
-theme = st.get_option("theme.base")
-if theme == "dark":
-    plt.style.use("dark_background")
-else:
-    plt.style.use("default")
-    
-if theme == "dark":
+# ============================================================
+# PATCH: Ganti seluruh blok theme detection dan CSS injection
+# di app.py dengan kode di bawah ini.
+#
+# LANGKAH:
+# 1. Hapus blok ini dari app.py:
+#       theme = st.get_option("theme.base")
+#       if theme == "dark": ...
+#       else: ...
+#       bg_main = ... (semua variabel tema)
+#
+# 2. Hapus dua blok st.markdown CSS (yang pakai {bg_card} dll)
+#
+# 3. Tempel seluruh kode di bawah sebagai gantinya
+# ============================================================
 
-    bg_main = "#020617"
-    bg_card = "#0f172a"
-    bg_sidebar = "#020617"
-    bg_insight = "#1e293b"
+import streamlit as st
 
-    text_main = "#f1f5f9"
-    text_soft = "#94a3b8"
+# ------------------------------------------------------------------
+# Variabel Python (dipakai untuk komponen non-CSS seperti plt, fig)
+# Tetap deteksi via st.get_option sebagai fallback
+# ------------------------------------------------------------------
+_theme_base = st.get_option("theme.base") or "light"
+_is_dark = (_theme_base == "dark")
 
-    border = "#1e293b"
+# Variabel Python untuk dipakai di luar CSS (chart matplotlib, dll.)
+bg_main    = "#020617"    if _is_dark else "#f8fafc"
+bg_card    = "#0f172a"    if _is_dark else "#ffffff"
+bg_sidebar = "#020617"    if _is_dark else "#f8fafc"
+bg_insight = "#1e293b"    if _is_dark else "#f1f5f9"
+text_main  = "#f1f5f9"    if _is_dark else "#111827"
+text_soft  = "#94a3b8"    if _is_dark else "#6b7280"
+border     = "#1e293b"    if _is_dark else "#e5e7eb"
 
-else:
-
-    bg_main = "linear-gradient(135deg,#f8fafc,#eef2f7)"
-    bg_card = "#ffffff"
-    bg_sidebar = "#f8fafc"
-    bg_insight = "#f1f5f9"
-
-    text_main = "#111827"
-    text_soft = "#6b7280"
-
-    border = "#e5e7eb"
-
-st.set_page_config(page_title="UX Research Dashboard", layout="wide")
-
-# ======================
-# CSS MODERN
-# ======================
-
+# ------------------------------------------------------------------
+# CSS: gunakan [data-theme] + prefers-color-scheme
+# Streamlit dark mode menambahkan class / attr ke root element
+# Kita target keduanya agar reliable
+# ------------------------------------------------------------------
 st.markdown("""
 <style>
+/* ================================================================
+   DARK MODE — Streamlit menyuntikkan class "dark" atau
+   atribut data-theme="dark" pada elemen root saat dark mode aktif.
+   Kita juga cover prefers-color-scheme sebagai fallback.
+   ================================================================ */
 
-/* Sidebar Styling yang lebih clean */
-[data-testid="stSidebar"]  {
-    background-color: {bg_sidebar} !important;
-    border-right: 1px solid {border} !important;
+/* ---- CSS VARIABLES ---- */
+:root {
+    --bg-main:    #f8fafc;
+    --bg-card:    #ffffff;
+    --bg-sidebar: #f8fafc;
+    --bg-insight: #f1f5f9;
+    --text-main:  #111827;
+    --text-soft:  #6b7280;
+    --border:     #e5e7eb;
+    --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
 }
-[data-testid="stSidebar"] .stMarkdown p, 
-[data-testid="stSidebar"] label, 
+
+/* Streamlit dark: class pada <html> atau <body> */
+html[data-theme="dark"],
+.stApp[data-theme="dark"],
+[class*="theme-dark"] {
+    --bg-main:    #020617;
+    --bg-card:    #0f172a;
+    --bg-sidebar: #020617;
+    --bg-insight: #1e293b;
+    --text-main:  #f1f5f9;
+    --text-soft:  #94a3b8;
+    --border:     #1e293b;
+    --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.4);
+}
+
+/* Fallback: OS dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-main:    #020617;
+        --bg-card:    #0f172a;
+        --bg-sidebar: #020617;
+        --bg-insight: #1e293b;
+        --text-main:  #f1f5f9;
+        --text-soft:  #94a3b8;
+        --border:     #1e293b;
+        --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.4);
+    }
+}
+
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
+[data-testid="stSidebar"] {
+    background-color: var(--bg-sidebar) !important;
+    border-right: 1px solid var(--border) !important;
+}
+[data-testid="stSidebar"] .stMarkdown p,
+[data-testid="stSidebar"] label,
 [data-testid="stSidebar"] .sidebar-title {
-    color: {text_sidebar} !important;
+    color: var(--text-main) !important;
 }
-            
-/* Header di Sidebar */
+
+/* Header Sidebar */
 .sidebar-branding {
     padding: 4px 0;
     margin-bottom: 12px;
     border-bottom: 2px solid #111827;
 }
-
 .sidebar-title {
     font-size: 16px;
     font-weight: 800;
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
-            
+
+/* ================================================================
+   MAIN APP BACKGROUND
+   ================================================================ */
 .stApp {
-    background-color: {bg_main};
+    background: var(--bg-main) !important;
 }
 
-/* Kategori Menu */
-.menu-label {
-    font-weight: 700;
-    font-size: 8px;
-    color: #94a3b8;
+/* ================================================================
+   METRIC & BLOCK WRAPPERS
+   ================================================================ */
+[data-testid="stMetricV2"] {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"] > div {
+    background-color: var(--bg-card) !important;
+}
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+body, p, span, div {
+    color: var(--text-main) !important;
+}
+.main-title  { color: var(--text-main) !important; }
+.subtitle    { color: var(--text-soft) !important; }
+.section-title { font-size: 18px; font-weight: 600; margin-top: 40px; margin-bottom: 15px; }
+
+/* ================================================================
+   CARD COMPONENT
+   ================================================================ */
+.card {
+    background: var(--bg-card) !important;
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    height: 100%;
+    color: var(--text-main) !important;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.12);
+    border-color: #6366f1 !important;
+}
+.card b, .card strong { color: var(--text-main) !important; }
+.card span            { color: var(--text-soft) !important; }
+.card li              { color: var(--text-main) !important; }
+
+/* ================================================================
+   METRIC INSIDE CARD
+   ================================================================ */
+.metric-container { display: flex; flex-direction: column; }
+.metric-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-soft) !important;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 4px !important;
-    margin-top: 6px !important;
+    letter-spacing: 0.5px;
+}
+.metric-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-main) !important;
+    line-height: 1.2;
+}
+.metric-footer {
+    font-size: 12px;
+    color: var(--text-soft) !important;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
 }
 
-/* Tombol Reset Minimalis */
+/* ================================================================
+   PREFERENCE CARD
+   ================================================================ */
+.pref-card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+}
+.pref-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-soft) !important;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+.pref-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main) !important;
+}
+
+/* ================================================================
+   P-CARD
+   ================================================================ */
+.p-card {
+    background-color: var(--bg-card) !important;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 20px;
+    color: var(--text-main) !important;
+}
+
+/* ================================================================
+   ALERT / INFO BOX
+   ================================================================ */
+.stAlert {
+    background-color: var(--bg-insight) !important;
+    color: var(--text-main) !important;
+}
+
+/* ================================================================
+   DETAILS / EXPANDER
+   ================================================================ */
+details {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px;
+}
+
+/* ================================================================
+   TABEL & DATAFRAME
+   ================================================================ */
+.stDataFrame, .stTable {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border) !important;
+}
+
+/* ================================================================
+   STATUS BADGE & LABEL WARNA
+   ================================================================ */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 5px;
+}
+.val-light   { color: #6366f1; font-weight: 800; }
+.val-dark    { color: #a78bfa; font-weight: 800; }
+.vs-divider  { color: #94a3b8; font-size: 14px; font-weight: 400; margin: 0 4px; }
+
+/* ================================================================
+   BUTTON
+   ================================================================ */
 .stButton > button {
     width: 100%;
     border-radius: 4px;
@@ -974,235 +1164,161 @@ st.markdown("""
     padding: 6px !important;
 }
 
-* {
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-[data-testid="stMetricV2"] {
-    background-color: {bg_card};
-    color:{text_main};
-}
-div[data-testid="stVerticalBlockBorderWrapper"] > div {
-    background-color: white !important;
-}
-
+/* ================================================================
+   BLOCK CONTAINER
+   ================================================================ */
 .block-container {
     max-width: 1500px;
     padding-top: 70px;
 }
 
-/* Tambahkan ini di dalam <style> */
-.stDataFrame, .stTable {
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #e5e7eb;
-}
-
-.chart-container {
-    padding: 10px;
-    background: transparent;
-}
-
-.main-title {
-    font-size: 28px;
-    font-weight: 600;
-    color: #111827;
-}
-
-.subtitle {
-    color: #6b7280;
-    margin-bottom: 30px;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-top: 40px;
-    margin-bottom: 15px;
-}
-
-.card {
-    background: {bg_card} !important;
-    padding: 24px;
-    border-radius: 20px;
-    border: 1px solid {border} !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: all 0.3s ease;
-    height: 100%;
-    color: {text_main} !important;
-}
-
-body, p, span, div {
-    color: {text_main} !important;
-}
-            
-.stAlert {
-    background-color: {bg_insight} !important;
-    color: {text_main} !important;
-}
-
-details {
-    background: {bg_card} !important;
-    border: 1px solid {border} !important;
-    border-radius: 8px;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: #6366f1;
-}
-
-.metric-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.metric-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: #64748b;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.metric-value {
-    font-size: 26px;
-    font-weight: 800;
-    color: {text_main} !important;
-    line-height: 1.2;
-}
-
+/* ================================================================
+   SIDEBAR SELECTBOX DARK OVERRIDE
+   ================================================================ */
 [data-testid="stSidebar"] div[data-baseweb="select"] > div {
-    background-color: #f8fafc !important;
-    color: #1e293b !important;
-    border: 1px solid #e2e8f0 !important;
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border) !important;
 }
 
-.metric-footer {
-    font-size: 12px;
-    color: #94a3b8;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #f8fafc;
-}
+/* ================================================================
+   TRANSISI GLOBAL
+   ================================================================ */
+* { transition: background 0.3s ease, color 0.3s ease; }
 
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 10px;
+/* ================================================================
+   SIDEBAR SPACING
+   ================================================================ */
+.menu-label {
     font-weight: 700;
-    margin-top: 5px;
-}
-
-/* Warna identitas untuk label */
-.val-light {
-    color: #6366f1;
-    font-weight: 800;
-}
-
-.val-dark {
-    color: #a78bfa;
-    font-weight: 800;
-}
-
-.vs-divider {
+    font-size: 8px;
     color: #94a3b8;
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0 4px;
-}
-
-.pref-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-.pref-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px !important;
+    margin-top: 6px !important;
 }
-.pref-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-}
-
-h3 {
-    font-size: 16px !important;
-}
-
-.p-card {
-    background-color: {bg_card};
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-}
-
-/* Kasih jarak normal sidebar */
 [data-testid="stSidebar"] .block-container {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
 }
-
-/* Biar tiap komponen ga nempel */
 section[data-testid="stSidebar"] .stSelectbox,
 section[data-testid="stSidebar"] .stNumberInput {
     margin-top: 6px;
     margin-bottom: 6px !important;
 }
-            
-.sidebar-header h1 {
-    font-size: 18px !important;
-}
+.sidebar-header h1 { font-size: 18px !important; }
+.sidebar-header p  { font-size: 9px !important; }
+.sidebar-card      { padding: 10px !important; font-size: 10px !important; }
 
-.sidebar-header p {
-    font-size: 9px !important;
-}
-
-.sidebar-card {
-    padding: 10px !important;
-    font-size: 10px !important;
-}
-            
 section[data-testid="stSidebar"] > div:first-child {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    
 }
-            
-div[data-baseweb="select"] {
-    margin-top: 4px;
-}
-
-/* Fix jarak label ke input */
-label[data-testid="stWidgetLabel"] {
-    margin-bottom: 4px !important;
-}
-
-/* Khusus sidebar selectbox */
-section[data-testid="stSidebar"] .stSelectbox {
-    margin-bottom: 10px;
-} 
-
+div[data-baseweb="select"] { margin-top: 4px; }
+label[data-testid="stWidgetLabel"] { margin-bottom: 4px !important; }
+section[data-testid="stSidebar"] .stSelectbox { margin-bottom: 10px; }
 section[data-testid="stSidebar"] [data-baseweb="select"],
 section[data-testid="stSidebar"] [data-baseweb="select"] *,
 section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
 }
 
+h3 { font-size: 16px !important; }
+
+/* ================================================================
+   INLINE HTML CARDS (yang dirender via st.markdown)
+   Targetkan elemen dengan style inline agar ikut tema
+   ================================================================ */
+
+/* Sidebar info card */
+[data-testid="stSidebar"] div[style*="background-color: #f1f5f9"] {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+    color: var(--text-main) !important;
+}
+
+/* KPI Cards di Overview */
+div[style*="background:#FFFFFF"],
+div[style*="background: #FFFFFF"],
+div[style*="background-color:#FFFFFF"],
+div[style*="background-color: #FFFFFF"],
+div[style*="background: white"],
+div[style*="background:white"] {
+    background: var(--bg-card) !important;
+}
+
+/* Border override untuk dark */
+div[style*="border:1px solid #E2E8F0"],
+div[style*="border: 1px solid #E2E8F0"] {
+    border-color: var(--border) !important;
+}
+
+/* Text override di dalam div inline */
+div[style*="color:#334155"],
+div[style*="color: #334155"],
+div[style*="color:#1E293B"],
+div[style*="color: #1E293B"],
+div[style*="color:#374151"],
+div[style*="color: #374151"] {
+    color: var(--text-main) !important;
+}
+
+/* Plotly chart background */
+.js-plotly-plot .plotly,
+.js-plotly-plot .plotly .svg-container {
+    background: transparent !important;
+}
 </style>
+""", unsafe_allow_html=True)
+
+
+# ------------------------------------------------------------------
+# Inject JS: Streamlit kadang pakai attribute berbeda untuk dark mode.
+# Script ini mendeteksi dan menyebarkan ke :root secara reliable.
+# ------------------------------------------------------------------
+st.markdown("""
+<script>
+(function() {
+    function applyTheme() {
+        // Streamlit menyimpan tema di localStorage
+        var stored = localStorage.getItem("stActiveTheme");
+        var isDark = false;
+
+        if (stored) {
+            try {
+                var t = JSON.parse(stored);
+                isDark = t.name === "Dark" || t.base === "dark";
+            } catch(e) {}
+        }
+
+        // Fallback: cek prefers-color-scheme
+        if (!stored) {
+            isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        }
+
+        // Terapkan ke html element agar CSS var aktif
+        if (isDark) {
+            document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+            document.documentElement.removeAttribute("data-theme");
+        }
+    }
+
+    applyTheme();
+
+    // Watch storage change (saat user ganti tema di Streamlit)
+    window.addEventListener("storage", applyTheme);
+
+    // Watch OS theme change
+    window.matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", applyTheme);
+
+    // Poll ringan tiap 1 detik karena Streamlit re-render DOM
+    setInterval(applyTheme, 1000);
+})();
+</script>
 """, unsafe_allow_html=True)
 
 # CSS override tema — blok f-string terpisah, hanya berisi aturan tema
