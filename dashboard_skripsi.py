@@ -919,7 +919,7 @@ st.set_page_config(page_title="UX Research Dashboard", layout="wide")
 # CSS MODERN
 # ======================
 
-st.markdown("""
+st.markdown(f"""
 <style>
 
 /* Sidebar Styling yang lebih clean */
