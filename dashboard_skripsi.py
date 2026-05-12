@@ -883,27 +883,21 @@ def render_delete_button(file_path, label, columns, default_value=0, key_suffix=
 
 
 
-# Inisialisasi dark mode toggle
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = False
-if st.session_state.get("dark_mode", False):
+bg_card    = "var(--secondary-background-color)"
+bg_main    = "var(--background-color)"
+bg_sidebar = "var(--secondary-background-color)"
+bg_insight = "var(--secondary-background-color)"
+text_main  = "var(--text-color)"
+text_soft  = "var(--text-color)"
+border     = "rgba(49,51,63,0.2)"
+
+# plt tetap pakai theme
+theme = st.get_option("theme.base")
+if theme == "dark":
     plt.style.use("dark_background")
-    bg_main    = "#020617"
-    bg_card    = "#0f172a"
-    bg_sidebar = "#020617"
-    bg_insight = "#1e293b"
-    text_main  = "#f1f5f9"
-    text_soft  = "#94a3b8"
-    border     = "#1e293b"
 else:
     plt.style.use("default")
-    bg_main    = "#f8fafc"
-    bg_card    = "#ffffff"
-    bg_sidebar = "#f8fafc"
-    bg_insight = "#f1f5f9"
-    text_main  = "#111827"
-    text_soft  = "#6b7280"
-    border     = "#e5e7eb"
+
 st.set_page_config(page_title="UX Research Dashboard", layout="wide")
 
 # ======================
@@ -1364,17 +1358,7 @@ with st.sidebar:
             <p style='font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;'>Universitas Islam Indonesia</p>
         </div>
     """, unsafe_allow_html=True)
-    col_dm1, col_dm2 = st.columns([3, 1])
-    with col_dm1:
-        st.markdown(f"<span style='font-size:11px;color:#94a3b8;font-weight:600;'>DARK MODE</span>", 
-                    unsafe_allow_html=True)
-    with col_dm2:
-        dark_toggle = st.toggle("", value=st.session_state.dark_mode, key="toggle_dark", 
-                                label_visibility="collapsed")
-    
-    if dark_toggle != st.session_state.dark_mode:
-        st.session_state.dark_mode = dark_toggle
-        st.rerun()
+
     # --- SECTION 1: RESEARCH OBJECT ---
     st.markdown('<p class="menu-label">Research Object</p>', unsafe_allow_html=True)
     
