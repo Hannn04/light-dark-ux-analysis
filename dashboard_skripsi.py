@@ -44,6 +44,9 @@ if "confirm_reset" not in st.session_state:
 if "show_logout_confirm" not in st.session_state:
     st.session_state.show_logout_confirm = False
 
+if "show_reset_confirm" not in st.session_state:
+    st.session_state.show_reset_confirm = False
+
 def interpret_ueq(score):
     if score > 1.5:
         return "Excellent"
@@ -1423,73 +1426,48 @@ with st.sidebar:
     </style>
     """, unsafe_allow_html=True)
 
-    if not st.session_state.confirm_reset:
-        if st.button("Reset All Data", use_container_width=True, type="secondary", key="btn_reset_split"):
-            st.session_state.confirm_reset = True
-            st.rerun()
-    else:
-        st.markdown("""
-        <div style="background:#fff1f2; border:1px solid #fecaca; border-radius:10px;
-            padding:10px 12px; margin-bottom:8px; text-align:center;">
-            <div style="font-size:12px; font-weight:700; color:#ef4444; margin-bottom:6px;">
-                Hapus semua data?
-            </div>
-            <div style="font-size:10px; color:#b91c1c;">
-                Tindakan ini tidak dapat dibatalkan.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        col_batal, col_ya = st.columns(2)
-        with col_batal:
-            st.markdown("""
-            <style>
-            div[data-testid="stSidebar"] [data-testid="stHorizontalBlock"] button:first-child {
-                background: #6366f1 !important;
-                color: white !important;
-                border: none !important;
-                border-radius: 10px !important;
-                font-weight: 700 !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-            if st.button("Batal", use_container_width=True, type="secondary", key="btn_reset_batal"):
-                st.session_state.confirm_reset = False
-                st.rerun()
-        with col_ya:
-            st.markdown("""
-            <style>
-            div[data-testid="stSidebar"] [data-testid="stHorizontalBlock"] button:last-child {
-                background: #ef4444 !important;
-                color: white !important;
-                border: none !important;
-                border-radius: 10px !important;
-                font-weight: 700 !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-            if st.button("Hapus", use_container_width=True, type="secondary", key="btn_reset_confirm_split"):
-                tables = ["data_tot", "data_error", "data_ueq_light", "data_ueq_dark", "data_pref_pos", "data_pref_neg", "app_list"]
-                SUPABASE_URL = st.secrets["SUPABASE_URL"]
-                SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
-                headers = {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": f"Bearer {SUPABASE_KEY}",
-                    "Content-Type": "application/json",
-                    "Prefer": "return=minimal"
-                }
-                for table in tables:
-                    requests.delete(
-                        f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{current_user}",
-                        headers=headers
-                    )
-                st.session_state["app_list"] = []
-                st.session_state.confirm_reset = False
-                st.rerun()
+    if st.button("Reset All Data", use_container_width=True, type="secondary", key="btn_reset_split"):
+        st.session_state["show_reset_confirm"] = True
 
     st.markdown("<div style='margin-top:6px;'></div>", unsafe_allow_html=True)
 
+    
     if st.button("Logout", use_container_width=True, type="primary", key="btn_logout"):
         st.session_state["show_logout_confirm"] = True
+
+@st.dialog("Konfirmasi Reset Data")
+def reset_dialog():
+    st.markdown("Yakin ingin menghapus **semua data** akun **{}**?".format(
+        st.session_state.get("current_user", "")))
+    st.caption("Tindakan ini tidak dapat dibatalkan.")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Batal", use_container_width=True, key="dialog_reset_batal"):
+            st.session_state["show_reset_confirm"] = False
+            st.rerun()
+    with col2:
+        if st.button("Ya, Hapus", use_container_width=True, type="primary", key="dialog_reset_hapus"):
+            tables = ["data_tot", "data_error", "data_ueq_light", "data_ueq_dark", 
+                      "data_pref_pos", "data_pref_neg", "app_list"]
+            SUPABASE_URL = st.secrets["SUPABASE_URL"]
+            SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+            headers = {
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal"
+            }
+            for table in tables:
+                requests.delete(
+                    f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{st.session_state.get('current_user','')}",
+                    headers=headers
+                )
+            st.session_state["app_list"] = []
+            st.session_state["show_reset_confirm"] = False
+            st.rerun()
+
+if st.session_state.get("show_reset_confirm") == True:
+    reset_dialog()
 
 @st.dialog("Konfirmasi Logout")
 def logout_dialog():
