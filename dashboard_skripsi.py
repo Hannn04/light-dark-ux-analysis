@@ -922,37 +922,81 @@ st.set_page_config(page_title="UX Research Dashboard", layout="wide")
 st.markdown(f"""
 <style>
 
-/* Sidebar Styling yang lebih clean */
-[data-testid="stSidebar"]  {
-    background-color: {bg_sidebar} !important;
+/* =====================
+   APP BACKGROUND
+   ===================== */
+.stApp {{
+    background: {bg_main} !important;
+}}
+
+/* =====================
+   SIDEBAR
+   ===================== */
+[data-testid="stSidebar"] {{
+    background: {bg_sidebar} !important;
     border-right: 1px solid {border} !important;
-}
-[data-testid="stSidebar"] .stMarkdown p, 
-[data-testid="stSidebar"] label, 
-[data-testid="stSidebar"] .sidebar-title {
-    color: {text_sidebar} !important;
-}
-            
-/* Header di Sidebar */
-.sidebar-branding {
+}}
+
+[data-testid="stSidebar"] .stMarkdown p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] .sidebar-title {{
+    color: {text_main} !important;
+}}
+
+[data-testid="stSidebar"] div[data-baseweb="select"] > div {{
+    background-color: {bg_card} !important;
+    color: {text_main} !important;
+    border: 1px solid {border} !important;
+}}
+
+[data-testid="stSidebar"] .block-container {{
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}}
+
+section[data-testid="stSidebar"] > div:first-child {{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}}
+
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stNumberInput {{
+    margin-top: 6px;
+    margin-bottom: 6px !important;
+}}
+
+section[data-testid="stSidebar"] .stSelectbox {{
+    margin-bottom: 10px;
+}}
+
+section[data-testid="stSidebar"] [data-baseweb="select"],
+section[data-testid="stSidebar"] [data-baseweb="select"] *,
+section[data-testid="stSidebar"] [data-baseweb="select"] input {{
+    cursor: pointer !important;
+}}
+
+/* =====================
+   SIDEBAR BRANDING
+   ===================== */
+.sidebar-branding {{
     padding: 4px 0;
     margin-bottom: 12px;
-    border-bottom: 2px solid #111827;
-}
+    border-bottom: 2px solid {border};
+}}
 
-.sidebar-title {
+.sidebar-title {{
     font-size: 16px;
     font-weight: 800;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-}
-            
-.stApp {
-    background-color: {bg_main};
-}
+    color: {text_main};
+}}
 
-/* Kategori Menu */
-.menu-label {
+/* =====================
+   MENU LABEL
+   ===================== */
+.menu-label {{
     font-weight: 700;
     font-size: 8px;
     color: #94a3b8;
@@ -960,10 +1004,48 @@ st.markdown(f"""
     letter-spacing: 1.2px;
     margin-bottom: 4px !important;
     margin-top: 6px !important;
-}
+}}
 
-/* Tombol Reset Minimalis */
-.stButton > button {
+/* =====================
+   SIDEBAR BUTTONS
+   ===================== */
+div[data-testid="stSidebar"] button[kind="secondary"] {{
+    background: #fff1f2 !important;
+    color: #ef4444 !important;
+    border: 1px solid #fecaca !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+}}
+
+div[data-testid="stSidebar"] button[kind="primary"] {{
+    background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+}}
+
+div[data-testid="stSidebar"] .stButton > button[kind="secondary"] {{
+    background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+}}
+
+div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {{
+    background: linear-gradient(135deg, #4f46e5, #3730a3) !important;
+    transform: translateY(-1px) !important;
+}}
+
+/* =====================
+   GLOBAL BUTTONS
+   ===================== */
+.stButton > button {{
     width: 100%;
     border-radius: 4px;
     font-size: 11px !important;
@@ -972,235 +1054,232 @@ st.markdown(f"""
     letter-spacing: 0.5px;
     transition: all 0.3s;
     padding: 6px !important;
-}
+}}
 
-* {
-    transition: background 0.3s ease, color 0.3s ease;
-}
+/* =====================
+   METRIC
+   ===================== */
+[data-testid="stMetricV2"] {{
+    background-color: {bg_card} !important;
+    color: {text_main} !important;
+}}
 
-[data-testid="stMetricV2"] {
-    background-color: {bg_card};
-    color:{text_main};
-}
-div[data-testid="stVerticalBlockBorderWrapper"] > div {
-    background-color: white !important;
-}
+/* =====================
+   CONTAINERS & CARDS
+   ===================== */
+div[data-testid="stVerticalBlockBorderWrapper"] > div {{
+    background-color: {bg_card} !important;
+}}
 
-.block-container {
+.block-container {{
     max-width: 1500px;
     padding-top: 70px;
-}
+}}
 
-/* Tambahkan ini di dalam <style> */
-.stDataFrame, .stTable {
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #e5e7eb;
-}
-
-.chart-container {
-    padding: 10px;
-    background: transparent;
-}
-
-.main-title {
-    font-size: 28px;
-    font-weight: 600;
-    color: #111827;
-}
-
-.subtitle {
-    color: #6b7280;
-    margin-bottom: 30px;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-top: 40px;
-    margin-bottom: 15px;
-}
-
-.card {
+.card {{
     background: {bg_card} !important;
     padding: 24px;
     border-radius: 20px;
     border: 1px solid {border} !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
     transition: all 0.3s ease;
     height: 100%;
     color: {text_main} !important;
-}
+}}
 
-body, p, span, div {
-    color: {text_main} !important;
-}
-            
-.stAlert {
-    background-color: {bg_insight} !important;
-    color: {text_main} !important;
-}
+.card:hover {{
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.04);
+    border-color: #6366f1;
+}}
 
-details {
+.card b, .card strong {{ color: {text_main} !important; }}
+.card span {{ color: {text_soft} !important; }}
+.card li {{ color: {text_main} !important; }}
+
+.p-card {{
+    background-color: {bg_card} !important;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid {border} !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    color: {text_main} !important;
+}}
+
+.pref-card {{
+    background: {bg_card} !important;
+    border: 1px solid {border} !important;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}}
+
+details {{
     background: {bg_card} !important;
     border: 1px solid {border} !important;
     border-radius: 8px;
-}
+}}
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: #6366f1;
-}
+/* =====================
+   TEXT & TYPOGRAPHY
+   ===================== */
+.main-title {{
+    font-size: 28px;
+    font-weight: 600;
+    color: {text_main} !important;
+}}
 
-.metric-container {
+.subtitle {{
+    color: {text_soft} !important;
+    margin-bottom: 30px;
+}}
+
+.section-title {{
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    color: {text_main} !important;
+}}
+
+h3 {{
+    font-size: 16px !important;
+    color: {text_main} !important;
+}}
+
+body, p, span, div {{
+    color: {text_main} !important;
+}}
+
+/* =====================
+   METRIC COMPONENTS
+   ===================== */
+.metric-container {{
     display: flex;
     flex-direction: column;
-}
+}}
 
-.metric-title {
+.metric-title {{
     font-size: 14px;
     font-weight: 500;
-    color: #64748b;
+    color: {text_soft} !important;
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-}
+}}
 
-.metric-value {
+.metric-value {{
     font-size: 26px;
     font-weight: 800;
     color: {text_main} !important;
     line-height: 1.2;
-}
+}}
 
-[data-testid="stSidebar"] div[data-baseweb="select"] > div {
-    background-color: #f8fafc !important;
-    color: #1e293b !important;
-    border: 1px solid #e2e8f0 !important;
-}
-
-.metric-footer {
+.metric-footer {{
     font-size: 12px;
     color: #94a3b8;
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #f8fafc;
-}
+    border-top: 1px solid {border};
+}}
 
-.status-badge {
+/* =====================
+   PREF LABELS
+   ===================== */
+.pref-label {{
+    font-size: 12px;
+    font-weight: 600;
+    color: {text_soft} !important;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}}
+
+.pref-value {{
+    font-size: 20px;
+    font-weight: 700;
+    color: {text_main} !important;
+}}
+
+/* =====================
+   LIGHT/DARK VALUE COLORS
+   ===================== */
+.val-light {{
+    color: #6366f1;
+    font-weight: 800;
+}}
+
+.val-dark {{
+    color: #a78bfa;
+    font-weight: 800;
+}}
+
+.vs-divider {{
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 4px;
+}}
+
+/* =====================
+   ALERTS & STATUS
+   ===================== */
+.stAlert {{
+    background-color: {bg_insight} !important;
+    color: {text_main} !important;
+}}
+
+.status-badge {{
     display: inline-block;
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 10px;
     font-weight: 700;
     margin-top: 5px;
-}
+}}
 
-/* Warna identitas untuk label */
-.val-light {
-    color: #6366f1;
-    font-weight: 800;
-}
+/* =====================
+   TABLES & DATAFRAMES
+   ===================== */
+.stDataFrame, .stTable {{
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid {border};
+}}
 
-.val-dark {
-    color: #a78bfa;
-    font-weight: 800;
-}
+/* =====================
+   MISC
+   ===================== */
+.chart-container {{
+    padding: 10px;
+    background: transparent;
+}}
 
-.vs-divider {
-    color: #94a3b8;
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0 4px;
-}
+div[data-baseweb="select"] {{
+    margin-top: 4px;
+}}
 
-.pref-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-.pref-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-.pref-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-}
+label[data-testid="stWidgetLabel"] {{
+    margin-bottom: 4px !important;
+}}
 
-h3 {
-    font-size: 16px !important;
-}
-
-.p-card {
-    background-color: {bg_card};
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-}
-
-/* Kasih jarak normal sidebar */
-[data-testid="stSidebar"] .block-container {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
-}
-
-/* Biar tiap komponen ga nempel */
-section[data-testid="stSidebar"] .stSelectbox,
-section[data-testid="stSidebar"] .stNumberInput {
-    margin-top: 6px;
-    margin-bottom: 6px !important;
-}
-            
-.sidebar-header h1 {
+.sidebar-header h1 {{
     font-size: 18px !important;
-}
+}}
 
-.sidebar-header p {
+.sidebar-header p {{
     font-size: 9px !important;
-}
+}}
 
-.sidebar-card {
+.sidebar-card {{
     padding: 10px !important;
     font-size: 10px !important;
-}
-            
-section[data-testid="stSidebar"] > div:first-child {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    
-}
-            
-div[data-baseweb="select"] {
-    margin-top: 4px;
-}
+}}
 
-/* Fix jarak label ke input */
-label[data-testid="stWidgetLabel"] {
-    margin-bottom: 4px !important;
-}
-
-/* Khusus sidebar selectbox */
-section[data-testid="stSidebar"] .stSelectbox {
-    margin-bottom: 10px;
-} 
-
-section[data-testid="stSidebar"] [data-baseweb="select"],
-section[data-testid="stSidebar"] [data-baseweb="select"] *,
-section[data-testid="stSidebar"] [data-baseweb="select"] input {
-    cursor: pointer !important;
-}
+* {{
+    transition: background 0.3s ease, color 0.3s ease;
+}}
 
 </style>
 """, unsafe_allow_html=True)
