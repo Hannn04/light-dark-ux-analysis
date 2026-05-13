@@ -1302,155 +1302,307 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
     st.session_state["last_user"] = current_user
     st.session_state["app_list"] = load_app_list(current_user)
 
+# GANTI BAGIAN SIDEBAR INI (sekitar baris 600-750)
+
 with st.sidebar:
 
-    # Branding Header
+    # ======================
+    # BRANDING HEADER MODERN (TANPA ICON)
+    # ======================
     st.markdown(f"""
-        <div style="text-align: center; padding: 10px 0 25px 0;">
-            <h1 style='font-size: 24px; color: #6366f1; margin-bottom: 0;'>UX Analytics</h1>
-            <p style='font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;'>Universitas Islam Indonesia</p>
+        <div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px 20px 20px 20px;
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            margin: -1rem -1rem 2rem -1rem;
+        ">
+            <div style="
+                font-size: 22px; 
+                font-weight: 800; 
+                color: white; 
+                letter-spacing: -0.5px;
+                margin-bottom: 4px;
+            ">UX Analytics</div>
+            <div style="
+                font-size: 11px; 
+                color: rgba(255,255,255,0.9); 
+                font-weight: 600;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+            ">Universitas Islam Indonesia</div>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- SECTION 1: RESEARCH OBJECT ---
-    st.markdown('<p class="menu-label">Research Object</p>', unsafe_allow_html=True)
+    # ======================
+    # SECTION 1: RESEARCH OBJECT
+    # ======================
+    st.markdown("""
+        <div style="
+            font-size: 10px; 
+            color: #94a3b8; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        ">Research Object</div>
+    """, unsafe_allow_html=True)
     
     # Pilih aplikasi aktif
-    app = st.selectbox("Aplikasi Analisis", st.session_state.app_list, label_visibility="collapsed")
+    app = st.selectbox(
+        "Aplikasi Analisis", 
+        st.session_state.app_list, 
+        label_visibility="collapsed",
+        help="Pilih aplikasi yang sedang diteliti"
+    )
     
-    # Kelola Aplikasi (Pop-over style expander)
-    with st.expander("Manage Applications", expanded=False):
-
-    # Notifikasi add berhasil
+    # ======================
+    # KELOLA APLIKASI (DESIGN BARU)
+    # ======================
+    with st.expander("Kelola Aplikasi", expanded=False):
+        
+        # Status notifikasi
         if st.session_state.get("app_added"):
-            st.success(f"✓ '{st.session_state.app_added}' berhasil ditambahkan!")
+            st.success(f"✓ {st.session_state.app_added} ditambahkan!")
             st.session_state["app_added"] = None
 
-        # Notifikasi delete berhasil
         if st.session_state.get("app_deleted"):
-            st.warning(f"✓ '{st.session_state.app_deleted}' berhasil dihapus!")
+            st.warning(f"✓ {st.session_state.app_deleted} dihapus!")
             st.session_state["app_deleted"] = None
 
+        # Input aplikasi baru
         if "input_key" not in st.session_state:
             st.session_state["input_key"] = 0
 
         new_app = st.text_input(
-            "Nama Aplikasi Baru",
-            placeholder="Contoh: Facebook",
-            key=f"new_app_input_{st.session_state['input_key']}"
+            "Tambah Aplikasi Baru",
+            placeholder="Contoh: Instagram, WhatsApp",
+            key=f"new_app_{st.session_state['input_key']}"
         )
 
-        st.markdown("""
-        <style>
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"] {
-            background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 8px !important;
-            font-weight: 700 !important;
-        }
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
-            background: linear-gradient(135deg, #4f46e5, #3730a3) !important;
-            transform: translateY(-1px) !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+        # Tombol tambah dengan style modern
+        col_add1, col_add2 = st.columns([4,1])
+        with col_add1:
+            st.markdown("")
+        with col_add2:
+            if st.button("➕", key="add_app_btn", help="Tambah aplikasi"):
+                pass
 
-        if st.button("Add Object", use_container_width=True, key="btn_add_app"):
+        if st.button("Tambah Aplikasi", use_container_width=True, 
+                    help="Tambahkan aplikasi ke daftar"):
             if new_app and new_app.strip() not in st.session_state.app_list:
                 nama = new_app.strip()
                 st.session_state.app_list.append(nama)
                 save_app_list(current_user, st.session_state.app_list)
                 st.session_state["app_added"] = nama
-                # Reset input dengan mengubah input_key
-                st.session_state["input_key"] = st.session_state.get("input_key", 0) + 1
+                st.session_state["input_key"] += 1
                 st.rerun()
-            elif new_app and new_app.strip() in st.session_state.app_list:
-                st.error("Aplikasi sudah ada!")
+            elif new_app.strip() in st.session_state.app_list:
+                st.error("❌ Aplikasi sudah ada!")
 
+        # Hapus aplikasi
         if st.session_state.app_list:
-            st.markdown("---")
-            app_delete = st.selectbox(
-                "Pilih Aplikasi",
-                st.session_state.app_list,
-                key="del_select"
-            )
-
-            if st.button("Delete Object", use_container_width=True, key="btn_del_app"):
-                nama_del = app_delete
+            st.markdown("**Hapus Aplikasi**")
+            app_delete = st.selectbox("Pilih:", st.session_state.app_list, key="del_app")
+            if st.button("Hapus Aplikasi", type="secondary", use_container_width=True):
                 st.session_state.app_list.remove(app_delete)
                 save_app_list(current_user, st.session_state.app_list)
-                st.session_state["app_deleted"] = nama_del
+                st.session_state["app_deleted"] = app_delete
                 st.rerun()
 
-    st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+    st.markdown("---")
 
-    # --- SECTION 2: MAIN NAVIGATION ---
+    # ======================
+    # SECTION 2: MAIN NAVIGATION
+    # ======================
+    st.markdown("""
+        <div style="
+            font-size: 10px; 
+            color: #94a3b8; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        ">Main Navigation</div>
+    """, unsafe_allow_html=True)
+
     menu = st.selectbox(
         "Pilih Menu", 
         ["Home", "Overview", "Time on Task", "Error Rate", "UEQ Analysis", "Preferensi Responden", "Settings"],
+        index=0,
         label_visibility="collapsed"
     )
 
-    # --- SECTION 3: PARAMETERS ---
-    st.markdown('<p class="menu-label">Study Parameters</p>', unsafe_allow_html=True)
-    n = st.number_input("Sample Size (N)", min_value=1, max_value=100, value=25, help="Jumlah responden dalam penelitian ini")
+    st.markdown("---")
 
-    # Info Card Aktif
-    st.markdown(f"""
-        <div style="background-color: #f1f5f9; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px;">
-            <div style="font-size: 9px; color: #6366f1; font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Project Insight</div>
-            <div style="font-size: 13px; font-weight: 700; color: #1e293b;">{app if app else "No App"} Study</div>
-            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Status: <span style="color:#10b981; font-weight:600;">Active Analysis</span></div>
+    # ======================
+    # SECTION 3: STUDY PARAMETERS
+    # ======================
+    st.markdown("""
+        <div style="
+            font-size: 10px; 
+            color: #94a3b8; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        ">Study Parameters</div>
+    """, unsafe_allow_html=True)
+
+    n = st.number_input(
+        "Jumlah Responden", 
+        min_value=1, 
+        max_value=100, 
+        value=25,
+        help="Total responden dalam penelitian"
+    )
+
+    # ======================
+    # PROJECT INSIGHT CARD (DESIGN BARU)
+    # ======================
+    st.markdown("""
+        <div style="
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin: 16px 0;
+        ">
+            <div style="
+                font-size: 9px; 
+                color: #6366f1; 
+                font-weight: 800; 
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+            ">Project Aktif</div>
+            <div style="
+                font-size: 14px; 
+                font-weight: 700; 
+                color: #1e293b;
+                margin-bottom: 4px;
+            ">{app or "Belum dipilih"}</div>
+            <div style="
+                font-size: 11px; 
+                color: #64748b;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            ">
+                <span style="color: #10b981; font-weight: 600;">● {n} responden</span>
+                <span style="color: #3b82f6; font-weight: 600;">● Within-Subject</span>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- SECTION 4: SYSTEM ---
-    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True) # Push reset button to bottom
+    # ======================
+    # SPACER & SYSTEM SECTION
+    # ======================
     st.markdown("---")
     
-    
+    # Spacer untuk push ke bawah
+    st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
 
-    
+    # ======================
+    # USER STATUS
+    # ======================
     st.markdown(f"""
-        <div style="background:linear-gradient(135deg,#eef2ff,#f0fdf4);
-            padding:10px 14px; border-radius:12px; border:1px solid #e0e7ff;
-            font-size:11px; color:#475569; text-align:center; margin-bottom:8px;">
-            Login sebagai <b style="color:#6366f1;">{current_user}</b>
+        <div style="
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 16px 14px;
+            border-radius: 12px;
+            border: 1px solid #bae6fd;
+            text-align: center;
+            margin-bottom: 12px;
+        ">
+            <div style="font-size: 11px; color: #0369a1; font-weight: 700;">
+                User Aktif
+            </div>
+            <div style="
+                font-size: 14px; 
+                font-weight: 700; 
+                color: #0c4a6e;
+                margin-top: 2px;
+            ">{current_user}</div>
         </div>
     """, unsafe_allow_html=True)
 
+    # ======================
+    # ACTION BUTTONS (DESIGN MODERN)
+    # ======================
     st.markdown("""
     <style>
+    /* Button Reset - Red Gradient */
     div[data-testid="stSidebar"] button[kind="secondary"] {
-        background: #fff1f2 !important;
-        color: #ef4444 !important;
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+        color: #dc2626 !important;
         border: 1px solid #fecaca !important;
         border-radius: 10px !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
         font-weight: 700 !important;
         letter-spacing: 0.5px !important;
+        padding: 10px 14px !important;
+        height: 44px !important;
+        margin-bottom: 8px !important;
+        box-shadow: 0 2px 8px rgba(239,68,68,0.2) !important;
+        transition: all 0.2s !important;
     }
+    div[data-testid="stSidebar"] button[kind="secondary"]:hover {
+        background: linear-gradient(135deg, #fecaca 0%, #fe2d2d 100%) !important;
+        color: white !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(239,68,68,0.3) !important;
+    }
+
+    /* Button Logout - Blue Gradient */
     div[data-testid="stSidebar"] button[kind="primary"] {
-        background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
         color: white !important;
         border: none !important;
         border-radius: 10px !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
         font-weight: 700 !important;
         letter-spacing: 0.5px !important;
+        padding: 10px 14px !important;
+        height: 44px !important;
+        box-shadow: 0 4px 12px rgba(59,130,246,0.3) !important;
+        transition: all 0.2s !important;
+    }
+    div[data-testid="stSidebar"] button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 16px rgba(59,130,246,0.4) !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    if st.button("Reset All Data", use_container_width=True, type="secondary", key="btn_reset_split"):
+    if st.button("Reset Semua Data", use_container_width=True, type="secondary", key="reset_sidebar"):
         st.session_state["show_reset_confirm"] = True
 
-    st.markdown("<div style='margin-top:6px;'></div>", unsafe_allow_html=True)
-
-    
-    if st.button("Logout", use_container_width=True, type="primary", key="btn_logout"):
+    if st.button("Logout", use_container_width=True, type="primary", key="logout_sidebar"):
         st.session_state["show_logout_confirm"] = True
+
+    # Footer
+    st.markdown("""
+        <div style="
+            padding-top: 24px;
+            margin-top: auto;
+            text-align: center;
+            font-size: 9px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+        ">
+            v2.1 · UII 2026
+        </div>
+    """, unsafe_allow_html=True)
 
 @st.dialog("Konfirmasi Reset Data")
 def reset_dialog():
