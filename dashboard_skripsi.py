@@ -696,8 +696,7 @@ def render_spss_wilcoxon(pairs_data):
         </div>
     </div>"""
 
-    st.markdown(ranks_html, unsafe_allow_html=True)
-    st.markdown(test_stats_html, unsafe_allow_html=True)
+    st.markdown(f'<div>{ranks_html}{test_stats_html}</div>', unsafe_allow_html=True)
 
 
 def dataset_manager(df, expected_columns, save_path, title, filename_base):
