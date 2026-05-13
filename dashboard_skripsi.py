@@ -914,7 +914,7 @@ else:
 
     border = "#e5e7eb"
 
-icon = Image.open("assets/icon.png")  # sesuaikan nama file-nya
+icon = Image.open(os.path.join(BASE_DIR, "assets", "icon.png"))
 
 st.set_page_config(
     page_title="UX Research Dashboard",
