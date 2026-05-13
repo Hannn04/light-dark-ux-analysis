@@ -932,6 +932,13 @@ st.set_page_config(
     page_icon=icon
 )
 
+
+if "mgr_open" not in st.session_state:
+    st.session_state.mgr_open = False
+if "confirm_delete_app" not in st.session_state:
+    st.session_state.confirm_delete_app = None
+if "input_key" not in st.session_state:
+    st.session_state.input_key = 0
 # ======================
 # CSS MODERN
 # ======================
@@ -939,86 +946,98 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+.mgr-toggle {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 13px;
+    background: #18181f;
+    border: 0.5px solid #2a2a3d;
+    border-radius: 11px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-bottom: 6px;
+    box-sizing: border-box;
+}
+.mgr-toggle:hover { border-color: #6366f1; background: #1c1c2a; }
 
-section[data-testid="stSidebar"] [data-testid="stExpander"] summary {
-    padding: 9px 12px !important;
-    border-radius: 10px !important;
-    border: 0.5px solid rgba(99,102,241,0.2) !important;
-    background: rgba(99,102,241,0.05) !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: #6366f1 !important;
-    transition: background 0.15s !important;
+.mgr-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 9px;
 }
-section[data-testid="stSidebar"] [data-testid="stExpander"] summary:hover {
-    background: rgba(99,102,241,0.1) !important;
+.mgr-icon-wrap {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: rgba(99,102,241,0.15);
+    display: flex; align-items: center; justify-content: center;
 }
-section[data-testid="stSidebar"] [data-testid="stExpander"] summary svg {
-    color: #6366f1 !important;
-}
+.mgr-label-wrap { display: flex; flex-direction: column; gap: 1px; }
+.mgr-title { font-size: 12px; font-weight: 600; color: #c7c7e0; }
+.mgr-sub { font-size: 10px; color: #4b4b6b; }
 
-/* ── Expander body ── */
-section[data-testid="stSidebar"] [data-testid="stExpander"] > div:last-child {
-    background: #ffffff !important;
-    border: 0.5px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-    padding: 14px 10px !important;
-    margin-top: 4px !important;
+/* Panel */
+.mgr-panel {
+    background: #18181f;
+    border: 0.5px solid #2a2a3d;
+    border-radius: 13px;
+    overflow: hidden;
+    margin-bottom: 8px;
 }
+.mgr-section { padding: 13px 12px; border-bottom: 0.5px solid #1e1e2e; }
+.mgr-section:last-child { border-bottom: none; }
+.mgr-field-label {
+    font-size: 9px; font-weight: 700;
+    color: #4b4b6b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+}
+.mgr-input-row { display: flex; gap: 6px; align-items: stretch; }
+.mgr-input {
+    flex: 1; padding: 8px 11px;
+    border-radius: 9px;
+    border: 0.5px solid #2a2a3d;
+    background: #13131a;
+    color: #e2e8f0;
+    font-size: 12px;
+    outline: none;
+    font-family: inherit;
+}
+.mgr-input:focus { border-color: #6366f1; }
+.mgr-input::placeholder { color: #3a3a55; }
 
-/* ── Text input di dalam expander sidebar ── */
-section[data-testid="stSidebar"] [data-testid="stExpander"] input[type="text"] {
-    border-radius: 8px !important;
-    border: 0.5px solid #e2e8f0 !important;
-    background: #f8fafc !important;
-    font-size: 12px !important;
-    color: #1e293b !important;
-    padding: 8px 11px !important;
+/* App item row */
+.app-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 9px;
+    background: #13131a;
+    border: 0.5px solid transparent;
+    margin-bottom: 5px;
+    transition: border-color 0.12s, background 0.12s;
 }
-section[data-testid="stSidebar"] [data-testid="stExpander"] input[type="text"]:focus {
-    border-color: #6366f1 !important;
-    background: #fff !important;
-}
+.app-row:last-child { margin-bottom: 0; }
+.app-row:hover { border-color: #2a2a3d; background: #1c1c2a; }
+.app-row-left { display: flex; align-items: center; gap: 8px; }
+.app-dot { width: 6px; height: 6px; border-radius: 50%; background: #6366f1; }
 
-/* ── Selectbox di dalam expander sidebar ── */
-section[data-testid="stSidebar"] [data-testid="stExpander"] [data-baseweb="select"] > div {
-    border-radius: 8px !important;
-    border: 0.5px solid #e2e8f0 !important;
-    background: #f8fafc !important;
-    font-size: 12px !important;
+/* Confirm row */
+.confirm-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 9px;
+    background: rgba(239,68,68,0.06);
+    border: 0.5px solid rgba(239,68,68,0.2);
+    margin-bottom: 5px;
 }
+.confirm-text { font-size: 11px; color: #fca5a5; }
+.confirm-btns { display: flex; gap: 5px; }
 
-/* ── Tombol ADD (secondary di expander → jadi ungu) ── */
-section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"] {
-    background: #6366f1 !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 9px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    padding: 9px 12px !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-}
-section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:hover {
-    background: #4f46e5 !important;
-}
-
-/* ── Tombol DELETE di expander → merah soft ── */
-section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"] {
-    background: #fff5f5 !important;
-    color: #ef4444 !important;
-    border: 0.5px solid #fecaca !important;
-    border-radius: 9px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-}
-section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"]:hover {
-    background: #fee2e2 !important;
-}
-            
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
     background-color: {bg_sidebar} !important;
@@ -1399,69 +1418,213 @@ with st.sidebar:
     app = st.selectbox("Aplikasi Analisis", st.session_state.app_list, label_visibility="collapsed")
     
     # Kelola Aplikasi (Pop-over style expander)
-    with st.expander("Manage Applications", expanded=False):
+    # ── MANAGE APPLICATIONS PANEL ──
+    _dot_colors = ["#6366f1","#8b5cf6","#a78bfa","#818cf8","#c4b5fd"]
+    _n_apps = len(st.session_state.app_list)
+    _arrow = "▲" if st.session_state.mgr_open else "▼"
 
-    # Notifikasi add berhasil
+    # ── Tombol toggle (invisible di atas HTML) ──
+    st.markdown(f"""
+    <div style="position:relative;margin-bottom:6px;">
+      <div style="
+        display:flex;align-items:center;justify-content:space-between;
+        padding:10px 13px;
+        background:#18181f;
+        border:0.5px solid {'#6366f1' if st.session_state.mgr_open else '#2a2a3d'};
+        border-radius:11px;
+        pointer-events:none;
+      ">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <div style="width:26px;height:26px;border-radius:7px;background:rgba(99,102,241,0.15);
+            display:flex;align-items:center;justify-content:center;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+              stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#c7c7e0;">Manage applications</div>
+            <div style="font-size:10px;color:#4b4b6b;">{_n_apps} object{"s" if _n_apps != 1 else ""} aktif</div>
+          </div>
+        </div>
+        <span style="font-size:10px;color:#4b4b6b;">{_arrow}</span>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <style>
+    section[data-testid="stSidebar"] div[data-testid="stButton"]:has(button[key="mgr_toggle_btn"]) button {
+        position:absolute !important;
+        top:-44px !important;
+        left:0 !important;
+        width:100% !important;
+        height:44px !important;
+        opacity:0 !important;
+        cursor:pointer !important;
+        z-index:999 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    if st.button("_", key="mgr_toggle_btn", use_container_width=True):
+        st.session_state.mgr_open = not st.session_state.mgr_open
+        st.session_state.confirm_delete_app = None
+        st.rerun()
+
+    # ── PANEL ──
+    if st.session_state.mgr_open:
+
+        # Notifikasi
         if st.session_state.get("app_added"):
-            st.success(f"✓ '{st.session_state.app_added}' berhasil ditambahkan!")
+            st.markdown(f"""
+            <div style="background:rgba(16,185,129,0.1);border:0.5px solid rgba(16,185,129,0.3);
+              border-radius:9px;padding:8px 12px;font-size:11px;color:#6ee7b7;margin-bottom:6px;">
+              ✓ &nbsp;<b>'{st.session_state.app_added}'</b> ditambahkan
+            </div>""", unsafe_allow_html=True)
             st.session_state["app_added"] = None
 
-        # Notifikasi delete berhasil
         if st.session_state.get("app_deleted"):
-            st.warning(f"✓ '{st.session_state.app_deleted}' berhasil dihapus!")
+            st.markdown(f"""
+            <div style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.25);
+              border-radius:9px;padding:8px 12px;font-size:11px;color:#fca5a5;margin-bottom:6px;">
+              ✓ &nbsp;<b>'{st.session_state.app_deleted}'</b> dihapus
+            </div>""", unsafe_allow_html=True)
             st.session_state["app_deleted"] = None
 
-        if "input_key" not in st.session_state:
-            st.session_state["input_key"] = 0
-
-        new_app = st.text_input(
-            "Nama Aplikasi Baru",
-            placeholder="Contoh: Facebook",
-            key=f"new_app_input_{st.session_state['input_key']}"
-        )
-
+        # Panel container
         st.markdown("""
-        <style>
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"] {
-            background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 8px !important;
-            font-weight: 700 !important;
-        }
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
-            background: linear-gradient(135deg, #4f46e5, #3730a3) !important;
-            transform: translateY(-1px) !important;
-        }
-        </style>
+        <div style="background:#18181f;border:0.5px solid #2a2a3d;border-radius:13px;
+          overflow:hidden;margin-bottom:8px;">
         """, unsafe_allow_html=True)
 
-        if st.button("Add Object", use_container_width=True, key="btn_add_app"):
-            if new_app and new_app.strip() not in st.session_state.app_list:
-                nama = new_app.strip()
+        # ── ADD SECTION ──
+        st.markdown("""
+        <div style="padding:12px 12px 4px;border-bottom:0.5px solid #1e1e2e;">
+          <div style="font-size:9px;font-weight:700;color:#4b4b6b;text-transform:uppercase;
+            letter-spacing:1px;margin-bottom:8px;">Add new object</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        col_inp, col_plus = st.columns([5, 1])
+        with col_inp:
+            new_app = st.text_input(
+                "", placeholder="e.g. Instagram…",
+                key=f"new_app_input_{st.session_state.input_key}",
+                label_visibility="collapsed"
+            )
+        with col_plus:
+            st.markdown("<div style='margin-top:2px;'>", unsafe_allow_html=True)
+            add_clicked = st.button("＋", key="btn_add_app",
+                                    use_container_width=True, help="Tambah")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        if add_clicked:
+            nama = (new_app or "").strip()
+            if nama and nama not in st.session_state.app_list:
                 st.session_state.app_list.append(nama)
                 save_app_list(current_user, st.session_state.app_list)
                 st.session_state["app_added"] = nama
-                # Reset input dengan mengubah input_key
-                st.session_state["input_key"] = st.session_state.get("input_key", 0) + 1
+                st.session_state.input_key += 1
                 st.rerun()
-            elif new_app and new_app.strip() in st.session_state.app_list:
+            elif nama in st.session_state.app_list:
                 st.error("Aplikasi sudah ada!")
 
+        # ── LIST SECTION ──
         if st.session_state.app_list:
-            st.markdown("---")
-            app_delete = st.selectbox(
-                "Pilih Aplikasi",
-                st.session_state.app_list,
-                key="del_select"
-            )
+            st.markdown("""
+            <div style="padding:10px 12px 4px;">
+              <div style="font-size:9px;font-weight:700;color:#4b4b6b;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px;">Active objects</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            if st.button("Delete Object", use_container_width=True, key="btn_del_app"):
-                nama_del = app_delete
-                st.session_state.app_list.remove(app_delete)
-                save_app_list(current_user, st.session_state.app_list)
-                st.session_state["app_deleted"] = nama_del
-                st.rerun()
+            for i, app_name in enumerate(st.session_state.app_list):
+                dot = _dot_colors[i % len(_dot_colors)]
+
+                if st.session_state.confirm_delete_app == app_name:
+                    # Confirm row
+                    st.markdown(f"""
+                    <div style="margin:0 12px 5px;padding:9px 12px;
+                      border-radius:9px;background:rgba(239,68,68,0.06);
+                      border:0.5px solid rgba(239,68,68,0.25);">
+                      <span style="font-size:11px;color:#fca5a5;">
+                        Hapus <b>{app_name}</b>?
+                      </span>
+                    </div>""", unsafe_allow_html=True)
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        if st.button("Batal", key=f"cancel_{i}_{app_name}",
+                                     use_container_width=True):
+                            st.session_state.confirm_delete_app = None
+                            st.rerun()
+                    with c2:
+                        if st.button("Hapus", key=f"confirm_{i}_{app_name}",
+                                     use_container_width=True, type="primary"):
+                            st.session_state.app_list.remove(app_name)
+                            save_app_list(current_user, st.session_state.app_list)
+                            st.session_state["app_deleted"] = app_name
+                            st.session_state.confirm_delete_app = None
+                            st.rerun()
+                else:
+                    col_name, col_del = st.columns([5, 1])
+                    with col_name:
+                        st.markdown(f"""
+                        <div style="margin:0 0 4px 12px;padding:8px 10px;border-radius:9px;
+                          background:#13131a;border:0.5px solid transparent;
+                          display:flex;align-items:center;gap:8px;">
+                          <div style="width:6px;height:6px;border-radius:50%;
+                            background:{dot};flex-shrink:0;"></div>
+                          <span style="font-size:12px;font-weight:500;color:#c7c7e0;">
+                            {app_name}
+                          </span>
+                        </div>""", unsafe_allow_html=True)
+                    with col_del:
+                        if st.button("✕", key=f"del_{i}_{app_name}",
+                                     use_container_width=True,
+                                     help=f"Hapus {app_name}"):
+                            st.session_state.confirm_delete_app = app_name
+                            st.rerun()
+
+        st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)  # close panel
+
+    # ── CSS tombol di dalam panel ──
+    st.markdown("""
+    <style>
+    /* Tombol ＋ add → ungu solid */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("＋")) {
+        background:#6366f1 !important;color:#fff !important;
+        border:none !important;border-radius:9px !important;
+        font-size:16px !important;padding:2px !important;min-height:36px !important;
+    }
+    /* Tombol ✕ delete → transparan, merah on hover */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("✕")) {
+        background:transparent !important;
+        border:0.5px solid #2a2a3d !important;
+        color:#4b4b6b !important;
+        border-radius:8px !important;font-size:11px !important;
+        min-height:36px !important;padding:2px !important;
+    }
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("✕")):hover {
+        background:rgba(239,68,68,0.1) !important;
+        color:#ef4444 !important;border-color:rgba(239,68,68,0.3) !important;
+    }
+    /* Konfirmasi: Hapus → merah, Batal → abu */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-primary"] {
+        background:#ef4444 !important;border:none !important;
+        border-radius:9px !important;font-size:11px !important;font-weight:600 !important;
+    }
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("Batal")) {
+        background:#1e1e2e !important;color:#94a3b8 !important;
+        border:0.5px solid #2a2a3d !important;border-radius:9px !important;
+        font-size:11px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
     st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
 
