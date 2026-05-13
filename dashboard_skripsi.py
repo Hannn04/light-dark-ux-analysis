@@ -20,6 +20,7 @@ from auth import render_auth_page, logout, render_settings_page
 import pingouin as pg
 from scipy.stats import t as t_dist
 import requests
+from PIL import Image
 
 # TAMBAHKAN INI setelah from auth import ...
 from db import (
@@ -913,7 +914,13 @@ else:
 
     border = "#e5e7eb"
 
-st.set_page_config(page_title="UX Research Dashboard", layout="wide")
+icon = Image.open("asets/icon.png")  # sesuaikan nama file-nya
+
+st.set_page_config(
+    page_title="UX Research Dashboard",
+    layout="wide",
+    page_icon=icon
+)
 
 # ======================
 # CSS MODERN
