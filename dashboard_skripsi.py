@@ -939,6 +939,28 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+
+section[data-testid="stSidebar"] [data-testid="stExpander"] summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border-radius: 10px !important;
+    border: 0.5px solid rgba(99,102,241,0.25) !important;
+    background: rgba(99,102,241,0.06) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #6366f1 !important;
+    transition: background 0.15s, border-color 0.15s;
+}
+section[data-testid="stSidebar"] [data-testid="stExpander"] summary:hover {
+    background: rgba(99,102,241,0.12) !important;
+    border-color: rgba(99,102,241,0.4) !important;
+}
+section[data-testid="stSidebar"] [data-testid="stExpander"] summary svg {
+    color: #6366f1 !important;
+}
+            
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
     background-color: {bg_sidebar} !important;
