@@ -933,12 +933,7 @@ st.set_page_config(
 )
 
 
-if "mgr_open" not in st.session_state:
-    st.session_state.mgr_open = False
-if "confirm_delete_app" not in st.session_state:
-    st.session_state.confirm_delete_app = None
-if "input_key" not in st.session_state:
-    st.session_state.input_key = 0
+
 # ======================
 # CSS MODERN
 # ======================
@@ -1401,6 +1396,15 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
     st.session_state["last_user"] = current_user
     st.session_state["app_list"] = load_app_list(current_user)
 
+
+
+if "mgr_open" not in st.session_state:
+    st.session_state.mgr_open = False
+if "confirm_delete_app" not in st.session_state:
+    st.session_state.confirm_delete_app = None
+if "input_key" not in st.session_state:
+    st.session_state.input_key = 0
+    
 with st.sidebar:
 
     # Branding Header
