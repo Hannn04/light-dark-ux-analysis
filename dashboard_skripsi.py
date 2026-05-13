@@ -941,8 +941,8 @@ st.markdown("""
 
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
-    background-color: #f8fafc !important;
-    border-right: 1px solid #e2e8f0 !important;
+    background-color: {bg_sidebar} !important;
+    border-right: 1px solid {border} !important;
 }
 [data-testid="stSidebar"] .stMarkdown p, 
 [data-testid="stSidebar"] label, 
@@ -952,24 +952,16 @@ st.markdown("""
             
 /* Header di Sidebar */
 .sidebar-branding {
-    text-align: center;
-    padding: 20px 0 30px 0;
+    padding: 4px 0;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #111827;
 }
 
-.branding-subtitle {
-    font-size: 10px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 700;   
-}
-            
 .sidebar-title {
-    font-size: 26px;
+    font-size: 16px;
     font-weight: 800;
-    color: #6366f1;
-    margin-bottom: 5px;
-    letter-spacing: -0.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
             
 .stApp {
@@ -978,42 +970,13 @@ st.markdown("""
 
 /* Kategori Menu */
 .menu-label {
-    font-weight: 800;
-    font-size: 11px;
+    font-weight: 700;
+    font-size: 8px;
     color: #94a3b8;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 12px !important;
-    margin-top: 20px !important;
-}
-
-.insight-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-.insight-status {
-        font-size: 11px;
-        color: #64748b;
-        margin-top: 6px;
-}
-            
-[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] {
-        border-radius: 12px !important;
-}
-            
-[data-testid="stSidebar"] .stNumberInput div[data-testid="stNumberInputContainer"] {
-        border-radius: 12px !important;
-        background-color: white !important;
-}
-            
-.insight-label {
-    font-size: 9px;
-    color: #6366f1;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px !important;
+    margin-top: 6px !important;
 }
 
 /* Tombol Reset Minimalis */
@@ -1340,68 +1303,62 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
     st.session_state["app_list"] = load_app_list(current_user)
 
 with st.sidebar:
-    # 1. Branding Header
+    # 1. Branding Section (Text Only)
     st.markdown("""
-        <div class="sidebar-branding">
-            <div class="branding-title">UX Analytics</div>
-            <div class="branding-subtitle">Universitas Islam Indonesia</div>
+        <div class="nav-header">
+            <div class="brand-title">UX ANALYTICS</div>
+            <div class="brand-subtitle">UNIVERSITAS ISLAM INDONESIA</div>
         </div>
     """, unsafe_allow_html=True)
 
-    # 2. Section: Research Object
-    st.markdown('<p class="menu-label">Research Object</p>', unsafe_allow_html=True)
-    
-    # Dropdown Pilih Aplikasi
-    app = st.selectbox(
-        "Pilih Aplikasi",
-        st.session_state.app_list,
-        label_visibility="collapsed",
-        key="sidebar_app_select"
-    )
-    
-    # Manage Applications (Expander yang didesain bersih)
-    with st.expander("Manage Applications"):
-        new_app = st.text_input("New App Name", placeholder="e.g. Instagram")
-        if st.button("Add Object", use_container_width=True):
-            if new_app and new_app.strip() not in st.session_state.app_list:
-                st.session_state.app_list.append(new_app.strip())
-                save_app_list(current_user, st.session_state.app_list)
-                st.rerun()
-
-    # 3. Main Navigation Dropdown
-    st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+    # 2. Navigasi Utama
+    st.markdown('<p class="menu-label">Navigasi Utama</p>', unsafe_allow_html=True)
     menu = st.selectbox(
-        "Menu Navigasi",
+        "Pilih Menu", 
         ["Home", "Overview", "Time on Task", "Error Rate", "UEQ Analysis", "Preferensi Responden", "Settings"],
         label_visibility="collapsed"
     )
 
-    # 4. Section: Study Parameters
-    st.markdown('<p class="menu-label">Study Parameters</p>', unsafe_allow_html=True)
-    n = st.number_input(
-        "Sample Size (N)", 
-        min_value=1, 
-        max_value=100, 
-        value=25,
-        help="Jumlah responden dalam penelitian"
-    )
+    # 3. Research Object Section
+    st.markdown('<p class="menu-label">Objek Penelitian</p>', unsafe_allow_html=True)
+    app = st.selectbox("Aplikasi", st.session_state.app_list, label_visibility="collapsed")
+    
+    # Manage App dengan gaya minimalis
+    with st.expander("Kelola Objek", expanded=False):
+        new_app = st.text_input("Nama Aplikasi", placeholder="Contoh: Facebook")
+        if st.button("Tambah Objek", use_container_width=True):
+            # Logika tambah aplikasi tetap sama
+            if new_app and new_app.strip() not in st.session_state.app_list:
+                nama = new_app.strip()
+                st.session_state.app_list.append(nama)
+                save_app_list(current_user, st.session_state.app_list)
+                st.rerun()
 
-    # 5. Project Insight Card (Tampilan bawah)
+    # 4. Parameter Study
+    st.markdown('<p class="menu-label">Parameter Studi</p>', unsafe_allow_html=True)
+    n = st.number_input("Ukuran Sampel (N)", min_value=1, value=25)
+
+    # 5. Status Card (Text Based)
     st.markdown(f"""
-        <div class="insight-card">
-            <div class="insight-label">Project Insight</div>
-            <div class="insight-title">{app if app else "No App Selected"} Study</div>
-            <div class="insight-status">
-                Status: <span style="color:#10b981; font-weight:700;">Active Analysis</span>
-            </div>
+        <div class="user-section">
+            <div class="status-pill">SISTEM AKTIF</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">{app if app else "No App Selected"}</div>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">User: {current_user}</div>
         </div>
     """, unsafe_allow_html=True)
 
-    # 6. System Buttons (Logout & Reset)
+    # 6. Bottom System Buttons
     st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)
-    st.markdown("---")
-    if st.button("Logout", use_container_width=True, type="primary"):
+    
+    # Logout & Reset tanpa Icon
+    if st.button("Logout Akun", use_container_width=True, type="primary"):
         st.session_state["show_logout_confirm"] = True
+        st.rerun()
+
+    st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
+    
+    if st.button("Reset Database Global", use_container_width=True, type="secondary"):
+        st.session_state["show_reset_confirm"] = True
 
 @st.dialog("Konfirmasi Reset Data")
 def reset_dialog():
