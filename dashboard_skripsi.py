@@ -941,24 +941,82 @@ st.markdown("""
 
 
 section[data-testid="stSidebar"] [data-testid="stExpander"] summary {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 12px;
+    padding: 9px 12px !important;
     border-radius: 10px !important;
-    border: 0.5px solid rgba(99,102,241,0.25) !important;
-    background: rgba(99,102,241,0.06) !important;
+    border: 0.5px solid rgba(99,102,241,0.2) !important;
+    background: rgba(99,102,241,0.05) !important;
     font-size: 12px !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     color: #6366f1 !important;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s !important;
 }
 section[data-testid="stSidebar"] [data-testid="stExpander"] summary:hover {
-    background: rgba(99,102,241,0.12) !important;
-    border-color: rgba(99,102,241,0.4) !important;
+    background: rgba(99,102,241,0.1) !important;
 }
 section[data-testid="stSidebar"] [data-testid="stExpander"] summary svg {
     color: #6366f1 !important;
+}
+
+/* ── Expander body ── */
+section[data-testid="stSidebar"] [data-testid="stExpander"] > div:last-child {
+    background: #ffffff !important;
+    border: 0.5px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 14px 10px !important;
+    margin-top: 4px !important;
+}
+
+/* ── Text input di dalam expander sidebar ── */
+section[data-testid="stSidebar"] [data-testid="stExpander"] input[type="text"] {
+    border-radius: 8px !important;
+    border: 0.5px solid #e2e8f0 !important;
+    background: #f8fafc !important;
+    font-size: 12px !important;
+    color: #1e293b !important;
+    padding: 8px 11px !important;
+}
+section[data-testid="stSidebar"] [data-testid="stExpander"] input[type="text"]:focus {
+    border-color: #6366f1 !important;
+    background: #fff !important;
+}
+
+/* ── Selectbox di dalam expander sidebar ── */
+section[data-testid="stSidebar"] [data-testid="stExpander"] [data-baseweb="select"] > div {
+    border-radius: 8px !important;
+    border: 0.5px solid #e2e8f0 !important;
+    background: #f8fafc !important;
+    font-size: 12px !important;
+}
+
+/* ── Tombol ADD (secondary di expander → jadi ungu) ── */
+section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"] {
+    background: #6366f1 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 9px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 9px 12px !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+}
+section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:hover {
+    background: #4f46e5 !important;
+}
+
+/* ── Tombol DELETE di expander → merah soft ── */
+section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"] {
+    background: #fff5f5 !important;
+    color: #ef4444 !important;
+    border: 0.5px solid #fecaca !important;
+    border-radius: 9px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+}
+section[data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"]:hover {
+    background: #fee2e2 !important;
 }
             
 /* Sidebar Styling yang lebih clean */
