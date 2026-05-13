@@ -1923,7 +1923,7 @@ if menu == "Overview":
     with col_b:
         st.markdown(_kpi("Time on Task", avg_light_tot, avg_dark_tot, "s", lower_is_better=True), unsafe_allow_html=True)
     with col_c:
-        st.markdown(_kpi("Error Rate", avg_light_err, avg_dark_err, "%", lower_is_better=True), unsafe_allow_html=True)
+        st.markdown(_kpi("Error Rate", avg_light_err, avg_dark_err, " ksl", lower_is_better=True), unsafe_allow_html=True)
     with col_d:
         pref_color = "#4338CA" if best_pref == "Light Mode" else "#1E293B"
         pref_bg    = "#EEF2FF" if best_pref == "Light Mode" else "#F1F5F9"
@@ -1992,7 +1992,7 @@ if menu == "Overview":
         st.plotly_chart(_bar_chart("Time on Task (detik)", avg_light_tot, avg_dark_tot, "s"),
                         use_container_width=True, config={"displayModeBar": False})
     with col_g2:
-        st.plotly_chart(_bar_chart("Error Rate (%)", avg_light_err, avg_dark_err, "%"),
+        st.plotly_chart(_bar_chart("Error Rate (kesalahan)", avg_light_err, avg_dark_err, ""),
                         use_container_width=True, config={"displayModeBar": False})
     with col_g3:
         st.plotly_chart(_bar_chart("UEQ Score", light_ueq_mean, dark_ueq_mean, ""),
@@ -2708,12 +2708,12 @@ if menu == "Error Rate":
         use_container_width=True,
         column_config={
             "Responden": st.column_config.TextColumn("Responden"),
-            "Light_T1": st.column_config.NumberColumn("Light T1 (error %)", min_value=0, max_value=100, step=0.1, format="%.1f%%"),
-            "Light_T2": st.column_config.NumberColumn("Light T2 (error %)", min_value=0, max_value=100, step=0.1, format="%.1f%%"),
-            "Light_T3": st.column_config.NumberColumn("Light T3 (error %)", min_value=0, max_value=100, step=0.1, format="%.1f%%"),
-            "Dark_T1": st.column_config.NumberColumn("Dark T1 (error %)", min_value=0, max_value=100, step=0.1, format="%.1f%%"),
-            "Dark_T2": st.column_config.NumberColumn("Dark T2 (error %)", min_value=0, max_value=100, step=0.1, format="%.1f%%"),
-            "Dark_T3": st.column_config.NumberColumn("Dark T3 (error %)", min_value=0, max_value=100, step=0.1, format="%.1f%%"),
+            "Light_T1": st.column_config.NumberColumn("Light T1 (kesalahan)", min_value=0, step=1),
+            "Light_T2": st.column_config.NumberColumn("Light T2 (kesalahan)", min_value=0, step=1),
+            "Light_T3": st.column_config.NumberColumn("Light T3 (kesalahan)", min_value=0, step=1),
+            "Dark_T1":  st.column_config.NumberColumn("Dark T1 (kesalahan)",  min_value=0, step=1),
+            "Dark_T2":  st.column_config.NumberColumn("Dark T2 (kesalahan)",  min_value=0, step=1),
+            "Dark_T3":  st.column_config.NumberColumn("Dark T3 (kesalahan)",  min_value=0, step=1),
         }
     )
     
@@ -2741,18 +2741,18 @@ if menu == "Error Rate":
     # ======================
     # ANALYSIS BUTTON - FIXED WITH UNIQUE KEY
     # ======================
-    data_kosong_err = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].replace(0, pd.NA).dropna(how="all").empty
+    data_kosong_err = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].dropna(how="all").empty
 
     if st.button("ANALISIS DATA", type="secondary", key="analyze_error_rate"):
         task_cols_err = ["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]
         df_numeric_err = df_edit[task_cols_err].apply(pd.to_numeric, errors="coerce")
-        baris_ada_err = df_numeric_err.replace(0, np.nan).dropna(how="all")
+        baris_ada_err = df_numeric_err.dropna(how="all")
 
         if baris_ada_err.empty:
             st.warning("Data masih kosong. Silakan isi data terlebih dahulu.")
             st.stop()
 
-        baris_tidak_lengkap_err = baris_ada_err.isnull().any(axis=1) | (baris_ada_err == 0).any(axis=1)
+        baris_tidak_lengkap_err = baris_ada_err.isnull().any(axis=1)
         jumlah_tidak_lengkap_err = baris_tidak_lengkap_err.sum()
 
         if jumlah_tidak_lengkap_err > 0:
@@ -2828,12 +2828,11 @@ if menu == "Error Rate":
         with col1:
             better_mode = "Light" if avg_light_err < avg_dark_err else "Dark"
             dc = "normal" if avg_light_err < avg_dark_err else "inverse"
-            st.metric("Lowest Error Rate", better_mode,
-                      f"{abs(avg_light_err - avg_dark_err):.1f}%", delta_color=dc)
+            st.metric("Lowest Error Rate", better_mode, f"{abs(avg_light_err - avg_dark_err):.1f} kesalahan", delta_color=dc)
         with col2:
-            st.metric("Light Mode Avg", f"{avg_light_err:.1f}%")
+            st.metric("Light Mode Avg", f"{avg_light_err:.1f} kesalahan")
         with col3:
-            st.metric("Dark Mode Avg", f"{avg_dark_err:.1f}%")
+            st.metric("Dark Mode Avg", f"{avg_dark_err:.1f} kesalahan")
  
         st.markdown("### Task Results")
         st.dataframe(task_avgs.round(2), use_container_width=True)
@@ -2899,12 +2898,12 @@ if menu == "Error Rate":
         ax1.bar(x + width/2, task_avgs["Dark Mode"],  width, label='Dark',  color="#1e293b", alpha=0.8)
         ax1.set_title("Per Task Comparison")
         ax1.set_xticks(x); ax1.set_xticklabels(["T1","T2","T3"])
-        ax1.set_ylabel("Error Rate (%)"); ax1.legend(); ax1.grid(True, alpha=0.3)
+        ax1.set_ylabel("Jumlah Kesalahan"); ax1.legend(); ax1.grid(True, alpha=0.3)
  
         ax2.hist(light_per_user.dropna(), bins=15, alpha=0.7, color="#6366f1", label='Light', density=True)
         ax2.hist(dark_per_user.dropna(),  bins=15, alpha=0.7, color="#1e293b", label='Dark',  density=True)
         ax2.set_title("Distribution (Mean per User)")
-        ax2.set_xlabel("Error Rate (%)"); ax2.legend(); ax2.grid(True, alpha=0.3)
+        ax2.set_xlabel("Jumlah Kesalahan"); ax2.legend(); ax2.grid(True, alpha=0.3)
  
         tasks = [f"T{i}" for i in range(1, 4)]
         colors_sig = ["#10b981" if p < 0.05 else "#ef4444" for p in p_values]
@@ -2939,7 +2938,7 @@ if menu == "Error Rate":
                   border:2px solid {color}20;box-shadow:0 4px 12px rgba(0,0,0,0.08);
                   height:140px;justify-content:center;">
                   <div style="font-size:32px;font-weight:900;color:{color};margin-bottom:8px;">
-                    {error_rate:.1f}%</div>
+                    {error_rate:.1f}</div>
                   <div style="font-size:14px;color:{color};font-weight:600;">{label}</div>
                   <div style="margin-top:12px;font-size:12px;color:#10b981;font-weight:700;">
                     {'LOWEST ERROR' if error_rate == min(avg_light_err, avg_dark_err) else 'Higher Error'}
@@ -2963,9 +2962,9 @@ if menu == "Error Rate":
             <li>Metode yang digunakan: <b>{method_name}</b></li>
             <li><b>{significant_tasks}/3 tasks</b> menunjukkan perbedaan signifikan (p &lt; 0.05)</li>
             <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} — {overall_sig}</li>
-            <li>Mean Light Mode: <b>{avg_light_err:.1f}%</b></li>
-            <li>Mean Dark Mode: <b>{avg_dark_err:.1f}%</b></li>
-            <li>{'Light Mode lebih akurat' if avg_light_err < avg_dark_err else 'Dark Mode lebih akurat'} secara deskriptif</li>
+            <li>Mean Light Mode: <b>{avg_light_err:.1f} kesalahan</b></li>
+            <li>Mean Dark Mode: <b>{avg_dark_err:.1f} kesalahan</b></li>
+            <li>{'Light Mode lebih sedikit kesalahan' if avg_light_err < avg_dark_err else 'Dark Mode lebih sedikit kesalahan'} secara deskriptif</li>
           </ul>
         </div>""", unsafe_allow_html=True)
  
