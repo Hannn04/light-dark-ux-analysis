@@ -213,19 +213,14 @@ def compute_wilcoxon_pair(light, dark, light_lbl, dark_lbl):
     }
 
 def shapiro_and_ks(light: pd.Series, dark: pd.Series, label: str) -> dict:
-    """
-    Hitung Shapiro-Wilk DAN Kolmogorov-Smirnov (dengan Lilliefors correction)
-    pada selisih (Dark - Light).
-    Return dict lengkap untuk render_normality_table().
-    """
     from scipy.stats import kstest, norm as sp_norm
     import warnings
- 
+
     light = pd.to_numeric(light, errors="coerce")
     dark  = pd.to_numeric(dark,  errors="coerce")
     mask  = ~(light.isna() | dark.isna())
     diff  = (dark - light)[mask]
- 
+
     if len(diff) < 3:
         return {
             "label": label, "n": int(mask.sum()),
@@ -233,42 +228,55 @@ def shapiro_and_ks(light: pd.Series, dark: pd.Series, label: str) -> dict:
             "sw_stat": np.nan, "sw_p": np.nan,
             "normal": None,
         }
- 
+
     n = len(diff)
- 
+
     # --- Shapiro-Wilk ---
     from scipy.stats import shapiro
     sw_stat, sw_p = shapiro(diff)
- 
-    # --- Kolmogorov-Smirnov dengan Lilliefors correction ---
-    # Lilliefors: standardize dulu, lalu KS test vs standard normal
-    diff_std = (diff - diff.mean()) / diff.std(ddof=1)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        ks_stat, ks_p_raw = kstest(diff_std, 'norm')
- 
-    # Lilliefors correction: p-value lebih konservatif (tidak bisa ambil dari kstest langsung)
-    # Gunakan pendekatan: jika tersedia statsmodels, pakai lilliefors; fallback ke ks biasa
-    # Ganti bagian Lilliefors di shapiro_and_ks:
+
+    # --- Lilliefors yang lebih akurat ---
+    # Standardisasi menggunakan mean & std sampel (bukan populasi)
+    diff_mean = diff.mean()
+    diff_std  = diff.std(ddof=1)
+    diff_standardized = (diff - diff_mean) / diff_std
+
+    # Hitung KS statistic manual
+    from scipy.stats import norm as sp_norm
+    n_obs = len(diff_standardized)
+    diff_sorted = np.sort(diff_standardized)
+    
+    # CDF empiris vs teoritis
+    cdf_teoritis = sp_norm.cdf(diff_sorted)
+    ecdf_atas  = np.arange(1, n_obs + 1) / n_obs
+    ecdf_bawah = np.arange(0, n_obs) / n_obs
+    
+    ks_stat = max(
+        np.max(np.abs(ecdf_atas  - cdf_teoritis)),
+        np.max(np.abs(ecdf_bawah - cdf_teoritis))
+    )
+
+    # P-value menggunakan Lilliefors via statsmodels
     try:
         from statsmodels.stats.diagnostic import lilliefors as lf_test
-        ks_stat, ks_p = lf_test(diff, dist='norm')
-        # Bulatkan konsisten dengan SPSS (3 desimal)
-        ks_p = round(float(ks_p), 3)
+        ks_stat_lf, ks_p = lf_test(diff.values, dist='norm')
+        ks_stat = ks_stat_lf  # gunakan stat dari lilliefors langsung
     except Exception:
-        ks_stat, ks_p = ks_stat, ks_p_raw
- 
-    # Keputusan: normal jika KEDUANYA sig >= 0.05
-    # Namun SPSS menggunakan Shapiro-Wilk sebagai acuan utama untuk n<50
+        # Fallback: gunakan aproksimasi Dallal-Wilkinson
+        # Formula yang lebih dekat ke SPSS
+        z = ks_stat * (np.sqrt(n_obs) + 0.12 + 0.11 / np.sqrt(n_obs))
+        ks_p = np.exp(-2 * z**2) * 2
+        ks_p = min(ks_p, 1.0)
+
     normal = bool(sw_p >= 0.05)
- 
+
     return {
         "label":   label,
         "n":       int(n),
         "ks_stat": round(float(ks_stat), 3),
-        "ks_p":    round(float(ks_p),    3),
+        "ks_p":    float(ks_p),   # jangan dibulatkan dulu, biar _fmt_p yang handle
         "sw_stat": round(float(sw_stat), 3),
-        "sw_p":    round(float(sw_p),    3),
+        "sw_p":    float(sw_p),
         "normal":  normal,
     }
  
@@ -281,12 +289,11 @@ def render_normality_table(results: list) -> None:
     """
  
     def _fmt_p(v):
-        """Format p-value: tampilkan <,001 jika sangat kecil."""
         if v is None or (isinstance(v, float) and np.isnan(v)):
             return "—"
         if v < 0.001:
-            return "<,001"
-        return f"{v:.3f}".replace(".", ",")
+            return "<,001"   # ← pakai koma seperti SPSS Indonesia
+        return f"{v:.3f}".replace(".", ",")  # ← ganti titik ke koma
  
     def _fmt_stat(v):
         if v is None or (isinstance(v, float) and np.isnan(v)):
