@@ -1294,121 +1294,202 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
 
 
 
-# ============================================================
-# PASTE INI ke app.py — ganti SIDEBAR_CSS + with st.sidebar:
-# Letakkan setelah baris: st.session_state["app_list"] = load_app_list(...)
-# ============================================================
-
 SIDEBAR_CSS = """<style>
-[data-testid="stSidebar"]{background:#fff!important;border-right:1px solid #ececf0!important}
-[data-testid="stSidebar"]>div:first-child{padding:0!important}
-section[data-testid="stSidebar"]>div:first-child{height:100vh;display:flex;flex-direction:column}
-[data-testid="stSidebar"] .block-container{padding:0!important}
-[data-testid="stSidebar"] .stVerticalBlock{gap:0!important}
-[data-testid="stSidebar"] div[data-testid="element-container"]{margin-bottom:0!important}
-
-/* RESET TOTAL tombol sidebar - ini yang bikin besar & merah */
-[data-testid="stSidebar"] .stButton>button{
-    all:unset!important;
-    display:block!important;box-sizing:border-box!important;
-    width:calc(100% - 16px)!important;margin:1px 8px!important;
-    padding:7px 14px!important;border-radius:7px!important;
-    font-size:13px!important;font-weight:500!important;color:#4b5563!important;
-    cursor:pointer!important;text-align:left!important;background:transparent!important;
-    line-height:1.5!important;font-family:inherit!important;
+ 
+/* ── BASE ── */
+[data-testid="stSidebar"] {
+    background: #f8f9fc !important;
+    border-right: 1px solid #eaecf0 !important;
+    min-width: 220px !important;
+    max-width: 260px !important;
 }
-[data-testid="stSidebar"] .stButton>button:hover{
-    background:#f0eeff!important;color:#4f46e5!important;
+[data-testid="stSidebar"] > div:first-child { padding: 0 !important; }
+section[data-testid="stSidebar"] > div:first-child {
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
 }
-
-/* Tombol LOGOUT - override spesifik via key */
-div[data-testid="stSidebar"] div:has(button[data-testid="btn_logout"]) button,
-div[data-testid="stSidebar"] .btn-logout button{
-    background:#6366f1!important;color:white!important;
-    text-align:center!important;font-weight:600!important;
+[data-testid="stSidebar"] .block-container { padding: 0 !important; }
+[data-testid="stSidebar"] .stVerticalBlock { gap: 0 !important; }
+[data-testid="stSidebar"] div[data-testid="element-container"] {
+    margin: 0 !important; padding: 0 !important;
 }
-
-/* Selectbox */
-[data-testid="stSidebar"] [data-baseweb="select"]>div{
-    background:#f5f6fa!important;border:1px solid #e4e6ed!important;
-    border-radius:8px!important;font-size:13px!important;min-height:34px!important;
+ 
+/* ── RESET SEMUA TOMBOL ── */
+[data-testid="stSidebar"] .stButton > button {
+    all: unset !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    padding: 7px 18px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    color: #6b7280 !important;
+    cursor: pointer !important;
+    background: transparent !important;
+    font-family: inherit !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0 !important;
+    border-radius: 0 !important;
+    transition: color 0.12s, background 0.12s !important;
 }
-section[data-testid="stSidebar"] .stSelectbox{padding:0 10px!important;margin:0 0 3px!important}
-
-/* Number input */
-[data-testid="stSidebar"] [data-testid="stNumberInput"] input{
-    background:#f5f6fa!important;border:1px solid #e4e6ed!important;
-    border-radius:8px!important;font-size:13px!important;padding:5px 10px!important;
+[data-testid="stSidebar"] .stButton > button:hover {
+    color: #111827 !important;
+    background: #f0f2f7 !important;
 }
-section[data-testid="stSidebar"] .stNumberInput{padding:0 10px!important;margin:0!important}
-
-/* Expander */
-[data-testid="stSidebar"] details{
-    background:#f5f6fa!important;border:1px solid #e4e6ed!important;
-    border-radius:8px!important;margin:2px 10px!important;
+ 
+/* ── SELECTBOX ── */
+[data-testid="stSidebar"] [data-baseweb="select"] > div {
+    background: #eef0f5 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 12.5px !important;
+    color: #374151 !important;
+    min-height: 32px !important;
 }
-[data-testid="stSidebar"] details summary{
-    font-size:12px!important;color:#4b5563!important;padding:7px 12px!important;
+section[data-testid="stSidebar"] .stSelectbox {
+    padding: 0 14px !important; margin: 0 0 2px !important;
 }
-
-/* Label */
-[data-testid="stSidebar"] label[data-testid="stWidgetLabel"] p{
-    font-size:10px!important;font-weight:700!important;
-    color:#9ca3af!important;text-transform:uppercase!important;letter-spacing:1px!important;
+ 
+/* ── NUMBER INPUT ── */
+[data-testid="stSidebar"] [data-testid="stNumberInput"] input {
+    background: #eef0f5 !important; border: none !important;
+    border-radius: 8px !important; font-size: 12.5px !important;
+    color: #374151 !important;
 }
-
-[data-testid="stSidebar"] hr{
-    border:none!important;border-top:1px solid #f0f0f4!important;margin:4px 0!important;
+[data-testid="stSidebar"] [data-testid="stNumberInput"] > div {
+    background: #eef0f5 !important; border: none !important; border-radius: 8px !important;
 }
-
-.sb-brand{padding:18px 16px 12px;text-align:center;border-bottom:1px solid #f0f0f4}
-.sb-brand-title{font-size:20px;font-weight:800;color:#6366f1;letter-spacing:-.3px;margin-bottom:2px}
-.sb-brand-sub{font-size:8px;font-weight:700;color:#c0c4d0;text-transform:uppercase;letter-spacing:2px}
-.sb-label{font-size:9px;font-weight:800;color:#b8bcc8;text-transform:uppercase;
-    letter-spacing:1.5px;padding:10px 18px 3px;display:block;margin:0}
-
-.sb-app-card{
-    margin:5px 10px 2px;padding:9px 12px;
-    background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:10px;color:white;
+section[data-testid="stSidebar"] .stNumberInput {
+    padding: 0 14px !important; margin: 0 0 2px !important;
 }
-.sb-app-eyebrow{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:2px}
-.sb-app-name{font-size:13px;font-weight:700;margin-bottom:1px}
-.sb-app-meta{font-size:9px;opacity:.65}
-
-.sb-user{
-    margin:4px 10px 5px;padding:8px 11px;background:#f5f6fa;
-    border:1px solid #e4e6ed;border-radius:8px;display:flex;align-items:center;gap:8px;
+ 
+/* ── EXPANDER ── */
+[data-testid="stSidebar"] details {
+    background: transparent !important; border: none !important;
+    border-radius: 0 !important; margin: 0 !important; box-shadow: none !important;
 }
-.sb-av{
-    width:26px;height:26px;border-radius:50%;
-    background:linear-gradient(135deg,#6366f1,#8b5cf6);
-    color:white;font-size:10px;font-weight:800;
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+[data-testid="stSidebar"] details summary {
+    font-size: 12.5px !important; font-weight: 400 !important;
+    color: #6b7280 !important; padding: 7px 18px !important;
 }
-.sb-uname{font-size:11px;font-weight:600;color:#1e293b;line-height:1.3}
-.sb-urole{font-size:9px;color:#9ca3af}
+[data-testid="stSidebar"] details summary:hover {
+    color: #111827 !important; background: #f0f2f7 !important;
+}
+[data-testid="stSidebar"] details[open] summary {
+    color: #111827 !important; font-weight: 500 !important;
+}
+[data-testid="stSidebar"] details > div { padding: 0 !important; }
+ 
+/* ── LABEL ── */
+[data-testid="stSidebar"] label[data-testid="stWidgetLabel"] p {
+    font-size: 10px !important; font-weight: 700 !important;
+    color: #9ca3af !important; text-transform: uppercase !important; letter-spacing: 1px !important;
+}
+ 
+/* ── HR ── */
+[data-testid="stSidebar"] hr {
+    border: none !important; border-top: 1px solid #e5e7eb !important; margin: 6px 0 !important;
+}
+ 
+/* ── CUSTOM CLASSES ── */
+ 
+/* User profile card */
+.sb-profile {
+    padding: 16px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #eaecf0;
+    margin-bottom: 2px;
+}
+.sb-av {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sb-uname { font-size: 12.5px; font-weight: 600; color: #111827; line-height: 1.3; }
+.sb-urole { font-size: 10px; color: #9ca3af; margin-top: 1px; }
+ 
+/* Section label */
+.sb-label {
+    font-size: 9px; font-weight: 700; color: #b0b8c8;
+    text-transform: uppercase; letter-spacing: 1.8px;
+    padding: 12px 18px 3px; display: block; margin: 0;
+}
+ 
+/* Nav item — active bar di kiri */
+.sb-nav-active {
+    display: block; width: 3px; height: 16px;
+    background: #6366f1; border-radius: 2px;
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+}
+ 
+/* App info card di bawah nav */
+.sb-app-card {
+    margin: 8px 14px 4px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    border-radius: 10px; color: white;
+}
+.sb-app-eyebrow {
+    font-size: 8px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; opacity: 0.7; margin-bottom: 2px;
+}
+.sb-app-name { font-size: 13px; font-weight: 700; }
+.sb-app-meta { font-size: 9px; opacity: 0.65; margin-top: 1px; }
+ 
+/* CTA Button bawah */
+.sb-cta {
+    margin: 6px 14px 10px;
+    padding: 9px;
+    background: #6366f1;
+    color: white; font-size: 12px; font-weight: 600;
+    border-radius: 8px; text-align: center; cursor: pointer;
+    border: none; width: calc(100% - 28px);
+}
+.sb-cta-danger {
+    margin: 3px 14px;
+    padding: 8px;
+    background: transparent;
+    color: #ef4444; font-size: 11.5px; font-weight: 500;
+    border-radius: 8px; text-align: center; cursor: pointer;
+    border: 1px solid #fecaca; width: calc(100% - 28px);
+}
+ 
 </style>"""
-
-
+ 
+ 
+# ================================================================
+# INISIALISASI SESSION STATE
+# ================================================================
 if "menu" not in st.session_state:
     st.session_state["menu"] = "Home"
-
+ 
+ 
+# ================================================================
+# SIDEBAR BLOCK
+# ================================================================
 with st.sidebar:
     st.markdown(SIDEBAR_CSS, unsafe_allow_html=True)
-
-    # ── BRANDING ──
-    st.markdown("""
-    <div class="sb-brand">
-        <div class="sb-brand-title">UX Analytics</div>
-        <div class="sb-brand-sub">Universitas Islam Indonesia</div>
+ 
+    # ── 1. USER PROFILE ──
+    initials = current_user[:2].upper() if current_user else "UX"
+    st.markdown(f"""
+    <div class="sb-profile">
+        <div class="sb-av">{initials}</div>
+        <div>
+            <div class="sb-uname">{current_user}</div>
+            <div class="sb-urole">UX Researcher · UII</div>
+        </div>
     </div>""", unsafe_allow_html=True)
-
-    # ── RESEARCH OBJECT ──
+ 
+    # ── 2. RESEARCH OBJECT ──
     st.markdown('<span class="sb-label">Research Object</span>', unsafe_allow_html=True)
     app = st.selectbox("app", st.session_state.app_list,
                        label_visibility="collapsed", key="app_select")
-
-    with st.expander("Manage Applications", expanded=False):
+ 
+    with st.expander("⊕  Manage Applications", expanded=False):
         if st.session_state.get("app_added"):
             st.success(f"✓ '{st.session_state.app_added}' ditambahkan!")
             st.session_state["app_added"] = None
@@ -1417,7 +1498,7 @@ with st.sidebar:
             st.session_state["app_deleted"] = None
         if "input_key" not in st.session_state:
             st.session_state["input_key"] = 0
-        new_app = st.text_input("Nama baru", placeholder="Contoh: Facebook",
+        new_app = st.text_input("Nama baru", placeholder="e.g. Facebook",
                                 key=f"new_app_input_{st.session_state['input_key']}")
         if st.button("Tambah", use_container_width=True, key="btn_add_app"):
             if new_app and new_app.strip() not in st.session_state.app_list:
@@ -1437,84 +1518,92 @@ with st.sidebar:
                 save_app_list(current_user, st.session_state.app_list)
                 st.session_state["app_deleted"] = app_del
                 st.rerun()
-
-    # ── MAIN NAV ──
+ 
+    # ── 3. MAIN NAVIGATION ──
     st.markdown('<span class="sb-label">Main</span>', unsafe_allow_html=True)
-
+ 
     current_menu = st.session_state.get("menu", "Home")
-
+ 
     MENU_ITEMS = [
         "Home", "Overview", "Time on Task",
         "Error Rate", "UEQ Analysis", "Preferensi Responden"
     ]
+ 
     for item in MENU_ITEMS:
         is_active = current_menu == item
-        prefix = "● " if is_active else "○ "
-        # Inject active style khusus untuk tombol ini
+        # Active state: inject CSS untuk tombol ini saja
         if is_active:
             st.markdown(f"""<style>
-            [data-testid="stSidebar"] button[kind="secondary"]:focus-visible{{outline:none}}
             div[data-testid="stSidebar"] div[data-testid="element-container"]:has(button[key="nav_{item}"])
-            button{{background:#ede9fe!important;color:#4f46e5!important;font-weight:700!important}}
+            button {{
+                color: #4f46e5 !important;
+                font-weight: 600 !important;
+                background: #eef0ff !important;
+                border-left: 3px solid #6366f1 !important;
+                padding-left: 15px !important;
+            }}
             </style>""", unsafe_allow_html=True)
-        if st.button(f"{prefix}{item}", key=f"nav_{item}", use_container_width=True):
+        if st.button(item, key=f"nav_{item}", use_container_width=True):
             st.session_state["menu"] = item
             st.rerun()
-
-    # ── SETTINGS ──
-    st.markdown('<span class="sb-label">Settings</span>', unsafe_allow_html=True)
-    s_prefix = "● " if current_menu == "Settings" else "○ "
+ 
+    # ── 4. SETTINGS ──
+    st.markdown('<span class="sb-label">System</span>', unsafe_allow_html=True)
     if current_menu == "Settings":
         st.markdown("""<style>
         div[data-testid="stSidebar"] div[data-testid="element-container"]:has(button[key="nav_settings"])
-        button{background:#ede9fe!important;color:#4f46e5!important;font-weight:700!important}
+        button {
+            color: #4f46e5 !important; font-weight: 600 !important;
+            background: #eef0ff !important; border-left: 3px solid #6366f1 !important;
+            padding-left: 15px !important;
+        }
         </style>""", unsafe_allow_html=True)
-    if st.button(f"{s_prefix}Settings", key="nav_settings", use_container_width=True):
+    if st.button("Settings", key="nav_settings", use_container_width=True):
         st.session_state["menu"] = "Settings"
         st.rerun()
-
-    # ── STUDY PARAMETERS ──
+ 
+    # ── 5. STUDY PARAMETERS ──
     st.markdown('<span class="sb-label">Study Parameters</span>', unsafe_allow_html=True)
     n = st.number_input("N", min_value=1, max_value=100, value=25,
                         label_visibility="collapsed", key="sample_n")
-
-    # ── APP CARD ──
+ 
+    # ── 6. ACTIVE APP CARD ──
     st.markdown(f"""
     <div class="sb-app-card">
         <div class="sb-app-eyebrow">Active Study</div>
         <div class="sb-app-name">{app if app else "—"}</div>
-        <div class="sb-app-meta">N = {n} · 3 tugas per mode</div>
+        <div class="sb-app-meta">N = {n} responden · 3 tasks</div>
     </div>""", unsafe_allow_html=True)
-
-    st.markdown("<div style='flex-grow:1;min-height:8px'></div>", unsafe_allow_html=True)
+ 
+    # ── SPACER ──
+    st.markdown("<div style='flex-grow:1;min-height:12px'></div>", unsafe_allow_html=True)
     st.markdown("---")
-
-    # ── USER BADGE ──
-    initials = current_user[:2].upper() if current_user else "UX"
-    st.markdown(f"""
-    <div class="sb-user">
-        <div class="sb-av">{initials}</div>
-        <div>
-            <div class="sb-uname">{current_user}</div>
-            <div class="sb-urole">Researcher</div>
-        </div>
-    </div>""", unsafe_allow_html=True)
-
-    # ── RESET & LOGOUT ──
-    # Pakai st.button biasa — CSS sudah di-reset total, jadi tidak akan merah
-    if st.button("Reset Semua Data", use_container_width=True, key="btn_reset_split"):
-        st.session_state["show_reset_confirm"] = True
-    # Inject warna logout manual
+ 
+    # ── 7. CTA: LOGOUT & RESET ──
+    # Inject style untuk dua tombol ini
     st.markdown("""<style>
-    div[data-testid="stSidebar"] div[data-testid="element-container"]:has(button[key="btn_logout"])
-    button{background:#6366f1!important;color:white!important;text-align:center!important;font-weight:600!important}
-    div[data-testid="stSidebar"] div[data-testid="element-container"]:has(button[key="btn_reset_split"])
-    button{color:#ef4444!important;border:1px solid #fecaca!important}
+    div[data-testid="stSidebar"] div[data-testid="element-container"]:has(button[key="btn_logout"]) button {
+        background: #6366f1 !important; color: white !important;
+        font-weight: 600 !important; justify-content: center !important;
+        border-radius: 8px !important; margin: 4px 14px !important;
+        width: calc(100% - 28px) !important; padding: 8px !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="element-container"]:has(button[key="btn_reset_split"]) button {
+        background: transparent !important; color: #ef4444 !important;
+        font-weight: 500 !important; justify-content: center !important;
+        border: 1px solid #fecaca !important; border-radius: 8px !important;
+        margin: 2px 14px 8px !important; width: calc(100% - 28px) !important;
+        padding: 7px !important;
+    }
     </style>""", unsafe_allow_html=True)
+ 
     if st.button("Logout", use_container_width=True, key="btn_logout"):
         st.session_state["show_logout_confirm"] = True
-
-# WAJIB setelah sidebar:
+    if st.button("Reset Semua Data", use_container_width=True, key="btn_reset_split"):
+        st.session_state["show_reset_confirm"] = True
+ 
+ 
+# WAJIB setelah sidebar
 menu = st.session_state.get("menu", "Home")
 
 @st.dialog("Konfirmasi Reset Data")
