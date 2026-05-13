@@ -1404,7 +1404,7 @@ if "confirm_delete_app" not in st.session_state:
     st.session_state.confirm_delete_app = None
 if "input_key" not in st.session_state:
     st.session_state.input_key = 0
-    
+
 with st.sidebar:
 
     # Branding Header
@@ -1425,148 +1425,169 @@ with st.sidebar:
     # ── MANAGE APPLICATIONS PANEL ──
     _dot_colors = ["#6366f1","#8b5cf6","#a78bfa","#818cf8","#c4b5fd"]
     _n_apps = len(st.session_state.app_list)
-    _arrow = "▲" if st.session_state.mgr_open else "▼"
 
-    # ── Tombol toggle (invisible di atas HTML) ──
-    st.markdown(f"""
-    <div style="position:relative;margin-bottom:6px;">
-      <div style="
-        display:flex;align-items:center;justify-content:space-between;
-        padding:10px 13px;
-        background:#18181f;
-        border:0.5px solid {'#6366f1' if st.session_state.mgr_open else '#2a2a3d'};
-        border-radius:11px;
-        pointer-events:none;
-      ">
-        <div style="display:flex;align-items:center;gap:9px;">
-          <div style="width:26px;height:26px;border-radius:7px;background:rgba(99,102,241,0.15);
-            display:flex;align-items:center;justify-content:center;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="7" height="7" rx="1"/>
-              <rect x="14" y="3" width="7" height="7" rx="1"/>
-              <rect x="3" y="14" width="7" height="7" rx="1"/>
-              <rect x="14" y="14" width="7" height="7" rx="1"/>
-            </svg>
-          </div>
-          <div>
-            <div style="font-size:12px;font-weight:600;color:#c7c7e0;">Manage applications</div>
-            <div style="font-size:10px;color:#4b4b6b;">{_n_apps} object{"s" if _n_apps != 1 else ""} aktif</div>
-          </div>
-        </div>
-        <span style="font-size:10px;color:#4b4b6b;">{_arrow}</span>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
-
+    # CSS untuk panel ini
     st.markdown("""
     <style>
-    section[data-testid="stSidebar"] div[data-testid="stButton"]:has(button[key="mgr_toggle_btn"]) button {
-        position:absolute !important;
-        top:-44px !important;
-        left:0 !important;
-        width:100% !important;
-        height:44px !important;
-        opacity:0 !important;
-        cursor:pointer !important;
-        z-index:999 !important;
+    /* Sembunyikan tombol toggle tapi tetap clickable */
+    section[data-testid="stSidebar"] div[data-testid="stButton"]:has(> button[kind="secondary"][data-testid="baseButton-secondary"]:nth-child(1)) {
+        margin-top: -52px !important;
+        opacity: 0 !important;
+        height: 44px !important;
+    }
+    /* Tombol ＋ */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("＋")) {
+        background:#6366f1 !important;color:#fff !important;
+        border:none !important;border-radius:9px !important;
+        font-size:18px !important;min-height:38px !important;
+        padding:0 !important;line-height:1 !important;
+    }
+    /* Tombol ✕ */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("✕")) {
+        background:transparent !important;
+        border:0.5px solid #2a2a3d !important;
+        color:#4b4b6b !important;border-radius:8px !important;
+        min-height:36px !important;font-size:12px !important;
+    }
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("✕")):hover {
+        background:rgba(239,68,68,0.1) !important;
+        color:#ef4444 !important;border-color:rgba(239,68,68,0.3) !important;
+    }
+    /* Batal */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-secondary"]:has(div p:contains("Batal")) {
+        background:#1e1e2e !important;color:#94a3b8 !important;
+        border:0.5px solid #2a2a3d !important;border-radius:9px !important;
+        font-size:11px !important;
+    }
+    /* Hapus confirm */
+    section[data-testid="stSidebar"] button[data-testid="baseButton-primary"] {
+        background:#ef4444 !important;border:none !important;
+        border-radius:9px !important;font-size:11px !important;font-weight:600 !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    if st.button("_", key="mgr_toggle_btn", use_container_width=True):
+    # Render tombol toggle HTML
+    _arrow = "▲" if st.session_state.mgr_open else "▼"
+    _border_color = "#6366f1" if st.session_state.mgr_open else "#2a2a3d"
+    st.markdown(f"""
+    <div style="
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 13px;
+      background:#18181f;
+      border:0.5px solid {_border_color};
+      border-radius:11px;
+      margin-bottom:2px;
+      pointer-events:none;
+    ">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div style="width:26px;height:26px;border-radius:7px;
+          background:rgba(99,102,241,0.15);
+          display:flex;align-items:center;justify-content:center;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+            stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#c7c7e0;">Manage applications</div>
+          <div style="font-size:10px;color:#4b4b6b;">{_n_apps} object{"s" if _n_apps != 1 else ""} aktif</div>
+        </div>
+      </div>
+      <span style="font-size:10px;color:#4b4b6b;">{_arrow}</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Tombol invisible tepat di atas HTML (margin negatif via CSS)
+    if st.button("toggle_mgr", key="mgr_toggle_btn",
+                 use_container_width=True, label_visibility="hidden"):
         st.session_state.mgr_open = not st.session_state.mgr_open
         st.session_state.confirm_delete_app = None
         st.rerun()
 
-    # ── PANEL ──
+    # ── PANEL KONTEN ──
     if st.session_state.mgr_open:
 
-        # Notifikasi
+        # Notifikasi add
         if st.session_state.get("app_added"):
             st.markdown(f"""
             <div style="background:rgba(16,185,129,0.1);border:0.5px solid rgba(16,185,129,0.3);
-              border-radius:9px;padding:8px 12px;font-size:11px;color:#6ee7b7;margin-bottom:6px;">
+              border-radius:9px;padding:8px 12px;font-size:11px;color:#6ee7b7;margin-bottom:4px;">
               ✓ &nbsp;<b>'{st.session_state.app_added}'</b> ditambahkan
             </div>""", unsafe_allow_html=True)
             st.session_state["app_added"] = None
 
+        # Notifikasi delete
         if st.session_state.get("app_deleted"):
             st.markdown(f"""
             <div style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.25);
-              border-radius:9px;padding:8px 12px;font-size:11px;color:#fca5a5;margin-bottom:6px;">
+              border-radius:9px;padding:8px 12px;font-size:11px;color:#fca5a5;margin-bottom:4px;">
               ✓ &nbsp;<b>'{st.session_state.app_deleted}'</b> dihapus
             </div>""", unsafe_allow_html=True)
             st.session_state["app_deleted"] = None
 
-        # Panel container
+        # Wrapper panel
         st.markdown("""
-        <div style="background:#18181f;border:0.5px solid #2a2a3d;border-radius:13px;
-          overflow:hidden;margin-bottom:8px;">
-        """, unsafe_allow_html=True)
-
-        # ── ADD SECTION ──
-        st.markdown("""
-        <div style="padding:12px 12px 4px;border-bottom:0.5px solid #1e1e2e;">
-          <div style="font-size:9px;font-weight:700;color:#4b4b6b;text-transform:uppercase;
-            letter-spacing:1px;margin-bottom:8px;">Add new object</div>
+        <div style="background:#18181f;border:0.5px solid #2a2a3d;
+          border-radius:13px;padding:14px 12px;margin-bottom:8px;">
+          <div style="font-size:9px;font-weight:700;color:#4b4b6b;
+            text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+            Add new object
+          </div>
         </div>
         """, unsafe_allow_html=True)
 
-        col_inp, col_plus = st.columns([5, 1])
-        with col_inp:
+        # Input + tombol add dalam kolom
+        c_in, c_add = st.columns([5, 1])
+        with c_in:
             new_app = st.text_input(
-                "", placeholder="e.g. Instagram…",
+                "add_input", placeholder="e.g. Instagram…",
                 key=f"new_app_input_{st.session_state.input_key}",
                 label_visibility="collapsed"
             )
-        with col_plus:
-            st.markdown("<div style='margin-top:2px;'>", unsafe_allow_html=True)
-            add_clicked = st.button("＋", key="btn_add_app",
-                                    use_container_width=True, help="Tambah")
-            st.markdown("</div>", unsafe_allow_html=True)
+        with c_add:
+            if st.button("＋", key="btn_add_app", use_container_width=True):
+                nama = (new_app or "").strip()
+                if nama and nama not in st.session_state.app_list:
+                    st.session_state.app_list.append(nama)
+                    save_app_list(current_user, st.session_state.app_list)
+                    st.session_state["app_added"] = nama
+                    st.session_state.input_key += 1
+                    st.rerun()
+                elif nama in st.session_state.app_list:
+                    st.error("Sudah ada!")
 
-        if add_clicked:
-            nama = (new_app or "").strip()
-            if nama and nama not in st.session_state.app_list:
-                st.session_state.app_list.append(nama)
-                save_app_list(current_user, st.session_state.app_list)
-                st.session_state["app_added"] = nama
-                st.session_state.input_key += 1
-                st.rerun()
-            elif nama in st.session_state.app_list:
-                st.error("Aplikasi sudah ada!")
-
-        # ── LIST SECTION ──
+        # Daftar apps
         if st.session_state.app_list:
             st.markdown("""
-            <div style="padding:10px 12px 4px;">
-              <div style="font-size:9px;font-weight:700;color:#4b4b6b;text-transform:uppercase;
-                letter-spacing:1px;margin-bottom:6px;">Active objects</div>
-            </div>
+            <div style="font-size:9px;font-weight:700;color:#4b4b6b;
+              text-transform:uppercase;letter-spacing:1px;
+              margin:10px 0 6px;">Active objects</div>
             """, unsafe_allow_html=True)
 
             for i, app_name in enumerate(st.session_state.app_list):
                 dot = _dot_colors[i % len(_dot_colors)]
 
                 if st.session_state.confirm_delete_app == app_name:
-                    # Confirm row
                     st.markdown(f"""
-                    <div style="margin:0 12px 5px;padding:9px 12px;
-                      border-radius:9px;background:rgba(239,68,68,0.06);
-                      border:0.5px solid rgba(239,68,68,0.25);">
+                    <div style="padding:9px 12px;border-radius:9px;
+                      background:rgba(239,68,68,0.06);
+                      border:0.5px solid rgba(239,68,68,0.25);margin-bottom:5px;">
                       <span style="font-size:11px;color:#fca5a5;">
                         Hapus <b>{app_name}</b>?
                       </span>
                     </div>""", unsafe_allow_html=True)
-                    c1, c2 = st.columns(2)
-                    with c1:
-                        if st.button("Batal", key=f"cancel_{i}_{app_name}",
+                    cb, ch = st.columns(2)
+                    with cb:
+                        if st.button("Batal", key=f"batal_{i}_{app_name}",
                                      use_container_width=True):
                             st.session_state.confirm_delete_app = None
                             st.rerun()
-                    with c2:
-                        if st.button("Hapus", key=f"confirm_{i}_{app_name}",
+                    with ch:
+                        if st.button("Hapus", key=f"hapus_{i}_{app_name}",
                                      use_container_width=True, type="primary"):
                             st.session_state.app_list.remove(app_name)
                             save_app_list(current_user, st.session_state.app_list)
@@ -1574,11 +1595,11 @@ with st.sidebar:
                             st.session_state.confirm_delete_app = None
                             st.rerun()
                 else:
-                    col_name, col_del = st.columns([5, 1])
-                    with col_name:
+                    cn, cd = st.columns([5, 1])
+                    with cn:
                         st.markdown(f"""
-                        <div style="margin:0 0 4px 12px;padding:8px 10px;border-radius:9px;
-                          background:#13131a;border:0.5px solid transparent;
+                        <div style="padding:8px 10px;border-radius:9px;
+                          background:#13131a;margin-bottom:4px;
                           display:flex;align-items:center;gap:8px;">
                           <div style="width:6px;height:6px;border-radius:50%;
                             background:{dot};flex-shrink:0;"></div>
@@ -1586,10 +1607,9 @@ with st.sidebar:
                             {app_name}
                           </span>
                         </div>""", unsafe_allow_html=True)
-                    with col_del:
-                        if st.button("✕", key=f"del_{i}_{app_name}",
-                                     use_container_width=True,
-                                     help=f"Hapus {app_name}"):
+                    with cd:
+                        if st.button("✕", key=f"x_{i}_{app_name}",
+                                     use_container_width=True):
                             st.session_state.confirm_delete_app = app_name
                             st.rerun()
 
