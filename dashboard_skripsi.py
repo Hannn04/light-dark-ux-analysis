@@ -955,7 +955,37 @@ st.markdown("""
 [data-testid="stSidebar"] .sidebar-title {
     color: {text_sidebar} !important;
 }
+
+.sidebar-branding::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(79,70,229,0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
             
+.sidebar-branding:hover::before {
+    opacity: 1;
+}
+
+.sidebar-branding h1 {
+    font-size: 28px !important;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 4px 0 !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.5px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
 /* Header di Sidebar */
 .sidebar-branding {
     background: rgba(255,255,255,0.08);
@@ -968,6 +998,19 @@ st.markdown("""
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+}
+            
+.sidebar-branding p {
+    font-size: 11px !important;
+    color: var(--text-subtle) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    text-align: center;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
 }
 
 .sidebar-title {
@@ -983,13 +1026,19 @@ st.markdown("""
 
 /* Kategori Menu */
 .menu-label {
-    font-weight: 700;
-    font-size: 8px;
-    color: #94a3b8;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    color: rgba(148, 163, 184, 0.8) !important;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 4px !important;
-    margin-top: 6px !important;
+    letter-spacing: 1.5px;
+    margin: 24px 0 12px 20px !important;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    position: relative;
+    transition: all 0.3s ease;
+    display: inline-block;
 }
 
 /* Tombol Reset Minimalis */
