@@ -1040,6 +1040,12 @@ st.markdown("""
     transition: all 0.3s ease;
     display: inline-block;
 }
+            
+.menu-label:hover {
+    background: rgba(99,102,241,0.15);
+    color: #a78bfa !important;
+    transform: translateX(4px);
+}
 
 /* Tombol Reset Minimalis */
 .stButton > button {
@@ -1279,6 +1285,224 @@ section[data-testid="stSidebar"] [data-baseweb="select"],
 section[data-testid="stSidebar"] [data-baseweb="select"] *,
 section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
+}
+            
+section[data-testid="stSidebar"] [data-baseweb="select"] {
+    background: rgba(255,255,255,0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 16px !important;
+    margin: 8px 16px !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden;
+    position: relative;
+}
+            
+section[data-testid="stSidebar"] [data-baseweb="select"]:hover {
+    background: rgba(255,255,255,0.12) !important;
+    border-color: rgba(99,102,241,0.4) !important;
+    transform: translateX(4px) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99,102,241,0.15);
+}
+
+section[data-testid="stSidebar"] [data-baseweb="select"] > div > div {
+    color: var(--text-main) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+/* SELECTBOX DROPDOWN */
+section[data-testid="stSidebar"] [role="listbox"] {
+    background: rgba(30, 41, 59, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(99,102,241,0.3) !important;
+    border-radius: 12px !important;
+    margin-top: 4px !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* INPUT FIELDS */
+section[data-testid="stSidebar"] .stTextInput > div > div > input {
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 12px !important;
+    color: var(--text-main) !important;
+    padding: 12px 16px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+    transform: translateY(-1px);
+}
+
+/* EXPANDER ANIMATED */
+section[data-testid="stSidebar"] details {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    border-radius: 16px !important;
+    margin: 12px 16px !important;
+    overflow: hidden;
+    transition: all 0.3s ease !important;
+}
+
+section[data-testid="stSidebar"] details:hover {
+    border-color: rgba(99,102,241,0.3) !important;
+    box-shadow: 0 8px 25px rgba(99,102,241,0.1);
+}
+
+section[data-testid="stSidebar"] summary {
+    padding: 16px !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+    border-radius: 16px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+section[data-testid="stSidebar"] summary:hover {
+    background: rgba(99,102,241,0.1) !important;
+    color: #a78bfa !important;
+}
+
+/* BUTTONS - GLASSMORPHISM + NEOMORPHISM */
+section[data-testid="stSidebar"] button {
+    background: rgba(255,255,255,0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 14px !important;
+    color: var(--text-main) !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    letter-spacing: 0.5px !important;
+    padding: 12px 20px !important;
+    margin: 8px 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+}
+
+section[data-testid="stSidebar"] button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+section[data-testid="stSidebar"] button:hover::before {
+    left: 100%;
+}
+
+section[data-testid="stSidebar"] button:hover {
+    transform: translateX(4px) translateY(-2px) !important;
+    box-shadow: 0 12px 32px rgba(99,102,241,0.25) !important;
+    border-color: rgba(99,102,241,0.4) !important;
+}
+
+/* PRIMARY BUTTON */
+section[data-testid="stSidebar"] button[kind="primary"] {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #3730a3 100%) !important;
+    border-color: rgba(99,102,241,0.3) !important;
+    box-shadow: 0 8px 25px rgba(99,102,241,0.3) !important;
+}
+
+section[data-testid="stSidebar"] button[kind="primary"]:hover {
+    box-shadow: 0 12px 35px rgba(99,102,241,0.4) !important;
+    transform: translateX(4px) translateY(-3px) scale(1.02) !important;
+}
+
+/* RESET BUTTON */
+section[data-testid="stSidebar"] button[kind="secondary"] {
+    background: rgba(239,68,68,0.1) !important;
+    border-color: rgba(239,68,68,0.3) !important;
+    color: #ef4444 !important;
+}
+
+section[data-testid="stSidebar"] button[kind="secondary"]:hover {
+    background: rgba(239,68,68,0.2) !important;
+    box-shadow: 0 8px 25px rgba(239,68,68,0.25) !important;
+}
+
+/* INFO CARD */
+.sidebar-info {
+    background: rgba(99,102,241,0.15) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(99,102,241,0.3) !important;
+    border-radius: 16px !important;
+    margin: 20px 16px !important;
+    padding: 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.sidebar-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(99,102,241,0.2);
+}
+
+/* USER STATUS */
+.user-status {
+    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(34,197,94,0.1)) !important;
+    border: 1px solid rgba(16,185,129,0.3) !important;
+    color: #10b981 !important;
+    font-weight: 700 !important;
+}
+
+/* SCROLLBAR CUSTOM */
+section[data-testid="stSidebar"]::-webkit-scrollbar {
+    width: 6px;
+}
+
+section[data-testid="stSidebar"]::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+section[data-testid="stSidebar"]::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border-radius: 10px;
+}
+
+section[data-testid="stSidebar"]::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #4f46e5, #3730a3);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .sidebar-branding {
+        margin: 12px;
+        padding: 20px 16px;
+    }
+    
+    section[data-testid="stSidebar"] [data-baseweb="select"] {
+        margin: 6px 12px !important;
+    }
+    
+    section[data-testid="stSidebar"] button {
+        margin: 6px 12px !important;
+    }
+}
+
+/* SHIMMER EFFECT ON LOAD */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.sidebar-shimmer {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.1) 50%, 
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
 }
 
 </style>
