@@ -939,6 +939,97 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Reset Font */
+html, body, [class*="st-"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar Styling */
+[data-testid="stSidebar"] {
+    background-color: #ffffff !important;
+    border-right: 1px solid #f1f5f9 !important;
+}
+
+/* Header Branding - Tanpa Icon */
+.nav-header {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 1.5rem;
+}
+
+.brand-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.brand-subtitle {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Kategori Navigasi */
+.menu-label {
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    color: #94a3b8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin: 1.5rem 1rem 0.5rem 1rem !important;
+}
+
+/* Custom Styling untuk Selectbox */
+div[data-baseweb="select"] > div {
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    background-color: #f8fafc !important;
+}
+
+/* Status Indicator - Pakai Text Label */
+.status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    margin-bottom: 8px;
+}
+
+/* User Profile Section */
+.user-section {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Button Styling */
+button[kind="primary"] {
+    background-color: #0f172a !important; /* Hitam pekat modern */
+    color: white !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    border: none !important;
+}
+
+button[kind="secondary"] {
+    background-color: #ffffff !important;
+    color: #ef4444 !important;
+    border: 1px solid #fee2e2 !important;
+    border-radius: 6px !important;
+}
+
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
     background-color: {bg_sidebar} !important;
