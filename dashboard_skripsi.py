@@ -941,8 +941,14 @@ st.markdown("""
 
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
-    background-color: {bg_sidebar} !important;
-    border-right: 1px solid {border} !important;
+    background: linear-gradient(180deg, 
+        var(--bg-sidebar-top) 0%, 
+        var(--bg-sidebar-bot) 100%) !important;
+    border-right: 1px solid var(--border-subtle) !important;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.08);
 }
 [data-testid="stSidebar"] .stMarkdown p, 
 [data-testid="stSidebar"] label, 
@@ -952,9 +958,16 @@ st.markdown("""
             
 /* Header di Sidebar */
 .sidebar-branding {
-    padding: 4px 0;
-    margin-bottom: 12px;
-    border-bottom: 2px solid #111827;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 24px 20px;
+    margin: 20px 16px 28px 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .sidebar-title {
@@ -1305,11 +1318,11 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
 with st.sidebar:
 
     # Branding Header
-    st.markdown(f"""
-        <div style="text-align: center; padding: 10px 0 25px 0;">
-            <h1 style='font-size: 24px; color: #6366f1; margin-bottom: 0;'>UX Analytics</h1>
-            <p style='font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;'>Universitas Islam Indonesia</p>
-        </div>
+    st.markdown("""
+    <div class="sidebar-branding">
+        <h1>UX Analytics</h1>
+        <p>Universitas Islam Indonesia</p>
+    </div>
     """, unsafe_allow_html=True)
 
     # --- SECTION 1: RESEARCH OBJECT ---
@@ -1398,11 +1411,11 @@ with st.sidebar:
 
     # Info Card Aktif
     st.markdown(f"""
-        <div style="background-color: #f1f5f9; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px;">
-            <div style="font-size: 9px; color: #6366f1; font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Project Insight</div>
-            <div style="font-size: 13px; font-weight: 700; color: #1e293b;">{app if app else "No App"} Study</div>
-            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Status: <span style="color:#10b981; font-weight:600;">Active Analysis</span></div>
-        </div>
+    <div class="sidebar-info">
+        <div style="font-size: 9px; color: #6366f1; font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Project Insight</div>
+        <div style="font-size: 13px; font-weight: 700; color: #1e293b;">{app if app else "No App"} Study</div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Status: <span style="color:#10b981; font-weight:600;">Active Analysis</span></div>
+    </div>
     """, unsafe_allow_html=True)
 
     # --- SECTION 4: SYSTEM ---
