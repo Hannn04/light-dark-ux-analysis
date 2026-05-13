@@ -22,14 +22,6 @@ from scipy.stats import t as t_dist
 import requests
 from PIL import Image
 
-icon = Image.open("asets/icon.png")  # sesuaikan nama file-nya
-
-st.set_page_config(
-    page_title="UX Research Dashboard",
-    layout="wide",
-    page_icon=icon
-)
-
 # TAMBAHKAN INI setelah from auth import ...
 from db import (
     load_app_list, save_app_list,
@@ -922,7 +914,13 @@ else:
 
     border = "#e5e7eb"
 
+icon = Image.open("assets/icon.png")  # sesuaikan nama file-nya
 
+st.set_page_config(
+    page_title="UX Research Dashboard",
+    layout="wide",
+    page_icon=icon
+)
 
 # ======================
 # CSS MODERN
