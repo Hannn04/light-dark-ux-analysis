@@ -941,76 +941,20 @@ st.markdown("""
 
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
-    background: linear-gradient(180deg, 
-        var(--bg-sidebar-top) 0%, 
-        var(--bg-sidebar-bot) 100%) !important;
-    border-right: 1px solid var(--border-subtle) !important;
-    backdrop-filter: blur(20px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    overflow: hidden;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+    background-color: {bg_sidebar} !important;
+    border-right: 1px solid {border} !important;
 }
 [data-testid="stSidebar"] .stMarkdown p, 
 [data-testid="stSidebar"] label, 
 [data-testid="stSidebar"] .sidebar-title {
     color: {text_sidebar} !important;
 }
-
-.sidebar-branding::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(79,70,229,0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
             
-.sidebar-branding:hover::before {
-    opacity: 1;
-}
-
-.sidebar-branding h1 {
-    font-size: 28px !important;
-    background: linear-gradient(135deg, #6366f1, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 0 0 4px 0 !important;
-    font-weight: 900 !important;
-    letter-spacing: -0.5px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
 /* Header di Sidebar */
 .sidebar-branding {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(16px);
-    border-radius: 20px;
-    padding: 24px 20px;
-    margin: 20px 16px 28px 16px;
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-            
-.sidebar-branding p {
-    font-size: 11px !important;
-    color: var(--text-subtle) !important;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 700 !important;
-    margin: 0 !important;
-    text-align: center;
-    opacity: 0.9;
-    position: relative;
-    z-index: 2;
+    padding: 4px 0;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #111827;
 }
 
 .sidebar-title {
@@ -1026,25 +970,13 @@ st.markdown("""
 
 /* Kategori Menu */
 .menu-label {
-    font-size: 9px !important;
-    font-weight: 800 !important;
-    color: rgba(148, 163, 184, 0.8) !important;
+    font-weight: 700;
+    font-size: 8px;
+    color: #94a3b8;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin: 24px 0 12px 20px !important;
-    padding: 4px 8px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    position: relative;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-            
-.menu-label:hover {
-    background: rgba(99,102,241,0.15);
-    color: #a78bfa !important;
-    transform: translateX(4px);
+    letter-spacing: 1.2px;
+    margin-bottom: 4px !important;
+    margin-top: 6px !important;
 }
 
 /* Tombol Reset Minimalis */
@@ -1286,224 +1218,6 @@ section[data-testid="stSidebar"] [data-baseweb="select"] *,
 section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
 }
-            
-section[data-testid="stSidebar"] [data-baseweb="select"] {
-    background: rgba(255,255,255,0.08) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    border-radius: 16px !important;
-    margin: 8px 16px !important;
-    padding: 12px 16px !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    overflow: hidden;
-    position: relative;
-}
-            
-section[data-testid="stSidebar"] [data-baseweb="select"]:hover {
-    background: rgba(255,255,255,0.12) !important;
-    border-color: rgba(99,102,241,0.4) !important;
-    transform: translateX(4px) translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99,102,241,0.15);
-}
-
-section[data-testid="stSidebar"] [data-baseweb="select"] > div > div {
-    color: var(--text-main) !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-}
-
-/* SELECTBOX DROPDOWN */
-section[data-testid="stSidebar"] [role="listbox"] {
-    background: rgba(30, 41, 59, 0.95) !important;
-    backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(99,102,241,0.3) !important;
-    border-radius: 12px !important;
-    margin-top: 4px !important;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-/* INPUT FIELDS */
-section[data-testid="stSidebar"] .stTextInput > div > div > input {
-    background: rgba(255,255,255,0.08) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    border-radius: 12px !important;
-    color: var(--text-main) !important;
-    padding: 12px 16px !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-}
-
-section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
-    border-color: #6366f1 !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
-    transform: translateY(-1px);
-}
-
-/* EXPANDER ANIMATED */
-section[data-testid="stSidebar"] details {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    border-radius: 16px !important;
-    margin: 12px 16px !important;
-    overflow: hidden;
-    transition: all 0.3s ease !important;
-}
-
-section[data-testid="stSidebar"] details:hover {
-    border-color: rgba(99,102,241,0.3) !important;
-    box-shadow: 0 8px 25px rgba(99,102,241,0.1);
-}
-
-section[data-testid="stSidebar"] summary {
-    padding: 16px !important;
-    font-weight: 700 !important;
-    color: var(--text-main) !important;
-    border-radius: 16px !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-}
-
-section[data-testid="stSidebar"] summary:hover {
-    background: rgba(99,102,241,0.1) !important;
-    color: #a78bfa !important;
-}
-
-/* BUTTONS - GLASSMORPHISM + NEOMORPHISM */
-section[data-testid="stSidebar"] button {
-    background: rgba(255,255,255,0.08) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    border-radius: 14px !important;
-    color: var(--text-main) !important;
-    font-weight: 700 !important;
-    font-size: 12px !important;
-    letter-spacing: 0.5px !important;
-    padding: 12px 20px !important;
-    margin: 8px 16px !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-}
-
-section[data-testid="stSidebar"] button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-}
-
-section[data-testid="stSidebar"] button:hover::before {
-    left: 100%;
-}
-
-section[data-testid="stSidebar"] button:hover {
-    transform: translateX(4px) translateY(-2px) !important;
-    box-shadow: 0 12px 32px rgba(99,102,241,0.25) !important;
-    border-color: rgba(99,102,241,0.4) !important;
-}
-
-/* PRIMARY BUTTON */
-section[data-testid="stSidebar"] button[kind="primary"] {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #3730a3 100%) !important;
-    border-color: rgba(99,102,241,0.3) !important;
-    box-shadow: 0 8px 25px rgba(99,102,241,0.3) !important;
-}
-
-section[data-testid="stSidebar"] button[kind="primary"]:hover {
-    box-shadow: 0 12px 35px rgba(99,102,241,0.4) !important;
-    transform: translateX(4px) translateY(-3px) scale(1.02) !important;
-}
-
-/* RESET BUTTON */
-section[data-testid="stSidebar"] button[kind="secondary"] {
-    background: rgba(239,68,68,0.1) !important;
-    border-color: rgba(239,68,68,0.3) !important;
-    color: #ef4444 !important;
-}
-
-section[data-testid="stSidebar"] button[kind="secondary"]:hover {
-    background: rgba(239,68,68,0.2) !important;
-    box-shadow: 0 8px 25px rgba(239,68,68,0.25) !important;
-}
-
-/* INFO CARD */
-.sidebar-info {
-    background: rgba(99,102,241,0.15) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(99,102,241,0.3) !important;
-    border-radius: 16px !important;
-    margin: 20px 16px !important;
-    padding: 20px !important;
-    transition: all 0.3s ease !important;
-}
-
-.sidebar-info:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(99,102,241,0.2);
-}
-
-/* USER STATUS */
-.user-status {
-    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(34,197,94,0.1)) !important;
-    border: 1px solid rgba(16,185,129,0.3) !important;
-    color: #10b981 !important;
-    font-weight: 700 !important;
-}
-
-/* SCROLLBAR CUSTOM */
-section[data-testid="stSidebar"]::-webkit-scrollbar {
-    width: 6px;
-}
-
-section[data-testid="stSidebar"]::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-}
-
-section[data-testid="stSidebar"]::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    border-radius: 10px;
-}
-
-section[data-testid="stSidebar"]::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #4f46e5, #3730a3);
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .sidebar-branding {
-        margin: 12px;
-        padding: 20px 16px;
-    }
-    
-    section[data-testid="stSidebar"] [data-baseweb="select"] {
-        margin: 6px 12px !important;
-    }
-    
-    section[data-testid="stSidebar"] button {
-        margin: 6px 12px !important;
-    }
-}
-
-/* SHIMMER EFFECT ON LOAD */
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}
-
-.sidebar-shimmer {
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(255,255,255,0.1) 50%, 
-        transparent 100%);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-}
 
 </style>
 """, unsafe_allow_html=True)
@@ -1591,11 +1305,11 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
 with st.sidebar:
 
     # Branding Header
-    st.markdown("""
-    <div class="sidebar-branding">
-        <h1>UX Analytics</h1>
-        <p>Universitas Islam Indonesia</p>
-    </div>
+    st.markdown(f"""
+        <div style="text-align: center; padding: 10px 0 25px 0;">
+            <h1 style='font-size: 24px; color: #6366f1; margin-bottom: 0;'>UX Analytics</h1>
+            <p style='font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;'>Universitas Islam Indonesia</p>
+        </div>
     """, unsafe_allow_html=True)
 
     # --- SECTION 1: RESEARCH OBJECT ---
@@ -1684,11 +1398,11 @@ with st.sidebar:
 
     # Info Card Aktif
     st.markdown(f"""
-    <div class="sidebar-info">
-        <div style="font-size: 9px; color: #6366f1; font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Project Insight</div>
-        <div style="font-size: 13px; font-weight: 700; color: #1e293b;">{app if app else "No App"} Study</div>
-        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Status: <span style="color:#10b981; font-weight:600;">Active Analysis</span></div>
-    </div>
+        <div style="background-color: #f1f5f9; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px;">
+            <div style="font-size: 9px; color: #6366f1; font-weight: 800; text-transform: uppercase; margin-bottom: 5px;">Project Insight</div>
+            <div style="font-size: 13px; font-weight: 700; color: #1e293b;">{app if app else "No App"} Study</div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Status: <span style="color:#10b981; font-weight:600;">Active Analysis</span></div>
+        </div>
     """, unsafe_allow_html=True)
 
     # --- SECTION 4: SYSTEM ---
