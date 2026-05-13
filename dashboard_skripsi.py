@@ -181,36 +181,70 @@ def wilcoxon_full_spss(light, dark):
 
 def compute_wilcoxon_pair(light, dark, light_lbl, dark_lbl):
     """Compute Wilcoxon stats for one pair and return a display-ready dict."""
-    ranks_table, stats_table = wilcoxon_full_spss(light, dark)
+    light = pd.to_numeric(light, errors="coerce")
+    dark = pd.to_numeric(dark, errors="coerce")
+    
+    mask = ~(light.isna() | dark.isna())
+    light_clean = light[mask]
+    dark_clean = dark[mask]
+    diff = dark_clean - light_clean
+    
+    # Jika semua diff = 0 atau tidak ada data non-zero, return NaN
+    non_zero = diff[diff != 0]
+    if len(non_zero) == 0 or len(light_clean) == 0:
+        ties_n = int(mask.sum())
+        return {
+            "var_name":  f"{dark_lbl} - {light_lbl}",
+            "light_lbl": light_lbl,
+            "dark_lbl":  dark_lbl,
+            "neg_n": 0, "pos_n": 0, "ties_n": ties_n, "total_n": ties_n,
+            "neg_mean": "0.00", "pos_mean": "0.00",
+            "neg_sum":  "0.00", "pos_sum":  "0.00",
+            "z_val": float('nan'), "p_val": float('nan'),
+        }
+    
+    try:
+        ranks_table, stats_table = wilcoxon_full_spss(light, dark)
 
-    z_val = float(stats_table.iloc[0, 1])
-    p_val = float(stats_table.iloc[1, 1])
+        z_val = float(stats_table.iloc[0, 1])
+        p_val = float(stats_table.iloc[1, 1])
 
-    neg_n   = int(ranks_table.iloc[0]["N"])
-    pos_n   = int(ranks_table.iloc[1]["N"])
-    ties_n  = int(ranks_table.iloc[2]["N"])
-    total_n = int(ranks_table.iloc[3]["N"])
+        neg_n   = int(ranks_table.iloc[0]["N"])
+        pos_n   = int(ranks_table.iloc[1]["N"])
+        ties_n  = int(ranks_table.iloc[2]["N"])
+        total_n = int(ranks_table.iloc[3]["N"])
 
-    neg_mean = ranks_table.iloc[0]["Mean Rank"]
-    pos_mean = ranks_table.iloc[1]["Mean Rank"]
-    neg_sum  = ranks_table.iloc[0]["Sum of Ranks"]
-    pos_sum  = ranks_table.iloc[1]["Sum of Ranks"]
+        neg_mean = ranks_table.iloc[0]["Mean Rank"]
+        pos_mean = ranks_table.iloc[1]["Mean Rank"]
+        neg_sum  = ranks_table.iloc[0]["Sum of Ranks"]
+        pos_sum  = ranks_table.iloc[1]["Sum of Ranks"]
 
-    def fmt(v, decimals=2):
-        try:
-            return f"{float(v):.{decimals}f}"
-        except (TypeError, ValueError):
-            return ""
+        def fmt(v, decimals=2):
+            try:
+                return f"{float(v):.{decimals}f}"
+            except (TypeError, ValueError):
+                return ""
 
-    return {
-        "var_name":  f"{dark_lbl} - {light_lbl}",
-        "light_lbl": light_lbl,
-        "dark_lbl":  dark_lbl,
-        "neg_n": neg_n, "pos_n": pos_n, "ties_n": ties_n, "total_n": total_n,
-        "neg_mean": fmt(neg_mean), "pos_mean": fmt(pos_mean),
-        "neg_sum":  fmt(neg_sum),  "pos_sum":  fmt(pos_sum),
-        "z_val": z_val, "p_val": p_val,
-    }
+        return {
+            "var_name":  f"{dark_lbl} - {light_lbl}",
+            "light_lbl": light_lbl,
+            "dark_lbl":  dark_lbl,
+            "neg_n": neg_n, "pos_n": pos_n, "ties_n": ties_n, "total_n": total_n,
+            "neg_mean": fmt(neg_mean), "pos_mean": fmt(pos_mean),
+            "neg_sum":  fmt(neg_sum),  "pos_sum":  fmt(pos_sum),
+            "z_val": z_val, "p_val": p_val,
+        }
+    except Exception:
+        ties_n = int(mask.sum())
+        return {
+            "var_name":  f"{dark_lbl} - {light_lbl}",
+            "light_lbl": light_lbl,
+            "dark_lbl":  dark_lbl,
+            "neg_n": 0, "pos_n": 0, "ties_n": ties_n, "total_n": ties_n,
+            "neg_mean": "0.00", "pos_mean": "0.00",
+            "neg_sum":  "0.00", "pos_sum":  "0.00",
+            "z_val": float('nan'), "p_val": float('nan'),
+        }
 
 def shapiro_and_ks(light: pd.Series, dark: pd.Series, label: str) -> dict:
     """
@@ -2424,7 +2458,7 @@ if menu == "Time on Task":
     # ANALYSIS BUTTON (WILCOXON)
     # ======================
     # ... bagian kode sebelumnya ...
-    data_kosong = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].sum().sum() == 0
+    data_kosong = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].replace(0, pd.NA).dropna(how="all").empty
 
     if st.button("ANALISIS DATA", type="secondary", key="analyze_tot"):
         if data_kosong:
