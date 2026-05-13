@@ -249,9 +249,12 @@ def shapiro_and_ks(light: pd.Series, dark: pd.Series, label: str) -> dict:
  
     # Lilliefors correction: p-value lebih konservatif (tidak bisa ambil dari kstest langsung)
     # Gunakan pendekatan: jika tersedia statsmodels, pakai lilliefors; fallback ke ks biasa
+    # Ganti bagian Lilliefors di shapiro_and_ks:
     try:
         from statsmodels.stats.diagnostic import lilliefors as lf_test
         ks_stat, ks_p = lf_test(diff, dist='norm')
+        # Bulatkan konsisten dengan SPSS (3 desimal)
+        ks_p = round(float(ks_p), 3)
     except Exception:
         ks_stat, ks_p = ks_stat, ks_p_raw
  
