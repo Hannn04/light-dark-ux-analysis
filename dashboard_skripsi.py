@@ -181,70 +181,36 @@ def wilcoxon_full_spss(light, dark):
 
 def compute_wilcoxon_pair(light, dark, light_lbl, dark_lbl):
     """Compute Wilcoxon stats for one pair and return a display-ready dict."""
-    light = pd.to_numeric(light, errors="coerce")
-    dark = pd.to_numeric(dark, errors="coerce")
-    
-    mask = ~(light.isna() | dark.isna())
-    light_clean = light[mask]
-    dark_clean = dark[mask]
-    diff = dark_clean - light_clean
-    
-    # Jika semua diff = 0 atau tidak ada data non-zero, return NaN
-    non_zero = diff[diff != 0]
-    if len(non_zero) == 0 or len(light_clean) == 0:
-        ties_n = int(mask.sum())
-        return {
-            "var_name":  f"{dark_lbl} - {light_lbl}",
-            "light_lbl": light_lbl,
-            "dark_lbl":  dark_lbl,
-            "neg_n": 0, "pos_n": 0, "ties_n": ties_n, "total_n": ties_n,
-            "neg_mean": "0.00", "pos_mean": "0.00",
-            "neg_sum":  "0.00", "pos_sum":  "0.00",
-            "z_val": float('nan'), "p_val": float('nan'),
-        }
-    
-    try:
-        ranks_table, stats_table = wilcoxon_full_spss(light, dark)
+    ranks_table, stats_table = wilcoxon_full_spss(light, dark)
 
-        z_val = float(stats_table.iloc[0, 1])
-        p_val = float(stats_table.iloc[1, 1])
+    z_val = float(stats_table.iloc[0, 1])
+    p_val = float(stats_table.iloc[1, 1])
 
-        neg_n   = int(ranks_table.iloc[0]["N"])
-        pos_n   = int(ranks_table.iloc[1]["N"])
-        ties_n  = int(ranks_table.iloc[2]["N"])
-        total_n = int(ranks_table.iloc[3]["N"])
+    neg_n   = int(ranks_table.iloc[0]["N"])
+    pos_n   = int(ranks_table.iloc[1]["N"])
+    ties_n  = int(ranks_table.iloc[2]["N"])
+    total_n = int(ranks_table.iloc[3]["N"])
 
-        neg_mean = ranks_table.iloc[0]["Mean Rank"]
-        pos_mean = ranks_table.iloc[1]["Mean Rank"]
-        neg_sum  = ranks_table.iloc[0]["Sum of Ranks"]
-        pos_sum  = ranks_table.iloc[1]["Sum of Ranks"]
+    neg_mean = ranks_table.iloc[0]["Mean Rank"]
+    pos_mean = ranks_table.iloc[1]["Mean Rank"]
+    neg_sum  = ranks_table.iloc[0]["Sum of Ranks"]
+    pos_sum  = ranks_table.iloc[1]["Sum of Ranks"]
 
-        def fmt(v, decimals=2):
-            try:
-                return f"{float(v):.{decimals}f}"
-            except (TypeError, ValueError):
-                return ""
+    def fmt(v, decimals=2):
+        try:
+            return f"{float(v):.{decimals}f}"
+        except (TypeError, ValueError):
+            return ""
 
-        return {
-            "var_name":  f"{dark_lbl} - {light_lbl}",
-            "light_lbl": light_lbl,
-            "dark_lbl":  dark_lbl,
-            "neg_n": neg_n, "pos_n": pos_n, "ties_n": ties_n, "total_n": total_n,
-            "neg_mean": fmt(neg_mean), "pos_mean": fmt(pos_mean),
-            "neg_sum":  fmt(neg_sum),  "pos_sum":  fmt(pos_sum),
-            "z_val": z_val, "p_val": p_val,
-        }
-    except Exception:
-        ties_n = int(mask.sum())
-        return {
-            "var_name":  f"{dark_lbl} - {light_lbl}",
-            "light_lbl": light_lbl,
-            "dark_lbl":  dark_lbl,
-            "neg_n": 0, "pos_n": 0, "ties_n": ties_n, "total_n": ties_n,
-            "neg_mean": "0.00", "pos_mean": "0.00",
-            "neg_sum":  "0.00", "pos_sum":  "0.00",
-            "z_val": float('nan'), "p_val": float('nan'),
-        }
+    return {
+        "var_name":  f"{dark_lbl} - {light_lbl}",
+        "light_lbl": light_lbl,
+        "dark_lbl":  dark_lbl,
+        "neg_n": neg_n, "pos_n": pos_n, "ties_n": ties_n, "total_n": total_n,
+        "neg_mean": fmt(neg_mean), "pos_mean": fmt(pos_mean),
+        "neg_sum":  fmt(neg_sum),  "pos_sum":  fmt(pos_sum),
+        "z_val": z_val, "p_val": p_val,
+    }
 
 def shapiro_and_ks(light: pd.Series, dark: pd.Series, label: str) -> dict:
     """
@@ -579,6 +545,10 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
     </div>""", unsafe_allow_html=True)
 
 def render_spss_wilcoxon(pairs_data):
+    """
+    Render output Wilcoxon identik dengan SPSS Style.
+    Menampilkan tabel Ranks dan Test Statistics.
+    """
     ranks_rows = ""
     footnotes = []
     abc = "abcdefghijklmnopqrstuvwxyz"
@@ -591,8 +561,8 @@ def render_spss_wilcoxon(pairs_data):
 
         labels = ["", "", ""]
         hubungan = [
-            f"{d_lbl} &lt; {l_lbl}",
-            f"{d_lbl} &gt; {l_lbl}",
+            f"{d_lbl} < {l_lbl}",
+            f"{d_lbl} > {l_lbl}",
             f"{l_lbl} = {d_lbl}"
         ]
 
@@ -605,38 +575,64 @@ def render_spss_wilcoxon(pairs_data):
                 footnotes.append(f"{current_letter}. {hubungan[i]}")
             fn_idx += 1
 
-        ranks_rows += (
-            f"<tr>"
-            f"<td rowspan='4' style='border:1px solid #bbb;padding:7px 12px;font-weight:600;"
-            f"background:#f5f5f5;vertical-align:middle;white-space:nowrap;'>{vn}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'>Negative Ranks</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['neg_n']}{labels[0]}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['neg_mean']}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['neg_sum']}</td>"
-            f"</tr>"
-            f"<tr>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'>Positive Ranks</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['pos_n']}{labels[1]}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['pos_mean']}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['pos_sum']}</td>"
-            f"</tr>"
-            f"<tr>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'>Ties</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['ties_n']}{labels[2]}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
-            f"</tr>"
-            f"<tr>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;font-weight:600;'>Total</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;font-weight:600;'>{pd_item['total_n']}</td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
-            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
-            f"</tr>"
-        )
+        ranks_rows += f"""
+        <tr>
+            <td rowspan="4" style="border:1px solid #bbb;padding:7px 12px;font-weight:600;
+                background:#f5f5f5;vertical-align:middle;white-space:nowrap;">{vn}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;">Negative Ranks</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_n']}{labels[0]}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_mean']}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_sum']}</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid #bbb;padding:7px 12px;">Positive Ranks</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_n']}{labels[1]}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_mean']}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_sum']}</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid #bbb;padding:7px 12px;">Ties</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['ties_n']}{labels[2]}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
+            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
+        </tr>
+        <tr>
+            <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;">Total</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;font-weight:600;">{pd_item['total_n']}</td>
+            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
+            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
+        </tr>"""
 
     footnote_html = "<br>".join(footnotes) if footnotes else ""
 
+    ranks_html = f"""
+    <div style="margin:20px 0 8px 0;">
+        <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:0;">Ranks</div>
+        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
+            <thead>
+                <tr style="background:#d9d9d9;">
+                    <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
+                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">N</th>
+                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Mean Rank</th>
+                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Sum of Ranks</th>
+                </tr>
+            </thead>
+            <tbody>{ranks_rows}</tbody>
+        </table>
+        <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;line-height:1.6;">
+            {footnote_html}
+        </div>
+    </div>"""
+
+    # ======================
+    # TEST STATISTICS (SPSS STYLE)
+    # ======================
     def get_z_superscript(pd_item):
+        """
+        Tentukan superscript Z sesuai SPSS:
+        - Z negatif → based on negative ranks → superscript 'b'
+        - Z positif → based on positive ranks → superscript 'c'
+        """
         z = pd_item["z_val"]
         neg_n = pd_item["neg_n"]
         pos_n = pd_item["pos_n"]
@@ -647,91 +643,60 @@ def render_spss_wilcoxon(pairs_data):
         else:
             return "c", "c. Based on positive ranks."
 
+    # Header kolom: nama variabel tiap pasangan
     test_stat_headers = "".join([
-        f"<th style='border:1px solid #aaa;padding:7px 12px;text-align:center;font-size:12px;'>{p['var_name']}</th>"
+        f'<th style="border:1px solid #aaa;padding:7px 12px;text-align:center;font-size:12px;">{p["var_name"]}</th>'
         for p in pairs_data
     ])
 
+    # Baris Z dengan superscript
     z_footnotes_dict = {}
     z_cells = ""
     for p in pairs_data:
         sup, note = get_z_superscript(p)
         if sup and sup not in z_footnotes_dict:
             z_footnotes_dict[sup] = note
-        z_val_fmt = f"{p['z_val']:.3f}"
-        sup_tag = f"<sup>{sup}</sup>" if sup else ""
-        z_cells += f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{z_val_fmt}{sup_tag}</td>"
+        z_cells += f'<td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p["z_val"]:.3f}<sup>{sup}</sup></td>'
 
+    # Baris Asymp. Sig
     p_cells = "".join([
-        f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{p['p_val']:.3f}</td>"
+        f'<td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p["p_val"]:.3f}</td>'
         for p in pairs_data
     ])
 
+    # Footnote Z
     z_footnote_html = "<br>".join(z_footnotes_dict.values())
 
-    full_html = f"""
-    <style>
-        .wilcoxon-wrap {{ font-family: Arial, sans-serif; font-size: 13px; }}
-        .wilcoxon-wrap table {{ border-collapse: collapse; width: 100%; margin-bottom: 16px; }}
-        .wilcoxon-wrap th, .wilcoxon-wrap td {{ padding: 7px 12px; border: 1px solid #bbb; }}
-        .wilcoxon-wrap thead tr {{ background: #d9d9d9; }}
-        .wilcoxon-wrap .section-title {{
-            font-weight: 700; font-size: 14px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 4px; margin: 20px 0 8px 0;
-        }}
-        .wilcoxon-wrap .footnote {{
-            font-size: 11px; color: #444;
-            font-style: italic; line-height: 1.8;
-            margin-top: 5px;
-        }}
-        .bg-label {{ background: #f5f5f5; font-weight: 600; }}
-        .bg-sig {{ background: #eaf4ff; font-weight: 600; }}
-    </style>
-    <div class='wilcoxon-wrap'>
-        <div class='section-title'>Ranks</div>
-        <table>
+    test_stats_html = f"""
+    <div style="margin:16px 0 24px 0;">
+        <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:0;">
+            Test Statistics<sup>a</sup>
+        </div>
+        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
             <thead>
-                <tr>
-                    <th colspan='2'></th>
-                    <th style='text-align:center;'>N</th>
-                    <th style='text-align:center;'>Mean Rank</th>
-                    <th style='text-align:center;'>Sum of Ranks</th>
-                </tr>
-            </thead>
-            <tbody>{ranks_rows}</tbody>
-        </table>
-        <div class='footnote'>{footnote_html}</div>
-
-        <div class='section-title'>Test Statistics<sup>a</sup></div>
-        <table>
-            <thead>
-                <tr>
-                    <th style='text-align:left;'></th>
+                <tr style="background:#d9d9d9;">
+                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:left;"></th>
                     {test_stat_headers}
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class='bg-label'>Z</td>
+                    <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;background:#f5f5f5;">Z</td>
                     {z_cells}
                 </tr>
                 <tr>
-                    <td class='bg-sig'>Asymp. Sig. (2-tailed)</td>
+                    <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;background:#eaf4ff;">Asymp. Sig. (2-tailed)</td>
                     {p_cells}
                 </tr>
             </tbody>
         </table>
-        <div class='footnote'>
+        <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;line-height:1.8;">
             a. Wilcoxon Signed Ranks Test<br>
             {z_footnote_html}
         </div>
-    </div>
-    """
+    </div>"""
 
-    # Estimasi tinggi: 200px base + 80px per pasangan untuk Ranks + 120px untuk Test Stats
-    estimated_height = 300 + (len(pairs_data) * 80) + 150
-    components.html(full_html, height=estimated_height, scrolling=False)
+    st.markdown(ranks_html + test_stats_html, unsafe_allow_html=True)
 
 
 def dataset_manager(df, expected_columns, save_path, title, filename_base):
@@ -2461,8 +2426,26 @@ if menu == "Time on Task":
     data_kosong = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].replace(0, pd.NA).dropna(how="all").empty
 
     if st.button("ANALISIS DATA", type="secondary", key="analyze_tot"):
-        if data_kosong:
-            st.warning("Data masih kosong. Silakan isi data terlebih dahulu sebelum melakukan analisis.")
+        task_cols = ["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]
+        df_numeric = df_edit[task_cols].apply(pd.to_numeric, errors="coerce")
+        baris_ada = df_numeric.replace(0, np.nan).dropna(how="all")
+        
+        if baris_ada.empty:
+            st.warning("Data masih kosong. Silakan isi data terlebih dahulu.")
+            st.stop()
+        
+        # Cek baris yang tidak lengkap (ada kolom kosong/0 di baris yang sudah diisi)
+        baris_tidak_lengkap = baris_ada.isnull().any(axis=1) | (baris_ada == 0).any(axis=1)
+        jumlah_tidak_lengkap = baris_tidak_lengkap.sum()
+        
+        if jumlah_tidak_lengkap > 0:
+            idx_tidak_lengkap = baris_ada[baris_tidak_lengkap].index.tolist()
+            responden_list = [f"R{i+1}" for i in idx_tidak_lengkap]
+            st.warning(
+                f"Data belum lengkap! {jumlah_tidak_lengkap} responden belum mengisi semua task: "
+                f"**{', '.join(responden_list)}**. "
+                f"Setiap responden harus mengisi Light T1, T2, T3 dan Dark T1, T2, T3."
+            )
             st.stop()
  
         st.markdown("---")
@@ -2748,11 +2731,28 @@ if menu == "Error Rate":
     # ======================
     # ANALYSIS BUTTON - FIXED WITH UNIQUE KEY
     # ======================
-    data_kosong_err = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].sum().sum() == 0
+    data_kosong_err = df_edit[["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]].replace(0, pd.NA).dropna(how="all").empty
 
     if st.button("ANALISIS DATA", type="secondary", key="analyze_error_rate"):
-        if data_kosong_err:
-            st.warning("Data masih kosong. Silakan isi data terlebih dahulu sebelum melakukan analisis.")
+        task_cols_err = ["Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]
+        df_numeric_err = df_edit[task_cols_err].apply(pd.to_numeric, errors="coerce")
+        baris_ada_err = df_numeric_err.replace(0, np.nan).dropna(how="all")
+
+        if baris_ada_err.empty:
+            st.warning("Data masih kosong. Silakan isi data terlebih dahulu.")
+            st.stop()
+
+        baris_tidak_lengkap_err = baris_ada_err.isnull().any(axis=1) | (baris_ada_err == 0).any(axis=1)
+        jumlah_tidak_lengkap_err = baris_tidak_lengkap_err.sum()
+
+        if jumlah_tidak_lengkap_err > 0:
+            idx_err = baris_ada_err[baris_tidak_lengkap_err].index.tolist()
+            responden_err = [f"R{i+1}" for i in idx_err]
+            st.warning(
+                f"Data belum lengkap! {jumlah_tidak_lengkap_err} responden belum mengisi semua task: "
+                f"**{', '.join(responden_err)}**. "
+                f"Setiap responden harus mengisi Light T1, T2, T3 dan Dark T1, T2, T3."
+            )
             st.stop()
  
         st.markdown("---")
