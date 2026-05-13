@@ -1502,8 +1502,20 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     # Tombol invisible tepat di atas HTML (margin negatif via CSS)
-    if st.button("toggle_mgr", key="mgr_toggle_btn",
-                 use_container_width=True, label_visibility="hidden"):
+    st.markdown("""
+    <style>
+    section[data-testid="stSidebar"] div[data-testid="stButton"]:has(button[key="mgr_toggle_btn"]) {
+        margin-top: -50px !important;
+        opacity: 0 !important;
+        height: 46px !important;
+        overflow: hidden !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    if st.button("m", key="mgr_toggle_btn", use_container_width=True):
         st.session_state.mgr_open = not st.session_state.mgr_open
         st.session_state.confirm_delete_app = None
         st.rerun()
