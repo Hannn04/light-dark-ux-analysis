@@ -545,10 +545,6 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
     </div>""", unsafe_allow_html=True)
 
 def render_spss_wilcoxon(pairs_data):
-    """
-    Render output Wilcoxon identik dengan SPSS Style.
-    Menampilkan tabel Ranks dan Test Statistics.
-    """
     ranks_rows = ""
     footnotes = []
     abc = "abcdefghijklmnopqrstuvwxyz"
@@ -561,8 +557,8 @@ def render_spss_wilcoxon(pairs_data):
 
         labels = ["", "", ""]
         hubungan = [
-            f"{d_lbl} < {l_lbl}",
-            f"{d_lbl} > {l_lbl}",
+            f"{d_lbl} &lt; {l_lbl}",
+            f"{d_lbl} &gt; {l_lbl}",
             f"{l_lbl} = {d_lbl}"
         ]
 
@@ -575,64 +571,38 @@ def render_spss_wilcoxon(pairs_data):
                 footnotes.append(f"{current_letter}. {hubungan[i]}")
             fn_idx += 1
 
-        ranks_rows += f"""
-        <tr>
-            <td rowspan="4" style="border:1px solid #bbb;padding:7px 12px;font-weight:600;
-                background:#f5f5f5;vertical-align:middle;white-space:nowrap;">{vn}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;">Negative Ranks</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_n']}{labels[0]}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_mean']}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_sum']}</td>
-        </tr>
-        <tr>
-            <td style="border:1px solid #bbb;padding:7px 12px;">Positive Ranks</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_n']}{labels[1]}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_mean']}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_sum']}</td>
-        </tr>
-        <tr>
-            <td style="border:1px solid #bbb;padding:7px 12px;">Ties</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['ties_n']}{labels[2]}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
-        </tr>
-        <tr>
-            <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;">Total</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;font-weight:600;">{pd_item['total_n']}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
-        </tr>"""
+        ranks_rows += (
+            f"<tr>"
+            f"<td rowspan='4' style='border:1px solid #bbb;padding:7px 12px;font-weight:600;"
+            f"background:#f5f5f5;vertical-align:middle;white-space:nowrap;'>{vn}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'>Negative Ranks</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['neg_n']}{labels[0]}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['neg_mean']}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['neg_sum']}</td>"
+            f"</tr>"
+            f"<tr>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'>Positive Ranks</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['pos_n']}{labels[1]}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['pos_mean']}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['pos_sum']}</td>"
+            f"</tr>"
+            f"<tr>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'>Ties</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{pd_item['ties_n']}{labels[2]}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
+            f"</tr>"
+            f"<tr>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;font-weight:600;'>Total</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;font-weight:600;'>{pd_item['total_n']}</td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
+            f"<td style='border:1px solid #bbb;padding:7px 12px;'></td>"
+            f"</tr>"
+        )
 
     footnote_html = "<br>".join(footnotes) if footnotes else ""
 
-    ranks_html = f"""
-    <div style="margin:20px 0 8px 0;">
-        <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:0;">Ranks</div>
-        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
-            <thead>
-                <tr style="background:#d9d9d9;">
-                    <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">N</th>
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Mean Rank</th>
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Sum of Ranks</th>
-                </tr>
-            </thead>
-            <tbody>{ranks_rows}</tbody>
-        </table>
-        <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;line-height:1.6;">
-            {footnote_html}
-        </div>
-    </div>"""
-
-    # ======================
-    # TEST STATISTICS (SPSS STYLE)
-    # ======================
     def get_z_superscript(pd_item):
-        """
-        Tentukan superscript Z sesuai SPSS:
-        - Z negatif → based on negative ranks → superscript 'b'
-        - Z positif → based on positive ranks → superscript 'c'
-        """
         z = pd_item["z_val"]
         neg_n = pd_item["neg_n"]
         pos_n = pd_item["pos_n"]
@@ -643,60 +613,91 @@ def render_spss_wilcoxon(pairs_data):
         else:
             return "c", "c. Based on positive ranks."
 
-    # Header kolom: nama variabel tiap pasangan
     test_stat_headers = "".join([
-        f'<th style="border:1px solid #aaa;padding:7px 12px;text-align:center;font-size:12px;">{p["var_name"]}</th>'
+        f"<th style='border:1px solid #aaa;padding:7px 12px;text-align:center;font-size:12px;'>{p['var_name']}</th>"
         for p in pairs_data
     ])
 
-    # Baris Z dengan superscript
     z_footnotes_dict = {}
     z_cells = ""
     for p in pairs_data:
         sup, note = get_z_superscript(p)
         if sup and sup not in z_footnotes_dict:
             z_footnotes_dict[sup] = note
-        z_cells += f'<td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p["z_val"]:.3f}<sup>{sup}</sup></td>'
+        z_val_fmt = f"{p['z_val']:.3f}"
+        sup_tag = f"<sup>{sup}</sup>" if sup else ""
+        z_cells += f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{z_val_fmt}{sup_tag}</td>"
 
-    # Baris Asymp. Sig
     p_cells = "".join([
-        f'<td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p["p_val"]:.3f}</td>'
+        f"<td style='border:1px solid #bbb;padding:7px 12px;text-align:right;'>{p['p_val']:.3f}</td>"
         for p in pairs_data
     ])
 
-    # Footnote Z
     z_footnote_html = "<br>".join(z_footnotes_dict.values())
 
-    test_stats_html = f"""
-    <div style="margin:16px 0 24px 0;">
-        <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:0;">
-            Test Statistics<sup>a</sup>
-        </div>
-        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
+    full_html = f"""
+    <style>
+        .wilcoxon-wrap {{ font-family: Arial, sans-serif; font-size: 13px; }}
+        .wilcoxon-wrap table {{ border-collapse: collapse; width: 100%; margin-bottom: 16px; }}
+        .wilcoxon-wrap th, .wilcoxon-wrap td {{ padding: 7px 12px; border: 1px solid #bbb; }}
+        .wilcoxon-wrap thead tr {{ background: #d9d9d9; }}
+        .wilcoxon-wrap .section-title {{
+            font-weight: 700; font-size: 14px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 4px; margin: 20px 0 8px 0;
+        }}
+        .wilcoxon-wrap .footnote {{
+            font-size: 11px; color: #444;
+            font-style: italic; line-height: 1.8;
+            margin-top: 5px;
+        }}
+        .bg-label {{ background: #f5f5f5; font-weight: 600; }}
+        .bg-sig {{ background: #eaf4ff; font-weight: 600; }}
+    </style>
+    <div class='wilcoxon-wrap'>
+        <div class='section-title'>Ranks</div>
+        <table>
             <thead>
-                <tr style="background:#d9d9d9;">
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:left;"></th>
+                <tr>
+                    <th colspan='2'></th>
+                    <th style='text-align:center;'>N</th>
+                    <th style='text-align:center;'>Mean Rank</th>
+                    <th style='text-align:center;'>Sum of Ranks</th>
+                </tr>
+            </thead>
+            <tbody>{ranks_rows}</tbody>
+        </table>
+        <div class='footnote'>{footnote_html}</div>
+
+        <div class='section-title'>Test Statistics<sup>a</sup></div>
+        <table>
+            <thead>
+                <tr>
+                    <th style='text-align:left;'></th>
                     {test_stat_headers}
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;background:#f5f5f5;">Z</td>
+                    <td class='bg-label'>Z</td>
                     {z_cells}
                 </tr>
                 <tr>
-                    <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;background:#eaf4ff;">Asymp. Sig. (2-tailed)</td>
+                    <td class='bg-sig'>Asymp. Sig. (2-tailed)</td>
                     {p_cells}
                 </tr>
             </tbody>
         </table>
-        <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;line-height:1.8;">
+        <div class='footnote'>
             a. Wilcoxon Signed Ranks Test<br>
             {z_footnote_html}
         </div>
-    </div>"""
+    </div>
+    """
 
-    st.markdown(f'<div>{ranks_html}{test_stats_html}</div>', unsafe_allow_html=True)
+    # Estimasi tinggi: 200px base + 80px per pasangan untuk Ranks + 120px untuk Test Stats
+    estimated_height = 300 + (len(pairs_data) * 80) + 150
+    components.html(full_html, height=estimated_height, scrolling=False)
 
 
 def dataset_manager(df, expected_columns, save_path, title, filename_base):
