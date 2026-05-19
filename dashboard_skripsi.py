@@ -1383,7 +1383,7 @@ with st.sidebar:
         )
 
 
-        if st.button("Add Object", use_container_width=True, key="btn_add_app"):
+        if st.button("Add Object", use_container_width=True, key="btn_add_app", type="primary"):
             if new_app and new_app.strip() not in st.session_state.app_list:
                 nama = new_app.strip()
                 st.session_state.app_list.append(nama)
@@ -1488,37 +1488,35 @@ with st.sidebar:
         box-shadow: 0 4px 12px rgba(99,102,241,0.2) !important;
     }
                 
-    /* Add Object button → hijau/teal */
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:first-of-type {
+    /* Add Object (primary di dalam expander) → hijau */
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"] {
         background: linear-gradient(135deg, #10b981, #059669) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
-        font-size: 11px !important;
-        transition: all 0.3s ease !important;
         box-shadow: 0 2px 8px rgba(16,185,129,0.3) !important;
+        transition: all 0.3s ease !important;
     }
 
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:first-of-type:hover {
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"]:hover {
         background: linear-gradient(135deg, #34d399, #10b981) !important;
         box-shadow: 0 4px 16px rgba(16,185,129,0.5) !important;
         transform: translateY(-2px) !important;
     }
 
-    /* Delete Object button → merah */
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:last-of-type {
+    /* Delete Object (secondary di dalam expander) → merah */
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"] {
         background: linear-gradient(135deg, #ef4444, #dc2626) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
-        font-size: 11px !important;
-        transition: all 0.3s ease !important;
         box-shadow: 0 2px 8px rgba(239,68,68,0.3) !important;
+        transition: all 0.3s ease !important;
     }
 
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:last-of-type:hover {
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:hover {
         background: linear-gradient(135deg, #f87171, #ef4444) !important;
         box-shadow: 0 4px 16px rgba(239,68,68,0.5) !important;
         transform: translateY(-2px) !important;
