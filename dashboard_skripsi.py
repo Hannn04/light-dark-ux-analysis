@@ -1333,9 +1333,12 @@ def create_donut_chart(data_dict, colors):
 # SIDEBAR UI (MODERN VERSION)
 # ======================
 
+# ======================
+# MODERN SIDEBAR UI
+# ======================
+
 if not render_auth_page():
     st.stop()
-
 
 current_user = st.session_state.get("current_user", "default")
 USER_DIR = os.path.join(BASE_DIR, "userdata", current_user)
@@ -1346,42 +1349,64 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
 
 with st.sidebar:
 
-    # Branding Header
-    st.markdown(f"""
-        <div style="text-align: center; padding: 10px 0 25px 0;">
-            <h1 style='font-size: 24px; color: #6366f1; margin-bottom: 0;'>UX Analytics</h1>
-            <p style='font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;'>Universitas Islam Indonesia</p>
+    # ======================
+    # BRANDING HEADER (Modern)
+    # ======================
+    st.markdown("""
+        <div style="
+            text-align: center; 
+            padding: 16px 0 24px 0;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #eef2ff;
+        ">
+            <h1 style="
+                font-size: 28px; 
+                font-weight: 800; 
+                color: #4f46e5; 
+                margin-bottom: 4px;
+                letter-spacing: -0.5px;
+            ">UX Analytics</h1>
+            <p style="
+                font-size: 11px; 
+                color: #94a3b8; 
+                text-transform: uppercase; 
+                letter-spacing: 2px; 
+                font-weight: 600;
+            ">Universitas Islam Indonesia</p>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- SECTION 1: RESEARCH OBJECT ---
+    # ======================
+    # SECTION 1: RESEARCH OBJECT (Polished)
+    # ======================
     st.markdown("""
         <div style="
-            background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
             border: 1px solid #C7D2FE;
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
         ">
             <div style="
-                font-size: 10px;
+                font-size: 12px;
                 font-weight: 700;
-                color: #6366F1;
+                color: #4f46e5;
                 text-transform: uppercase;
-                letter-spacing: 1px;
-                margin-bottom: 12px;
+                letter-spacing: 1.2px;
+                margin-bottom: 16px;
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: 8px;
             ">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.5">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
                 Research Object
             </div>
     """, unsafe_allow_html=True)
     
-    # Pilih aplikasi aktif
+    # Pilih aplikasi aktif (larger font)
     app = st.selectbox(
         "Aplikasi Analisis", 
         st.session_state.app_list, 
@@ -1407,10 +1432,9 @@ with st.sidebar:
 
         new_app = st.text_input(
             "Nama Aplikasi Baru",
-            placeholder="Contoh: Instagram, Spotify, dll",
+            placeholder="Contoh: Instagram, Spotify, TikTok",
             key=f"new_app_input_{st.session_state['input_key']}"
         )
-
 
         if st.button("Tambah Objek", use_container_width=True, key="btn_add_app", type="primary"):
             if new_app and new_app.strip() not in st.session_state.app_list:
@@ -1418,7 +1442,6 @@ with st.sidebar:
                 st.session_state.app_list.append(nama)
                 save_app_list(current_user, st.session_state.app_list)
                 st.session_state["app_added"] = nama
-                # Reset input dengan mengubah input_key
                 st.session_state["input_key"] = st.session_state.get("input_key", 0) + 1
                 st.rerun()
             elif new_app and new_app.strip() in st.session_state.app_list:
@@ -1427,7 +1450,7 @@ with st.sidebar:
         if st.session_state.app_list:
             st.markdown("---")
             st.markdown("""
-                <div style="font-size: 10px; font-weight: 600; color: #64748B; margin-bottom: 8px;">
+                <div style="font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 10px;">
                     HAPUS OBJEK
                 </div>
             """, unsafe_allow_html=True)
@@ -1444,38 +1467,39 @@ with st.sidebar:
                 st.session_state["app_deleted"] = nama_del
                 st.rerun()
 
-    st.markdown("</div>", unsafe_allow_html=True)  # Close the research object card
+    st.markdown("</div>", unsafe_allow_html=True)  # Close research object card
 
-    st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin: 16px 0;'></div>", unsafe_allow_html=True)
 
-    # --- SECTION 2: MAIN NAVIGATION ---
+    # --- SECTION 2: MAIN NAVIGATION (Larger) ---
     menu = st.selectbox(
         "Pilih Menu", 
         ["Home", "Overview", "Time on Task", "Error Rate", "UEQ Analysis", "Preferensi Responden", "Settings"],
         label_visibility="collapsed"
     )
 
-    # --- SECTION 3: PARAMETERS ---
+    # --- SECTION 3: PARAMETERS (Polished) ---
     st.markdown("""
         <div style="
-            background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
             border: 1px solid #BBF7D0;
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
         ">
             <div style="
-                font-size: 10px;
+                font-size: 12px;
                 font-weight: 700;
-                color: #10B981;
+                color: #059669;
                 text-transform: uppercase;
-                letter-spacing: 1px;
-                margin-bottom: 12px;
+                letter-spacing: 1.2px;
+                margin-bottom: 16px;
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: 8px;
             ">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
                     <circle cx="12" cy="12" r="3"/>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
@@ -1483,110 +1507,119 @@ with st.sidebar:
             </div>
     """, unsafe_allow_html=True)
     
-    n = st.number_input("Sample Size (N)", min_value=1, max_value=100, value=25, help="Jumlah responden dalam penelitian ini")
+    # Sample Size dengan larger font
+    n = st.number_input(
+        "Sample Size (N)", 
+        min_value=1, 
+        max_value=100, 
+        value=25, 
+        help="Jumlah responden dalam penelitian ini"
+    )
 
-    # Info Card Aktif
+    # Info Card Aktif (larger and more prominent)
     st.markdown(f"""
         <div style="
-            background-color: #F8FAFC;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid #E2E8F0;
-            margin-top: 8px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 18px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            margin-top: 16px;
         ">
-            <div style="font-size: 9px; color: #6366F1; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+            <div style="font-size: 11px; color: #6366F1; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
                 Objek Studi Aktif
             </div>
-            <div style="font-size: 14px; font-weight: 700; color: #1E293B;">
+            <div style="font-size: 18px; font-weight: 800; color: #1E293B; margin-bottom: 8px;">
                 {app if app else "Belum dipilih"}
             </div>
-            <div style="font-size: 11px; color: #64748B; margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+            <div style="font-size: 12px; color: #64748B; display: flex; align-items: center; gap: 8px;">
                 <span style="
                     display: inline-block;
-                    width: 6px;
-                    height: 6px;
+                    width: 8px;
+                    height: 8px;
                     border-radius: 50%;
                     background-color: #10B981;
                 "></span>
-                Active Analysis
+                <span style="font-weight: 600;">Active Analysis</span>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)  # Close parameter card
 
-    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True) # Push reset button to bottom
+    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)  # Push to bottom
+    
     st.markdown("---")
     
-    
-
-    
+    # ======================
+    # USER INFO CARD
+    # ======================
     st.markdown(f"""
         <div style="
             background: linear-gradient(135deg, #EEF2FF 0%, #F0FDF4 100%);
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
             border: 1px solid #E0E7FF;
-            font-size: 11px;
+            font-size: 12px;
             color: #475569;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         ">
-            Login sebagai <b style="color: #6366F1;">{current_user}</b>
+            Login sebagai <b style="color: #6366F1; font-weight: 700;">{current_user}</b>
         </div>
     """, unsafe_allow_html=True)
 
-    # Styling buttons
+    # ======================
+    # STYLING OVERRIDES
+    # ======================
     st.markdown("""
     <style>
-    div[data-testid="stSidebar"] button[kind="secondary"] {
-        background: #fff1f2 !important;
-        color: #ef4444 !important;
-        border: 1px solid #fecaca !important;
+    /* Styling untuk semua tombol di sidebar */
+    div[data-testid="stSidebar"] button {
         border-radius: 10px !important;
-        font-size: 11px !important;
         font-weight: 700 !important;
     }
 
-    /* Logout → ungu */
+    /* Secondary button - merah untuk delete */
+    div[data-testid="stSidebar"] button[kind="secondary"] {
+        background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
+        color: #dc2626 !important;
+        border: 1px solid #fca5a5 !important;
+        font-size: 12px !important;
+    }
+
+    /* Primary button - ungu untuk logout */
     div[data-testid="stSidebar"] button[kind="primary"] {
         background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
         color: white !important;
         border: none !important;
-        border-radius: 10px !important;
-        font-size: 11px !important;
-        font-weight: 700 !important;
+        font-size: 12px !important;
     }
 
-    /* Manage Applications expander */
+    /* Expander styling */
+    [data-testid="stSidebar"] details {
+        background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
+        border: 1px solid #c7d2fe !important;
+        border-radius: 12px !important;
+    }
+
+    [data-testid="stSidebar"] details:hover {
+        border-color: #6366f1 !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.15) !important;
+    }
+
     [data-testid="stSidebar"] summary {
         color: #4f46e5 !important;
         font-weight: 700 !important;
-        font-size: 12px !important;
-        border-radius: 12px !important;
-        padding: 10px 14px !important;
+        font-size: 13px !important;
     }
 
-    [data-testid="stSidebar"] [data-testid="stExpander"] {
-        border: 1px solid #c7d2fe !important;
-        border-radius: 12px !important;
-        background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
-    }
-
-    [data-testid="stSidebar"] [data-testid="stExpander"]:hover {
-        border-color: #6366f1 !important;
-        box-shadow: 0 4px 12px rgba(99,102,241,0.2) !important;
-    }
-                
-    /* Add Object (primary di dalam expander) → hijau */
+    /* Primary button dalam expander - hijau */
     [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"] {
         background: linear-gradient(135deg, #10b981, #059669) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
-        font-weight: 700 !important;
         box-shadow: 0 2px 8px rgba(16,185,129,0.3) !important;
-        transition: all 0.3s ease !important;
     }
 
     [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"]:hover {
@@ -1595,15 +1628,13 @@ with st.sidebar:
         transform: translateY(-2px) !important;
     }
 
-    /* Delete Object (secondary di dalam expander) → merah */
+    /* Secondary button dalam expander - merah */
     [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"] {
         background: linear-gradient(135deg, #ef4444, #dc2626) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
-        font-weight: 700 !important;
         box-shadow: 0 2px 8px rgba(239,68,68,0.3) !important;
-        transition: all 0.3s ease !important;
     }
 
     [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:hover {
@@ -1614,12 +1645,14 @@ with st.sidebar:
     </style>
     """, unsafe_allow_html=True)
 
+    # ======================
+    # ACTION BUTTONS
+    # ======================
     if st.button("Reset All Data", use_container_width=True, type="secondary", key="btn_reset_split"):
         st.session_state["show_reset_confirm"] = True
 
-    st.markdown("<div style='margin-top:6px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
 
-    
     if st.button("Logout", use_container_width=True, type="primary", key="btn_logout"):
         st.session_state["show_logout_confirm"] = True
 
