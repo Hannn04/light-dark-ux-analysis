@@ -1343,16 +1343,51 @@ with st.sidebar:
         st.markdown("""
         <style>
         div[data-testid="stSidebar"] .stButton > button[kind="secondary"] {
-            background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 8px !important;
-            font-weight: 700 !important;
-        }
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
-            background: linear-gradient(135deg, #4f46e5, #3730a3) !important;
-            transform: translateY(-1px) !important;
-        }
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #4f46e5 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    padding: 10px 16px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4) !important;
+    transition: all 0.3s ease !important;
+}
+
+div[data-testid="stSidebar"] .stButton > button[kind="secondary"]::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    ) !important;
+    transition: left 0.5s ease !important;
+}
+
+div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #3730a3 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.55) !important;
+}
+
+div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover::before {
+    left: 100% !important;
+}
+
+div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:active {
+    transform: translateY(0px) !important;
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3) !important;
+}
         </style>
         """, unsafe_allow_html=True)
 
