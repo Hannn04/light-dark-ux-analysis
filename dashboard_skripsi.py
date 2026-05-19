@@ -1380,14 +1380,7 @@ with st.sidebar:
     # SECTION 1: RESEARCH OBJECT (Polished)
     # ======================
     st.markdown("""
-        <div style="
-            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
-            border: 1px solid #C7D2FE;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
-        ">
+        <div style="padding: 12px 0;">
             <div style="
                 font-size: 12px;
                 font-weight: 700;
@@ -1480,14 +1473,7 @@ with st.sidebar:
 
     # --- SECTION 3: PARAMETERS (Polished) ---
     st.markdown("""
-        <div style="
-            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
-            border: 1px solid #BBF7D0;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
-        ">
+        <div style="padding: 12px 0;">
             <div style="
                 font-size: 12px;
                 font-weight: 700;
