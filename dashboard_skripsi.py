@@ -1340,56 +1340,6 @@ with st.sidebar:
             key=f"new_app_input_{st.session_state['input_key']}"
         )
 
-        st.markdown("""
-        <style>
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"] {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #4f46e5 100%) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 10px !important;
-            font-weight: 700 !important;
-            font-size: 12px !important;
-            letter-spacing: 1px !important;
-            text-transform: uppercase !important;
-            padding: 10px 16px !important;
-            position: relative !important;
-            overflow: hidden !important;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4) !important;
-            transition: all 0.3s ease !important;
-        }
-
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]::before {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: -100% !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            ) !important;
-            transition: left 0.5s ease !important;
-        }
-
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #3730a3 100%) !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.55) !important;
-        }
-
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover::before {
-            left: 100% !important;
-        }
-
-        div[data-testid="stSidebar"] .stButton > button[kind="secondary"]:active {
-            transform: translateY(0px) !important;
-            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3) !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
 
         if st.button("Add Object", use_container_width=True, key="btn_add_app"):
             if new_app and new_app.strip() not in st.session_state.app_list:
@@ -1457,6 +1407,8 @@ with st.sidebar:
 
     st.markdown("""
     <style>
+    /* ===== ADD OBJECT button — ungu ===== */
+    /* Semua secondary button di sidebar → merah (Reset All Data, Hapus Data, dll) */
     div[data-testid="stSidebar"] button[kind="secondary"] {
         background: #fff1f2 !important;
         color: #ef4444 !important;
@@ -1464,8 +1416,19 @@ with st.sidebar:
         border-radius: 10px !important;
         font-size: 11px !important;
         font-weight: 700 !important;
-        letter-spacing: 0.5px !important;
     }
+
+    /* KHUSUS Add Object di dalam expander — override jadi ungu */
+    div[data-testid="stSidebar"] details button[kind="secondary"] {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6, #4f46e5) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 15px rgba(99,102,241,0.4) !important;
+    }
+
+    /* Logout → ungu primary */
     div[data-testid="stSidebar"] button[kind="primary"] {
         background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
         color: white !important;
@@ -1473,7 +1436,6 @@ with st.sidebar:
         border-radius: 10px !important;
         font-size: 11px !important;
         font-weight: 700 !important;
-        letter-spacing: 0.5px !important;
     }
     </style>
     """, unsafe_allow_html=True)
