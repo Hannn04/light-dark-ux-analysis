@@ -1407,50 +1407,17 @@ with st.sidebar:
 
     st.markdown("""
     <style>
-        /* Semua secondary button di sidebar → merah */
-    div[data-testid="stSidebar"] button[kind="secondary"] {
-        background: #fff1f2 !important;
-        color: #ef4444 !important;
-        border: 1px solid #fecaca !important;
-        border-radius: 10px !important;
-        font-size: 11px !important;
-        font-weight: 700 !important;
+    /* Target spesifik berdasarkan key button */
+    button[data-testid="stBaseButton-secondary"][kind="secondary"]:has(+ *) {
+        background: red !important;
     }
 
-    /* KHUSUS Add Object di dalam expander → override ungu + animasi */
-    div[data-testid="stSidebar"] details button[kind="secondary"] {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6, #4f46e5) !important;
+    /* Atau coba cara ini - target semua button di dalam details/expander */
+    [data-testid="stSidebar"] [data-testid="stExpander"] button {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
         color: white !important;
         border: none !important;
         border-radius: 20px !important;
-        font-weight: 700 !important;
-        font-size: 12px !important;
-        letter-spacing: 1px !important;
-        text-transform: none !important;
-        box-shadow: 0 4px 15px rgba(99,102,241,0.4) !important;
-        transition: all 0.3s ease !important;
-    }
-
-    div[data-testid="stSidebar"] details button[kind="secondary"]:hover {
-        background: linear-gradient(135deg, #818cf8, #a78bfa, #6366f1) !important;
-        box-shadow: 0 0 20px rgba(139,92,246,0.7), 0 0 40px rgba(99,102,241,0.4) !important;
-        transform: translateY(-2px) scale(1.03) !important;
-        letter-spacing: 2px !important;
-    }
-
-    div[data-testid="stSidebar"] details button[kind="secondary"]:active {
-        transform: translateY(0px) scale(0.98) !important;
-        box-shadow: 0 2px 8px rgba(99,102,241,0.3) !important;
-    }
-
-    /* Logout → ungu primary */
-    div[data-testid="stSidebar"] button[kind="primary"] {
-        background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 10px !important;
-        font-size: 11px !important;
-        font-weight: 700 !important;
     }
     </style>
     """, unsafe_allow_html=True)
