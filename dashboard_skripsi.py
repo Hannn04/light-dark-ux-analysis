@@ -1487,6 +1487,42 @@ with st.sidebar:
         border-color: #6366f1 !important;
         box-shadow: 0 4px 12px rgba(99,102,241,0.2) !important;
     }
+                
+    /* Add Object button → hijau/teal */
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:first-of-type {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 11px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(16,185,129,0.3) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:first-of-type:hover {
+        background: linear-gradient(135deg, #34d399, #10b981) !important;
+        box-shadow: 0 4px 16px rgba(16,185,129,0.5) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    /* Delete Object button → merah */
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:last-of-type {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 11px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(239,68,68,0.3) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:last-of-type:hover {
+        background: linear-gradient(135deg, #f87171, #ef4444) !important;
+        box-shadow: 0 4px 16px rgba(239,68,68,0.5) !important;
+        transform: translateY(-2px) !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
