@@ -1219,7 +1219,35 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
 }
             
+/* Manage Applications expander — styling keren */
+    div[data-testid="stSidebar"] details {
+        background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
+        border: 1px solid #c7d2fe !important;
+        border-radius: 12px !important;
+        transition: all 0.3s ease !important;
+    }
 
+    div[data-testid="stSidebar"] details:hover {
+        border-color: #6366f1 !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.15) !important;
+    }
+
+    div[data-testid="stSidebar"] details summary {
+        color: #4f46e5 !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        letter-spacing: 0.3px !important;
+        padding: 10px 14px !important;
+    }
+
+    div[data-testid="stSidebar"] details summary:hover {
+        color: #6366f1 !important;
+    }
+
+    div[data-testid="stSidebar"] details summary svg {
+        fill: #6366f1 !important;
+        color: #6366f1 !important;
+    }
 
 </style>
 """, unsafe_allow_html=True)
