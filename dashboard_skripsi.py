@@ -4180,10 +4180,12 @@ if menu == "Preferensi Responden":
        
 # Replace the Settings section at the bottom with this modern version:
 
+# Replace the Settings section at the bottom with this modern version:
+
 if menu == "Settings":
 
     # ======================
-    # SETTINGS - MODERN UI
+    # SETTINGS - MODERN UI (NO ICONS, UPLOADABLE PROFILE PIC)
     # ======================
     
     # Header with app info
@@ -4199,32 +4201,67 @@ if menu == "Settings":
     """, unsafe_allow_html=True)
 
     # ======================
-    # USER PROFILE CARD
+    # USER PROFILE CARD WITH UPLOADABLE PHOTO
     # ======================
     
-    st.markdown("### 👤 Profil Pengguna", unsafe_allow_html=True)
+    st.markdown("### Profil Pengguna", unsafe_allow_html=True)
     
     col_p1, col_p2 = st.columns([1, 2])
     
     with col_p1:
-        # User avatar placeholder (modern circle)
-        st.markdown(f"""
-        <div style="
-            width:100px;
-            height:100px;
-            border-radius:50%;
-            background:linear-gradient(135deg,#6366F1,#4F46E5);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin:0 auto;
-            box-shadow:0 8px 20px rgba(99,102,241,0.3);
-        ">
-            <span style="font-size:36px;font-weight:700;color:white;">
-                {current_user[0].upper() if current_user else "U"}
-            </span>
-        </div>
-        """, unsafe_allow_html=True)
+        # Initialize profile picture state
+        if "profile_pic" not in st.session_state:
+            st.session_state["profile_pic"] = None
+        
+        # File uploader for profile picture
+        uploaded_pic = st.file_uploader(
+            "Unggah Foto Profil",
+            type=["png", "jpg", "jpeg", "gif"],
+            help="PNG, JPG, atau GIF. Ukuran maks 2MB."
+        )
+        
+        if uploaded_pic is not None:
+            # Validate size (2MB max)
+            if uploaded_pic.size > 2 * 1024 * 1024:
+                st.error("File terlalu besar! Maksimal 2MB.")
+            else:
+                st.session_state["profile_pic"] = uploaded_pic
+                st.success("Foto profil berhasil diunggah!")
+        
+        # Display profile picture
+        if st.session_state["profile_pic"] is not None:
+            try:
+                image = Image.open(st.session_state["profile_pic"])
+                # Resize to fit display
+                image.thumbnail((150, 150))
+                st.image(image, width=120, caption="Foto Profil Saat Ini")
+            except Exception:
+                st.error("Gagal memuat gambar.")
+        else:
+            # Default placeholder avatar
+            st.markdown(f"""
+            <div style="
+                width:120px;
+                height:120px;
+                border-radius:50%;
+                background:linear-gradient(135deg,#6366F1,#4F46E5);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                margin:0 auto;
+                box-shadow:0 8px 20px rgba(99,102,241,0.3);
+            ">
+                <span style="font-size:42px;font-weight:700;color:white;">
+                    {current_user[0].upper() if current_user else "U"}
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Button to remove profile picture
+        if st.session_state["profile_pic"] is not None:
+            if st.button("Hapus Foto Profil", use_container_width=True):
+                st.session_state["profile_pic"] = None
+                st.rerun()
     
     with col_p2:
         with st.container():
@@ -4264,9 +4301,9 @@ if menu == "Settings":
     # PREFERENCES SECTION
     # ======================
     
-    st.markdown("### ⚙️ Pengaturan Preferensi", unsafe_allow_html=True)
+    st.markdown("### Pengaturan Preferensi", unsafe_allow_html=True)
     
-    # Theme toggle (placeholder for future enhancement)
+    # Theme toggle
     col_t1, col_t2 = st.columns(2)
     
     with col_t1:
@@ -4289,7 +4326,7 @@ if menu == "Settings":
     # STUDY INFO SECTION
     # ======================
     
-    st.markdown("### 📊 Info Penelitian", unsafe_allow_html=True)
+    st.markdown("### Info Penelitian", unsafe_allow_html=True)
     
     col_i1, col_i2 = st.columns(2)
     
@@ -4298,7 +4335,7 @@ if menu == "Settings":
             st.markdown(f"""
             <div class="card" style="padding:20px;background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-left:4px solid #6366F1;">
                 <div style="font-size:12px;font-weight:600;color:#6366F1;margin-bottom:8px;">
-                    📋 Desain Studi
+                    Desain Studi
                 </div>
                 <div style="font-size:18px;font-weight:700;color:#1E293B;">
                     Within-Subject Design
@@ -4314,13 +4351,13 @@ if menu == "Settings":
             st.markdown(f"""
             <div class="card" style="padding:20px;background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border-left:4px solid #10B981;">
                 <div style="font-size:12px;font-weight:600;color:#10B981;margin-bottom:8px;">
-                    📈 Metode Analisis
+                    Metode Analisis
                 </div>
                 <div style="font-size:18px;font-weight:700;color:#1E293B;">
                     Parametrik + Non-Parametrik
                 </div>
                 <div style="font-size:12px;color:#64748B;margin-top:4px;">
-                    Shapiro-Wilk → Rekomendasi otomatis uji statistik
+                    Shapiro-Wilk untuk rekomendasi otomatis uji statistik
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -4329,7 +4366,7 @@ if menu == "Settings":
     # DATA MANAGEMENT
     # ======================
     
-    st.markdown("### 🗄️ Manajemen Data", unsafe_allow_html=True)
+    st.markdown("### Manajemen Data", unsafe_allow_html=True)
     
     # Quick stats for data coverage
     def _count_data(table_name):
@@ -4404,17 +4441,17 @@ if menu == "Settings":
     # ACCOUNT ACTIONS
     # ======================
     
-    st.markdown("### 🔐 Akun", unsafe_allow_html=True)
+    st.markdown("### Akun", unsafe_allow_html=True)
     
     col_a1, col_a2 = st.columns(2)
     
     with col_a1:
-        if st.button("🔄 Reset Semua Data", use_container_width=True, type="secondary"):
+        if st.button("Reset Semua Data", use_container_width=True, type="secondary"):
             st.session_state["show_reset_confirm"] = True
             st.rerun()
     
     with col_a2:
-        if st.button("📤 Logout", use_container_width=True, type="primary"):
+        if st.button("Logout", use_container_width=True, type="primary"):
             st.session_state["show_logout_confirm"] = True
             st.rerun()
 
@@ -4422,7 +4459,7 @@ if menu == "Settings":
     # ABOUT SECTION
     # ======================
     
-    st.markdown("### ℹ️ Tentang", unsafe_allow_html=True)
+    st.markdown("### Tentang", unsafe_allow_html=True)
     
     st.markdown(f"""
     <div class="card" style="padding:24px;background:linear-gradient(135deg,#1E293B,#0F172A);">
@@ -4436,7 +4473,7 @@ if menu == "Settings":
                 align-items:center;
                 justify-content:center;
             ">
-                <span style="font-size:24px;color:white;">📊</span>
+                <span style="font-size:24px;color:white;">A</span>
             </div>
             <div>
                 <div style="font-size:16px;font-weight:700;color:white;">
@@ -4451,12 +4488,12 @@ if menu == "Settings":
         <div style="font-size:12px;color:#CBD5E1;line-height:1.7;">
             Platform analitik web untuk penelitian UX perbandingan Light Mode vs Dark Mode.
             Dikembangkan dengan Python Streamlit dan Supabase dengan metodologi 
-            Within-Subject Design untuk akurasi analisis статистика.
+            Within-Subject Design untuk akurasi analisis statistik.
         </div>
         
         <div style="margin-top:16px;padding-top:16px;border-top:1px solid #334155;">
             <div style="font-size:11px;color:#64748B;">
-                🎓 Penelitian · Universitas Islam Indonesia · 2026
+                Penelitian - Universitas Islam Indonesia - 2026
             </div>
         </div>
     </div>
