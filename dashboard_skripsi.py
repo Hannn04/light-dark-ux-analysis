@@ -1421,7 +1421,42 @@ with st.sidebar:
 
     # --- SECTION 3: PARAMETERS ---
     st.markdown('<p class="menu-label">Study Parameters</p>', unsafe_allow_html=True)
-    n = st.number_input("Sample Size (N)", min_value=1, max_value=100, value=25, help="Jumlah responden dalam penelitian ini")
+    st.markdown("""
+    <div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;
+        letter-spacing:1.2px;margin-bottom:4px;">Sample Size</div>
+    """, unsafe_allow_html=True)
+    
+    n = st.number_input(
+        "N",
+        min_value=1,
+        max_value=100,
+        value=25,
+        label_visibility="collapsed",
+        help="Jumlah responden dalam penelitian ini"
+    )
+    
+    # Card info sample size
+    pct = min(n / 100 * 100, 100)
+    bar_color = "#10b981" if n >= 30 else "#f59e0b" if n >= 15 else "#ef4444"
+    label_n = "Ideal (≥30)" if n >= 30 else "Cukup (≥15)" if n >= 15 else "Kecil (<15)"
+    
+    st.markdown(f"""
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;
+        padding:10px 12px;margin-top:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:11px;color:#64748b;">Responden</span>
+            <span style="font-size:13px;font-weight:800;color:#1e293b;">n = {n}</span>
+        </div>
+        <div style="background:#e2e8f0;border-radius:99px;height:6px;overflow:hidden;">
+            <div style="width:{pct}%;height:100%;background:{bar_color};
+                border-radius:99px;transition:width 0.4s ease;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px;">
+            <span style="font-size:9px;font-weight:700;color:{bar_color};">{label_n}</span>
+            <span style="font-size:9px;color:#94a3b8;">{n}/100</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Info Card Aktif
     st.markdown(f"""
