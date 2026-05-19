@@ -1064,6 +1064,18 @@ details {
     border-radius: 8px;
 }
 
+div[data-testid="stSidebar"] details {
+    background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
+    border: 1px solid #c7d2fe !important;
+    border-radius: 12px !important;
+}
+
+div[data-testid="stSidebar"] details summary {
+    color: #4f46e5 !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+}
+
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
