@@ -1449,17 +1449,43 @@ with st.sidebar:
 
     st.markdown("""
     <style>
-    /* Target spesifik berdasarkan key button */
-    button[data-testid="stBaseButton-secondary"][kind="secondary"]:has(+ *) {
-        background: red !important;
+    div[data-testid="stSidebar"] button[kind="secondary"] {
+        background: #fff1f2 !important;
+        color: #ef4444 !important;
+        border: 1px solid #fecaca !important;
+        border-radius: 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
     }
 
-    /* Atau coba cara ini - target semua button di dalam details/expander */
-    [data-testid="stSidebar"] [data-testid="stExpander"] button {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    /* Logout → ungu */
+    div[data-testid="stSidebar"] button[kind="primary"] {
+        background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
         color: white !important;
         border: none !important;
-        border-radius: 20px !important;
+        border-radius: 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+    }
+
+    /* Manage Applications expander */
+    [data-testid="stSidebar"] summary {
+        color: #4f46e5 !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        border-radius: 12px !important;
+        padding: 10px 14px !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"] {
+        border: 1px solid #c7d2fe !important;
+        border-radius: 12px !important;
+        background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stExpander"]:hover {
+        border-color: #6366f1 !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.2) !important;
     }
     </style>
     """, unsafe_allow_html=True)
