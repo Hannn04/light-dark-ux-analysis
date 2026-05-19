@@ -1407,8 +1407,18 @@ with st.sidebar:
 
     st.markdown("""
     <style>
-        /* ===== ADD OBJECT button — ungu ===== */
-        div[data-testid="stSidebar"] details button[kind="secondary"] {
+        /* Semua secondary button di sidebar → merah */
+    div[data-testid="stSidebar"] button[kind="secondary"] {
+        background: #fff1f2 !important;
+        color: #ef4444 !important;
+        border: 1px solid #fecaca !important;
+        border-radius: 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+    }
+
+    /* KHUSUS Add Object di dalam expander → override ungu + animasi */
+    div[data-testid="stSidebar"] details button[kind="secondary"] {
         background: linear-gradient(135deg, #6366f1, #8b5cf6, #4f46e5) !important;
         color: white !important;
         border: none !important;
@@ -1419,7 +1429,6 @@ with st.sidebar:
         text-transform: none !important;
         box-shadow: 0 4px 15px rgba(99,102,241,0.4) !important;
         transition: all 0.3s ease !important;
-        padding: 8px 16px !important;
     }
 
     div[data-testid="stSidebar"] details button[kind="secondary"]:hover {
@@ -1432,6 +1441,16 @@ with st.sidebar:
     div[data-testid="stSidebar"] details button[kind="secondary"]:active {
         transform: translateY(0px) scale(0.98) !important;
         box-shadow: 0 2px 8px rgba(99,102,241,0.3) !important;
+    }
+
+    /* Logout → ungu primary */
+    div[data-testid="stSidebar"] button[kind="primary"] {
+        background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
     }
     </style>
     """, unsafe_allow_html=True)
