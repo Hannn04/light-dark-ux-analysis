@@ -4189,315 +4189,259 @@ if menu == "Settings":
     # ======================
     
     # Header with app info
-    st.markdown(f"""
-    <div style="margin-bottom:28px;">
-        <div style="font-size:24px;font-weight:700;color:#1E293B;letter-spacing:-0.3px;">
-            Settings
-        </div>
-        <div style="font-size:13px;color:#64748B;margin-top:3px;">
-            Pengaturan akun dan preferensi · Objek studi: {app}
-        </div>
+st.markdown(f"""
+<div style="margin-bottom:28px;">
+    <div style="font-size:24px;font-weight:700;color:#1E293B;letter-spacing:-0.3px;">
+        Settings
     </div>
-    """, unsafe_allow_html=True)
+    <div style="font-size:13px;color:#64748B;margin-top:3px;">
+        Pengaturan akun dan preferensi · Objek studi: {app}
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-    # ======================
-    # USER PROFILE CARD WITH UPLOADABLE PHOTO
-    # ======================
-    
-    st.markdown("### Profil Pengguna", unsafe_allow_html=True)
-    
-    col_p1, col_p2 = st.columns([1, 2])
-    
-    with col_p1:
-        # Initialize profile picture state
-        if "profile_pic" not in st.session_state:
-            st.session_state["profile_pic"] = None
-        
-        # File uploader for profile picture
-        uploaded_pic = st.file_uploader(
-            "Unggah Foto Profil",
-            type=["png", "jpg", "jpeg", "gif"],
-            help="PNG, JPG, atau GIF. Ukuran maks 2MB."
-        )
-        
-        if uploaded_pic is not None:
-            # Validate size (2MB max)
-            if uploaded_pic.size > 2 * 1024 * 1024:
-                st.error("File terlalu besar! Maksimal 2MB.")
-            else:
-                st.session_state["profile_pic"] = uploaded_pic
-                st.success("Foto profil berhasil diunggah!")
-        
-        # Display profile picture
-        if st.session_state["profile_pic"] is not None:
-            try:
-                image = Image.open(st.session_state["profile_pic"])
-                # Resize to fit display
-                image.thumbnail((150, 150))
-                st.image(image, width=120, caption="Foto Profil Saat Ini")
-            except Exception:
-                st.error("Gagal memuat gambar.")
-        else:
-            # Default placeholder avatar
-            st.markdown(f"""
-            <div style="
-                width:120px;
-                height:120px;
-                border-radius:50%;
-                background:linear-gradient(135deg,#6366F1,#4F46E5);
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                margin:0 auto;
-                box-shadow:0 8px 20px rgba(99,102,241,0.3);
-            ">
-                <span style="font-size:42px;font-weight:700;color:white;">
-                    {current_user[0].upper() if current_user else "U"}
-                </span>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        # Button to remove profile picture
-        if st.session_state["profile_pic"] is not None:
-            if st.button("Hapus Foto Profil", use_container_width=True):
-                st.session_state["profile_pic"] = None
-                st.rerun()
-    
-    with col_p2:
-        with st.container():
-            st.markdown(f"""
-            <div class="card" style="padding:20px;">
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div>
-                        <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">
-                            Username
-                        </div>
-                        <div style="font-size:16px;font-weight:700;color:{text_main};">
-                            {current_user}
-                        </div>
-                    </div>
-                    <div style="height:1px;background:#E2E8F0;"></div>
-                    <div>
-                        <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">
-                            Objek Studi Aktif
-                        </div>
-                        <div style="font-size:16px;font-weight:700;color:#6366F1;">
-                            {app if app else "Belum dipilih"}
-                        </div>
-                    </div>
-                    <div>
-                        <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">
-                            Sample Size
-                        </div>
-                        <div style="font-size:16px;font-weight:700;color:{text_main};">
-                            {n} responden
-                        </div>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+# ======================
+# USER PROFILE CARD WITH UPLOADABLE PHOTO (MERGED)
+# ======================
 
-    # ======================
-    # PREFERENCES SECTION
-    # ======================
-    
-    st.markdown("### Pengaturan Preferensi", unsafe_allow_html=True)
-    
-    # Theme toggle
-    col_t1, col_t2 = st.columns(2)
-    
-    with col_t1:
-        theme_choice = st.selectbox(
-            "Tampilan Antarmuka",
-            ["Light Mode", "Dark Mode", "Auto (System)"],
-            index=0,
-            help="Pilih tema tampilan aplikasi"
-        )
-    
-    with col_t2:
-        lang_choice = st.selectbox(
-            "Bahasa",
-            ["Bahasa Indonesia", "English"],
-            index=0,
-            help="Pilih bahasa antarmuka"
-        )
+st.markdown("### Profil Pengguna", unsafe_allow_html=True)
 
-    # ======================
-    # STUDY INFO SECTION
-    # ======================
-    
-    st.markdown("### Info Penelitian", unsafe_allow_html=True)
-    
-    col_i1, col_i2 = st.columns(2)
-    
-    with col_i1:
-        with st.container():
-            st.markdown(f"""
-            <div class="card" style="padding:20px;background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-left:4px solid #6366F1;">
-                <div style="font-size:12px;font-weight:600;color:#6366F1;margin-bottom:8px;">
-                    Desain Studi
-                </div>
-                <div style="font-size:18px;font-weight:700;color:#1E293B;">
-                    Within-Subject Design
-                </div>
-                <div style="font-size:12px;color:#64748B;margin-top:4px;">
-                    Setiap responden menguji kedua kondisi (Light & Dark)
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    with col_i2:
-        with st.container():
-            st.markdown(f"""
-            <div class="card" style="padding:20px;background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border-left:4px solid #10B981;">
-                <div style="font-size:12px;font-weight:600;color:#10B981;margin-bottom:8px;">
-                    Metode Analisis
-                </div>
-                <div style="font-size:18px;font-weight:700;color:#1E293B;">
-                    Parametrik + Non-Parametrik
-                </div>
-                <div style="font-size:12px;color:#64748B;margin-top:4px;">
-                    Shapiro-Wilk untuk rekomendasi otomatis uji statistik
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+# Initialize profile picture state
+if "profile_pic" not in st.session_state:
+    st.session_state["profile_pic"] = None
 
-    # ======================
-    # DATA MANAGEMENT
-    # ======================
-    
-    st.markdown("### Manajemen Data", unsafe_allow_html=True)
-    
-    # Quick stats for data coverage
-    def _count_data(table_name):
+# Display profile picture (clickable to upload)
+col_p1, col_p2 = st.columns([1, 2])
+
+with col_p1:
+    # Avatar container - click to upload
+    if st.session_state["profile_pic"] is not None:
         try:
-            if table_name == "data_tot":
-                df = load_data(table_name, current_user, app)
-            elif table_name == "data_error":
-                df = load_data(table_name, current_user, app)
-            elif table_name == "data_ueq_light":
-                df = load_ueq(table_name, current_user, app, n)
-            elif table_name == "data_ueq_dark":
-                df = load_ueq(table_name, current_user, app, n)
-            elif table_name == "data_pref_pos":
-                df = load_pref(table_name, current_user, app, n)
-            elif table_name == "data_pref_neg":
-                df = load_pref(table_name, current_user, app, n)
-            else:
-                return 0
-            
-            # Count non-empty cells
-            cols = [c for c in df.columns if c != "Responden"]
-            return df[cols].apply(pd.to_numeric, errors="coerce").sum().sum()
-        except:
+            image = Image.open(st.session_state["profile_pic"])
+            image.thumbnail((150, 150))
+            st.image(image, width=120, caption="Klik untuk ubah foto")
+        except Exception:
+            st.error("Gagal memuat gambar.")
+            st.session_state["profile_pic"] = None
+    else:
+        # Default placeholder avatar - clickable
+        st.markdown(f"""
+        <div style="
+            width:120px;
+            height:120px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#6366F1,#4F46E5);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0 auto;
+            box-shadow:0 8px 20px rgba(99,102,241,0.3);
+            cursor:pointer;
+        ">
+            <span style="font-size:42px;font-weight:700;color:white;">
+                {current_user[0].upper() if current_user else "U"}
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # File uploader (appears when clicking)
+    uploaded_pic = st.file_uploader(
+        "Klik untuk mengubah foto profil",
+        type=["png", "jpg", "jpeg", "gif"],
+        help="PNG, JPG, atau GIF. Ukuran maks 2MB."
+    )
+    
+    if uploaded_pic is not None:
+        if uploaded_pic.size > 2 * 1024 * 1024:
+            st.error("File terlalu besar! Maksimal 2MB.")
+        else:
+            st.session_state["profile_pic"] = uploaded_pic
+            st.success("Foto profil berhasil diunggah!")
+            st.rerun()
+    
+    # Remove button (only if photo exists)
+    if st.session_state["profile_pic"] is not None:
+        if st.button("Hapus Foto Profil", use_container_width=True):
+            st.session_state["profile_pic"] = None
+            st.rerun()
+
+with col_p2:
+    with st.container():
+        st.markdown(f"""
+        <div class="card" style="padding:20px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">
+                        Username
+                    </div>
+                    <div style="font-size:16px;font-weight:700;color:{text_main};">
+                        {current_user}
+                    </div>
+                </div>
+                <div style="height:1px;background:#E2E8F0;"></div>
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">
+                        Objek Studi Aktif
+                    </div>
+                    <div style="font-size:16px;font-weight:700;color:#6366F1;">
+                        {app if app else "Belum dipilih"}
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">
+                        Sample Size
+                    </div>
+                    <div style="font-size:16px;font-weight:700;color:{text_main};">
+                        {n} responden
+                    </div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ======================
+# STUDY INFO SECTION
+# ======================
+
+st.markdown("### Info Penelitian", unsafe_allow_html=True)
+
+col_i1, col_i2 = st.columns(2)
+
+with col_i1:
+    with st.container():
+        st.markdown(f"""
+        <div class="card" style="padding:20px;background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-left:4px solid #6366F1;">
+            <div style="font-size:12px;font-weight:600;color:#6366F1;margin-bottom:8px;">
+                Desain Studi
+            </div>
+            <div style="font-size:18px;font-weight:700;color:#1E293B;">
+                Within-Subject Design
+            </div>
+            <div style="font-size:12px;color:#64748B;margin-top:4px;">
+                Setiap responden menguji kedua kondisi (Light & Dark)
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+with col_i2:
+    with st.container():
+        st.markdown(f"""
+        <div class="card" style="padding:20px;background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border-left:4px solid #10B981;">
+            <div style="font-size:12px;font-weight:600;color:#10B981;margin-bottom:8px;">
+                Metode Analisis
+            </div>
+            <div style="font-size:18px;font-weight:700;color:#1E293B;">
+                Parametrik + Non-Parametrik
+            </div>
+            <div style="font-size:12px;color:#64748B;margin-top:4px;">
+                Shapiro-Wilk untuk rekomendasi otomatis uji statistik
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ======================
+# DATA MANAGEMENT
+# ======================
+
+st.markdown("### Manajemen Data", unsafe_allow_html=True)
+
+# Quick stats for data coverage
+def _count_data(table_name):
+    try:
+        if table_name == "data_tot":
+            df = load_data(table_name, current_user, app)
+        elif table_name == "data_error":
+            df = load_data(table_name, current_user, app)
+        elif table_name == "data_ueq_light":
+            df = load_ueq(table_name, current_user, app, n)
+        elif table_name == "data_ueq_dark":
+            df = load_ueq(table_name, current_user, app, n)
+        elif table_name == "data_pref_pos":
+            df = load_pref(table_name, current_user, app, n)
+        elif table_name == "data_pref_neg":
+            df = load_pref(table_name, current_user, app, n)
+        else:
             return 0
-    
-    data_stats = {
-        "Time on Task": _count_data("data_tot"),
-        "Error Rate": _count_data("data_error"),
-        "UEQ Light": _count_data("data_ueq_light"),
-        "UEQ Dark": _count_data("data_ueq_dark"),
-        "Pref. Positif": _count_data("data_pref_pos"),
-        "Pref. Negatif": _count_data("data_pref_neg"),
-    }
-    
-    st.markdown("#### Status Data Penelitian", unsafe_allow_html=True)
-    
-    # Create data status cards
-    ds_cols = st.columns(3)
-    for idx, (label, count) in enumerate(data_stats.items()):
-        col = ds_cols[idx % 3]
-        with col:
-            if count > 0:
-                status_color = "#10B981"
-                status_text = "Terisi"
-                bg = "linear-gradient(135deg,#F0FDF4,#ECFDF5)"
-            else:
-                status_color = "#94A3B8"
-                status_text = "Kosong"
-                bg = "linear-gradient(135deg,#F8FAFC,#F1F5F9)"
-            
-            st.markdown(f"""
-            <div style="
-                background:{bg};
-                border:1px solid {status_color}30;
-                border-radius:12px;
-                padding:16px;
-                margin-bottom:12px;
-            ">
-                <div style="font-size:11px;font-weight:600;color:{status_color};text-transform:uppercase;letter-spacing:0.5px;">
-                    {label}
-                </div>
-                <div style="font-size:24px;font-weight:700;color:{status_color};margin-top:4px;">
-                    {count}
-                </div>
-                <div style="font-size:11px;color:#64748B;">
-                    {status_text}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    # ======================
-    # ACCOUNT ACTIONS
-    # ======================
-    
-    st.markdown("### Akun", unsafe_allow_html=True)
-    
-    col_a1, col_a2 = st.columns(2)
-    
-    with col_a1:
-        if st.button("Reset Semua Data", use_container_width=True, type="secondary"):
-            st.session_state["show_reset_confirm"] = True
-            st.rerun()
-    
-    with col_a2:
-        if st.button("Logout", use_container_width=True, type="primary"):
-            st.session_state["show_logout_confirm"] = True
-            st.rerun()
-
-    # ======================
-    # ABOUT SECTION
-    # ======================
-    
-    st.markdown("### Tentang", unsafe_allow_html=True)
-    
-    st.markdown(f"""
-    <div class="card" style="padding:24px;background:linear-gradient(135deg,#1E293B,#0F172A);">
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
-            <div style="
-                width:48px;
-                height:48px;
-                border-radius:12px;
-                background:linear-gradient(135deg,#6366F1,#4F46E5);
-                display:flex;
-                align-items:center;
-                justify-content:center;
-            ">
-                <span style="font-size:24px;color:white;">A</span>
-            </div>
-            <div>
-                <div style="font-size:16px;font-weight:700;color:white;">
-                    UX Analytics Dashboard
-                </div>
-                <div style="font-size:12px;color:#94A3B8;">
-                    Versi 1.0.0
-                </div>
-            </div>
-        </div>
         
-        <div style="font-size:12px;color:#CBD5E1;line-height:1.7;">
-            Platform analitik web untuk penelitian UX perbandingan Light Mode vs Dark Mode.
-            Dikembangkan dengan Python Streamlit dan Supabase dengan metodologi 
-            Within-Subject Design untuk akurasi analisis statistik.
-        </div>
+        # Count non-empty cells
+        cols = [c for c in df.columns if c != "Responden"]
+        return df[cols].apply(pd.to_numeric, errors="coerce").sum().sum()
+    except:
+        return 0
+
+data_stats = {
+    "Time on Task": _count_data("data_tot"),
+    "Error Rate": _count_data("data_error"),
+    "UEQ Light": _count_data("data_ueq_light"),
+    "UEQ Dark": _count_data("data_ueq_dark"),
+    "Pref. Positif": _count_data("data_pref_pos"),
+    "Pref. Negatif": _count_data("data_pref_neg"),
+}
+
+st.markdown("#### Status Data Penelitian", unsafe_allow_html=True)
+
+# Create data status cards
+ds_cols = st.columns(3)
+for idx, (label, count) in enumerate(data_stats.items()):
+    col = ds_cols[idx % 3]
+    with col:
+        if count > 0:
+            status_color = "#10B981"
+            status_text = "Terisi"
+            bg = "linear-gradient(135deg,#F0FDF4,#ECFDF5)"
+        else:
+            status_color = "#94A3B8"
+            status_text = "Kosong"
+            bg = "linear-gradient(135deg,#F8FAFC,#F1F5F9)"
         
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid #334155;">
+        st.markdown(f"""
+        <div style="
+            background:{bg};
+            border:1px solid {status_color}30;
+            border-radius:12px;
+            padding:16px;
+            margin-bottom:12px;
+        ">
+            <div style="font-size:11px;font-weight:600;color:{status_color};text-transform:uppercase;letter-spacing:0.5px;">
+                {label}
+            </div>
+            <div style="font-size:24px;font-weight:700;color:{status_color};margin-top:4px;">
+                {count}
+            </div>
             <div style="font-size:11px;color:#64748B;">
-                Penelitian - Universitas Islam Indonesia - 2026
+                {status_text}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ======================
+# ABOUT SECTION (FIXED)
+# ======================
+
+st.markdown("### Tentang", unsafe_allow_html=True)
+
+st.markdown(f"""
+<div style="background:linear-gradient(135deg,#1E293B,#0F172A);padding:24px;border-radius:16px;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#6366F1,#4F46E5);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:24px;color:white;">A</span>
+        </div>
+        <div>
+            <div style="font-size:16px;font-weight:700;color:white;">
+                UX Analytics Dashboard
+            </div>
+            <div style="font-size:12px;color:#94A3B8;">
+                Versi 1.0.0
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
-
-    # Space at bottom
-    st.markdown("<div style='margin-bottom:50px;'></div>", unsafe_allow_html=True)
+    <div style="font-size:12px;color:#CBD5E1;line-height:1.7;margin-bottom:12px;">
+        Platform analitik web untuk penelitian UX perbandingan Light Mode vs Dark Mode.
+        Dikembangkan dengan Python Streamlit dan Supabase dengan metodologi Within-Subject Design 
+        untuk akurasi analisis statistik.
+    </div>
+    <div style="font-size:11px;color:#64748B;padding-top:12px;border-top:1px solid #334155;">
+        Penelitian - Universitas Islam Indonesia - 2026
+    </div>
+</div>
+""", unsafe_allow_html=True)
