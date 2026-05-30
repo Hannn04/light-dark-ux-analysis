@@ -3946,7 +3946,7 @@ if menu == "UEQ Analysis":
         n_crit  = (df_check["Critical Length"].str.startswith("Ya")).sum()
         if n_hapus > 0 or n_crit > 0:
             st.warning(
-                f"Ditemukan {n_hapus} responden dengan 2+ skala kritis "
+                f"Ditemukan {n_hapus} responden dengan 3+ skala kritis "
                 f"dan {n_crit} dengan Critical Length."
             )
         else:
