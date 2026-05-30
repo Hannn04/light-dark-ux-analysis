@@ -3274,7 +3274,7 @@ if menu == "UEQ Analysis":
             hasil.append({
                 "Responden":       f"R{idx + 1}",
                 "Skala Kritis":    crit,
-                "Perlu Dihapus?":  "Ya" if crit >= 2 else "Tidak",
+                "Perlu Dihapus?":  "Ya" if crit >= 3 else "Tidak",
                 "Jawaban Identik": same,
                 "Critical Length": "Ya" if same > 15 else "Tidak",
             })
