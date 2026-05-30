@@ -48,17 +48,11 @@ if "show_logout_confirm" not in st.session_state:
 if "show_reset_confirm" not in st.session_state:
     st.session_state.show_reset_confirm = False
 
+# ✅ Perbaikan — sesuai handbook (>0.8 = positif, -0.8 s.d. 0.8 = netral, <-0.8 = negatif)
 def interpret_ueq(score):
-    if score > 1.5:
-        return "Excellent"
-    elif score > 0.8:
-        return "Good"
-    elif score > 0:
-        return "Above Average"
-    elif score > -0.8:
-        return "Below Average"
-    else:
-        return "Bad"
+    if score > 0.8:    return "Positive"
+    elif score >= -0.8: return "Neutral"
+    else:              return "Negative"
 
 def wilcoxon_full_spss(light, dark):
 
@@ -1781,100 +1775,47 @@ dark_df = dark_df.apply(pd.to_numeric, errors="coerce")
 # PREPROCESS UEQ (SAMA SEPERTI UEQ TOOL)
 # ======================
 
+# ====================== KONSTANTA UEQ GLOBAL ======================
+UEQ_REVERSE_ITEMS = {3, 4, 5, 9, 10, 12, 17, 18, 19, 21, 23, 24, 25}
 
+UEQ_SKALA_MAP = {
+    "Daya tarik":  [1, 12, 14, 16, 24, 25],
+    "Kejelasan":   [2, 4, 13, 21],
+    "Efisiensi":   [9, 20, 22, 23],
+    "Ketepatan":   [8, 11, 17, 19],
+    "Stimulasi":   [5, 6, 7, 18],
+    "Kebaruan":    [3, 10, 15, 26],
+}
 
-def preprocess_ueq(df):
-    df = df.copy().apply(pd.to_numeric, errors='coerce')
-    df_transformed = df - 4
- 
-    # REVERSE_ITEMS terverifikasi dari UEQ Data Analysis Tool V13
-    # Identik dengan REVERSE_ITEMS di menu UEQ Analysis
-    reverse_items = [3, 4, 5, 9, 10, 12, 17, 18, 19, 21, 23, 24, 25]
-    for i in reverse_items:
+def ueq_transform_global(df_raw):
+    """Transformasi UEQ: raw (1-7) → skala -3 s.d. +3, dengan reverse."""
+    dt = df_raw.copy().apply(pd.to_numeric, errors="coerce") - 4
+    for i in UEQ_REVERSE_ITEMS:
         col = f"I{i}"
-        if col in df_transformed.columns:
-            df_transformed[col] = -df_transformed[col]
-    return df_transformed
+        if col in dt.columns:
+            dt[col] = -dt[col]
+    return dt
 
-
-def ueq_transform(df):
+def ueq_scale_mean_global(df_raw):
     """
-    Transformasi data mentah (1–7) ke skala -3 s.d. +3.
-    Identik dengan sheet DT di UEQ Tools Excel v13.
+    Hitung mean per skala sesuai UEQ Tools V13:
+    1. Transform raw → -3..+3 dengan reverse
+    2. Per responden: mean item dalam skala
+    3. Scale mean = mean dari per-responden mean
     """
-    df = df.copy().apply(pd.to_numeric, errors="coerce")
-    df_t = df - 4
-    for i in REVERSE_ITEMS:
-        col = f"I{i}"
-        if col in df_t.columns:
-            df_t[col] = -df_t[col]
-    return df_t
-
-def calculate_ueq_tool_style(df):
-    """LOGIKA FINAL: Menghitung mean persis UEQ Analysis Tool"""
-    df_proc = preprocess_ueq(df)
-    
-    # Mapping item ke skala sesuai standar UEQ
-    scales_map = {
-        "Daya tarik": [1, 12, 14, 16, 24, 25],
-        "Kejelasan": [2, 4, 13, 21],
-        "Efisiensi": [9, 20, 22, 23],
-        "Ketepatan": [8, 11, 17, 19],
-        "Stimulasi": [5, 6, 7, 18],
-        "Kebaruan": [3, 10, 15, 26]
-    }
-    
+    dt = ueq_transform_global(df_raw)
     results = []
-    for scale_name, item_indices in scales_map.items():
-        cols = [f"I{i}" for i in item_indices]
-        
-        # LOGIKA KRUSIAL: 
-        # 1. Hitung rata-rata per baris (per responden) terlebih dahulu
-        # 2. Kemudian hitung rata-rata dari hasil per responden tersebut
-        scale_means_per_person = df_proc[cols].mean(axis=1)
-        final_scale_mean = scale_means_per_person.mean()
-        
-        # Hitung varians (menggunakan ddof=1 sesuai statistik sampel)
-        final_variance = scale_means_per_person.var()
-        
-        results.append({
-            "Scale": scale_name,
-            "Mean": round(final_scale_mean, 6),
-            "Variance": round(final_variance, 6)
-        })
-        
+    for sk, items in UEQ_SKALA_MAP.items():
+        cols = [f"I{i}" for i in items]
+        per_person = dt[cols].mean(axis=1).dropna()
+        n = len(per_person)
+        mean = float(per_person.mean()) if n > 0 else 0.0
+        var  = float(per_person.var(ddof=1)) if n > 1 else 0.0
+        results.append({"Scale": sk, "Mean": round(mean, 4), "Variance": round(var, 4)})
     return pd.DataFrame(results)
 
 
-def calculate_ueq_mean_only(light_df, dark_df):
-    """Mean per responden untuk paired t-test per scale"""
-    light_proc = preprocess_ueq(light_df)
-    dark_proc = preprocess_ueq(dark_df)
-    
-    results = []
-    for scale_name, item_indices in scales.items():
-        scale_cols = [f"I{i}" for i in item_indices]
-        
-        # Mean PER RESPONDEN (bukan flatten)
-        light_means = light_proc[scale_cols].mean(axis=1)
-        dark_means = dark_proc[scale_cols].mean(axis=1)
-        
-        # Paired t-test
-        mask = ~(light_means.isna() | dark_means.isna())
-        if mask.sum() >= 2:
-            t_stat, p_val = stats.ttest_rel(light_means[mask], dark_means[mask])
-        else:
-            t_stat, p_val = np.nan, np.nan
-        
-        results.append({
-            "Scale": scale_name,
-            "Light Mean": round(light_means.mean(), 3),
-            "Dark Mean": round(dark_means.mean(), 3),
-            "T-stat": round(t_stat, 3),
-            "P-value": round(p_val, 3)
-        })
-    
-    return pd.DataFrame(results)
+
 
 # ======================
 # FUNCTION PAIRED T TEST
@@ -2023,8 +1964,8 @@ if menu == "Overview":
     avg_light_err = df_error[["Light_T1","Light_T2","Light_T3"]].mean().mean()
     avg_dark_err  = df_error[["Dark_T1","Dark_T2","Dark_T3"]].mean().mean()
 
-    light_ueq_mean = calculate_ueq_tool_style(light_df)["Mean"].mean()
-    dark_ueq_mean  = calculate_ueq_tool_style(dark_df)["Mean"].mean()
+    light_ueq_mean = ueq_scale_mean_global(light_df)["Mean"].mean()
+    dark_ueq_mean  = ueq_scale_mean_global(dark_df)["Mean"].mean()
 
 
     aspek = {
@@ -2326,8 +2267,8 @@ if menu == "Overview":
     p_ueq = np.nan
     if not ueq_empty:
         _, p_ueq = stats.ttest_rel(
-            preprocess_ueq(light_df).mean(axis=1),
-            preprocess_ueq(dark_df).mean(axis=1)
+            ueq_transform_global(light_df).mean(axis=1),   # ✅
+            ueq_transform_global(dark_df).mean(axis=1)
         )
 
     pref_diff = []
@@ -2446,8 +2387,8 @@ if menu == "Overview":
     if data_tot_empty or data_err_empty or data_ueq_empty or pref_empty:
         st.info("Silakan input semua data penelitian terlebih dahulu untuk menampilkan kesimpulan.")
     else:
-        result_light   = calculate_ueq_tool_style(light_df)
-        result_dark    = calculate_ueq_tool_style(dark_df)
+        result_light   = ueq_scale_mean_global(light_df)
+        result_dark    = ueq_scale_mean_global(dark_df)
         ueq_scale_m    = {result_light.loc[i,"Scale"]: {"l": result_light.loc[i,"Mean"], "d": result_dark.loc[i,"Mean"]} for i in range(len(result_light))}
         best_ueq_scale = max(ueq_scale_m, key=lambda s: max(ueq_scale_m[s]["l"], ueq_scale_m[s]["d"]))
 
@@ -3234,12 +3175,7 @@ if menu == "UEQ Analysis":
     # =========================================================================
 
     def ueq_transform(df_raw):
-        dt = df_raw.copy().apply(pd.to_numeric, errors="coerce") - 4
-        for i in REVERSE_ITEMS:
-            col = f"I{i}"
-            if col in dt.columns:
-                dt[col] = -dt[col]
-        return dt
+        return ueq_transform_global(df_raw)
 
     def ueq_scale_stats(df_raw):
         """
@@ -3249,7 +3185,7 @@ if menu == "UEQ Analysis":
         - Std Dev scale = std(per-person means, ddof=1)
         - CI = t(0.975, n-1) * std / sqrt(n)
         """
-        dt = ueq_transform(df_raw)
+        dt = ueq_transform_global(df_raw)
         results = []
         for sk, items in SKALA_MAP.items():
             cols = [f"I{i}" for i in items]
@@ -3304,8 +3240,8 @@ if menu == "UEQ Analysis":
         if mean >= b["Good"]:           return "Good"
         elif mean >= b["Above Average"]:return "Above Average"
         elif mean >= b["Below Average"]:return "Below Average"
-        elif mean >= b["Bad"]:          return "Below Average"
-        else:                           return "Bad"
+        elif mean >= b["Bad"]:          return "Bad"            # ← benar
+        else:                              return "Bad"
 
     def benchmark_interpretasi(k):
         return {
