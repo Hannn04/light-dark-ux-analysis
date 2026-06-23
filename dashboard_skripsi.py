@@ -889,6 +889,9 @@ def render_delete_button(file_path, label, columns, default_value=0, key_suffix=
 
 
 theme = st.get_option("theme.base")
+if theme is None or theme == "auto":
+    theme = "dark"
+
 if theme == "dark":
     plt.style.use("dark_background")
 else:
@@ -935,20 +938,20 @@ st.markdown("""
 
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
-    background-color: {bg_sidebar} !important;
-    border-right: 1px solid {border} !important;
+    background-color: var(--secondary-background-color) !important;
+    border-right: 1px solid rgba(128, 128, 128, 0.2) !important;
 }
 [data-testid="stSidebar"] .stMarkdown p, 
 [data-testid="stSidebar"] label, 
 [data-testid="stSidebar"] .sidebar-title {
-    color: {text_sidebar} !important;
+    color: var(--text-color) !important;
 }
             
 /* Header di Sidebar */
 .sidebar-branding {
     padding: 4px 0;
     margin-bottom: 12px;
-    border-bottom: 2px solid #111827;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.2);
 }
 
 .sidebar-title {
@@ -959,7 +962,7 @@ st.markdown("""
 }
             
 .stApp {
-    background-color: {bg_main};
+    background-color: var(--background-color);
 }
 
 /* Kategori Menu */
@@ -990,11 +993,13 @@ st.markdown("""
 }
 
 [data-testid="stMetricV2"] {
-    background-color: {bg_card};
-    color:{text_main};
+    background-color: var(--secondary-background-color);
+    color: var(--text-color);
 }
 div[data-testid="stVerticalBlockBorderWrapper"] > div {
-    background-color: white !important;
+    background-color: var(--secondary-background-color) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
+    border-radius: 12px !important;
 }
 
 .block-container {
@@ -1006,7 +1011,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
 .stDataFrame, .stTable {
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #e5e7eb;
+    border: 1px solid rgba(128, 128, 128, 0.2);
 }
 
 .chart-container {
@@ -1017,11 +1022,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
 .main-title {
     font-size: 28px;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-color);
 }
 
 .subtitle {
-    color: #6b7280;
+    color: var(--text-color);
+    opacity: 0.7;
     margin-bottom: 30px;
 }
 
@@ -1033,41 +1039,42 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
 }
 
 .card {
-    background: {bg_card} !important;
+    background: var(--secondary-background-color) !important;
     padding: 24px;
     border-radius: 20px;
-    border: 1px solid {border} !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     transition: all 0.3s ease;
     height: 100%;
-    color: {text_main} !important;
+    color: var(--text-color) !important;
 }
 
 body, p, span, div {
-    color: {text_main} !important;
+    color: var(--text-color) !important;
 }
             
 .stAlert {
-    background-color: {bg_insight} !important;
-    color: {text_main} !important;
+    background-color: rgba(128, 128, 128, 0.1) !important;
+    color: var(--text-color) !important;
 }
 
 details {
-    background: {bg_card} !important;
-    border: 1px solid {border} !important;
+    background: var(--secondary-background-color) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
     border-radius: 8px;
 }
 
 div[data-testid="stSidebar"] details {
-    background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
-    border: 1px solid #c7d2fe !important;
+    background: rgba(128, 128, 128, 0.05) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
     border-radius: 12px !important;
 }
 
 div[data-testid="stSidebar"] details summary {
-    color: #4f46e5 !important;
+    color: var(--text-color) !important;
     font-weight: 700 !important;
     font-size: 12px !important;
+    opacity: 0.8;
 }
 
 .card:hover {
@@ -1093,14 +1100,14 @@ div[data-testid="stSidebar"] details summary {
 .metric-value {
     font-size: 26px;
     font-weight: 800;
-    color: {text_main} !important;
+    color: var(--text-color) !important;
     line-height: 1.2;
 }
 
 [data-testid="stSidebar"] div[data-baseweb="select"] > div {
-    background-color: #f8fafc !important;
-    color: #1e293b !important;
-    border: 1px solid #e2e8f0 !important;
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
 }
 
 .metric-footer {
@@ -1108,7 +1115,7 @@ div[data-testid="stSidebar"] details summary {
     color: #94a3b8;
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #f8fafc;
+    border-top: 1px solid rgba(128, 128, 128, 0.15);
 }
 
 .status-badge {
@@ -1139,12 +1146,13 @@ div[data-testid="stSidebar"] details summary {
 }
 
 .pref-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
+    background: var(--secondary-background-color) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
     border-radius: 15px;
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    color: var(--text-color) !important;
 }
 .pref-label {
     font-size: 12px;
@@ -1156,7 +1164,7 @@ div[data-testid="stSidebar"] details summary {
 .pref-value {
     font-size: 20px;
     font-weight: 700;
-    color: #111827;
+    color: var(--text-color) !important;
 }
 
 h3 {
@@ -1164,12 +1172,13 @@ h3 {
 }
 
 .p-card {
-    background-color: {bg_card};
+    background-color: var(--secondary-background-color) !important;
     padding: 20px;
     border-radius: 15px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(128, 128, 128, 0.2);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     margin-bottom: 20px;
+    color: var(--text-color) !important;
 }
 
 /* Kasih jarak normal sidebar */
@@ -1227,8 +1236,8 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
             
 /* Manage Applications expander — styling keren */
     div[data-testid="stSidebar"] details {
-        background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
-        border: 1px solid #c7d2fe !important;
+        background: rgba(128, 128, 128, 0.05) !important;
+        border: 1px solid rgba(128, 128, 128, 0.2) !important;
         border-radius: 12px !important;
         transition: all 0.3s ease !important;
     }
@@ -1239,21 +1248,125 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     }
 
     div[data-testid="stSidebar"] details summary {
-        color: #4f46e5 !important;
+        color: var(--text-color) !important;
         font-weight: 700 !important;
         font-size: 12px !important;
         letter-spacing: 0.3px !important;
         padding: 10px 14px !important;
+        opacity: 0.8;
     }
 
     div[data-testid="stSidebar"] details summary:hover {
         color: #6366f1 !important;
+        opacity: 1;
     }
 
     div[data-testid="stSidebar"] details summary svg {
         fill: #6366f1 !important;
         color: #6366f1 !important;
     }
+
+/* Custom classes for theme-adaptive styling */
+.sidebar-active-card {
+    background: rgba(128, 128, 128, 0.08);
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    margin-top: 16px;
+}
+.sidebar-active-label {
+    font-size: 11px;
+    color: #6366F1;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.sidebar-active-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+.sidebar-user-card {
+    background: rgba(128, 128, 128, 0.08);
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    font-size: 12px;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 12px;
+}
+.unggul-light-card {
+    background-color: rgba(99, 102, 241, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #6366f1;
+}
+.unggul-light-title {
+    color: #6366f1;
+}
+.unggul-dark-card {
+    background-color: rgba(148, 163, 184, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid var(--text-color);
+}
+.unggul-dark-title {
+    color: var(--text-color);
+}
+.kpi-card {
+    background: var(--secondary-background-color) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
+    border-radius: 14px;
+    padding: 20px 18px;
+    height: 100%;
+}
+.kpi-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+}
+.kpi-label {
+    font-size: 12px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.8;
+}
+.kpi-value-light {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6366F1 !important;
+}
+.kpi-value-dark {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color) !important;
+}
+.kpi-divider {
+    height: 1px;
+    background: rgba(128, 128, 128, 0.15);
+}
+.pref-value-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-color) !important;
+    margin-bottom: 8px;
+}
+.pref-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(128, 128, 128, 0.15);
+    color: var(--text-color);
+    padding: 3px 10px;
+    border-radius: 20px;
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -1498,17 +1611,11 @@ with st.sidebar:
 
     # Info Card Aktif (larger and more prominent)
     st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 18px;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            margin-top: 16px;
-        ">
-            <div style="font-size: 11px; color: #6366F1; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
+        <div class="sidebar-active-card">
+            <div class="sidebar-active-label">
                 Objek Studi Aktif
             </div>
-            <div style="font-size: 18px; font-weight: 800; color: #1E293B; margin-bottom: 8px;">
+            <div class="sidebar-active-value">
                 {app if app else "Belum dipilih"}
             </div>
             <div style="font-size: 12px; color: #64748B; display: flex; align-items: center; gap: 8px;">
@@ -1519,7 +1626,7 @@ with st.sidebar:
                     border-radius: 50%;
                     background-color: #10B981;
                 "></span>
-                <span style="font-weight: 600;">Active Analysis</span>
+                <span style="font-weight: 600; color: var(--text-color) !important; opacity: 0.7;">Active Analysis</span>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -1534,16 +1641,7 @@ with st.sidebar:
     # USER INFO CARD
     # ======================
     st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, #EEF2FF 0%, #F0FDF4 100%);
-            padding: 14px 18px;
-            border-radius: 14px;
-            border: 1px solid #E0E7FF;
-            font-size: 12px;
-            color: #475569;
-            text-align: center;
-            margin-bottom: 12px;
-        ">
+        <div class="sidebar-user-card">
             Login sebagai <b style="color: #6366F1; font-weight: 700;">{current_user}</b>
         </div>
     """, unsafe_allow_html=True)
@@ -2013,34 +2111,32 @@ if menu == "Overview":
     # ======================
     def _winner_badge(wins):
         if wins:
-            return '<span style="font-size:9px;font-weight:600;background:#EEF2FF;color:#4338CA;padding:2px 7px;border-radius:20px;margin-left:5px;vertical-align:middle;">BEST</span>'
+            return '<span class="pref-badge" style="margin-left:5px;vertical-align:middle;background:rgba(99,102,241,0.2);color:#6366F1 !important;border:1px solid rgba(99,102,241,0.3);">BEST</span>'
         return ""
 
     def _kpi(title, l_val, d_val, unit, lower_is_better=False):
         l_wins = (l_val < d_val) if lower_is_better else (l_val > d_val)
         d_wins = not l_wins
         return f"""
-        <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:14px;
-            padding:20px 18px;height:100%;">
-            <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;
-                letter-spacing:0.08em;margin-bottom:16px;">{title}</div>
+        <div class="kpi-card">
+            <div class="kpi-title">{title}</div>
             <div style="display:flex;flex-direction:column;gap:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-size:12px;color:#64748B;display:flex;align-items:center;gap:6px;">
+                    <div class="kpi-label">
                         <span style="display:inline-block;width:6px;height:6px;border-radius:50%;
                             background:#6366F1;flex-shrink:0;"></span>Light
                     </div>
-                    <div style="font-size:16px;font-weight:700;color:#4338CA;">
+                    <div class="kpi-value-light">
                         {round(l_val, 2)}{unit}{_winner_badge(l_wins)}
                     </div>
                 </div>
-                <div style="height:1px;background:#F1F5F9;"></div>
+                <div class="kpi-divider"></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-size:12px;color:#64748B;display:flex;align-items:center;gap:6px;">
+                    <div class="kpi-label">
                         <span style="display:inline-block;width:6px;height:6px;border-radius:50%;
-                            background:#334155;flex-shrink:0;"></span>Dark
+                            background:#a78bfa;flex-shrink:0;"></span>Dark
                     </div>
-                    <div style="font-size:16px;font-weight:700;color:#334155;">
+                    <div class="kpi-value-dark">
                         {round(d_val, 2)}{unit}{_winner_badge(d_wins)}
                     </div>
                 </div>
@@ -2056,31 +2152,27 @@ if menu == "Overview":
     with col_c:
         st.markdown(_kpi("Error Rate", avg_light_err, avg_dark_err, " ksl", lower_is_better=True), unsafe_allow_html=True)
     with col_d:
-        pref_color = "#4338CA" if best_pref == "Light Mode" else "#1E293B"
-        pref_bg    = "#EEF2FF" if best_pref == "Light Mode" else "#F1F5F9"
+        pref_color = "#6366F1" if best_pref == "Light Mode" else "#a78bfa"
+        pref_bg    = "rgba(99,102,241,0.15)" if best_pref == "Light Mode" else "rgba(167,139,250,0.15)"
         st.markdown(f"""
-        <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:14px;
-            padding:20px 18px;height:100%;">
-            <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;
-                letter-spacing:0.08em;margin-bottom:16px;">Best Preference</div>
-            <div style="font-size:18px;font-weight:700;color:{pref_color};margin-bottom:8px;">
+        <div class="kpi-card">
+            <div class="kpi-title">Best Preference</div>
+            <div class="pref-value-text" style="color:{pref_color} !important;">
                 {best_pref}
             </div>
-            <div style="display:inline-block;font-size:10px;font-weight:600;
-                background:{pref_bg};color:{pref_color};
-                padding:3px 10px;border-radius:20px;">
+            <div class="pref-badge" style="background:{pref_bg}; color:{pref_color} !important;">
                 {light_pref} Light &nbsp;·&nbsp; {dark_pref} Dark
             </div>
         </div>
         """, unsafe_allow_html=True)
     with col_e:
         st.markdown(f"""
-        <div style="background:#6366F1;border-radius:14px;padding:20px 18px;height:100%;color:white;">
+        <div class="kpi-card" style="background: linear-gradient(135deg, #6366F1, #4f46e5) !important; color: white !important;">
             <div style="font-size:10px;font-weight:700;text-transform:uppercase;
-                letter-spacing:0.08em;margin-bottom:16px;opacity:0.7;">Objek Studi</div>
-            <div style="font-size:20px;font-weight:700;margin-bottom:6px;">{app}</div>
-            <div style="font-size:11px;opacity:0.7;">N = {n} responden</div>
-            <div style="font-size:11px;opacity:0.7;">3 tugas per mode</div>
+                letter-spacing:0.08em;margin-bottom:16px;opacity:0.7;color: white !important;">Objek Studi</div>
+            <div style="font-size:20px;font-weight:700;margin-bottom:6px;color: white !important;">{app}</div>
+            <div style="font-size:11px;opacity:0.7;color: white !important;">N = {n} responden</div>
+            <div style="font-size:11px;opacity:0.7;color: white !important;">3 tugas per mode</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2101,18 +2193,18 @@ if menu == "Overview":
         fig.add_trace(go.Bar(
             x=["Light", "Dark"],
             y=[l_val, d_val],
-            marker_color=["#6366F1", "#334155"],
+            marker_color=["#6366F1", "#a78bfa"],
             text=[f"{round(l_val,1)}{unit}", f"{round(d_val,1)}{unit}"],
             textposition="outside",
-            textfont=dict(size=12, color=["#4338CA", "#334155"]),
+            textfont=dict(size=12, color=["#6366F1", "#a78bfa"]),
             width=0.45,
         ))
         fig.update_layout(
-            title=dict(text=title, font=dict(size=12, color="#64748B"), x=0, xanchor="left"),
-            yaxis=dict(showgrid=True, gridcolor="#F1F5F9", zeroline=False,
+            title=dict(text=title, font=dict(size=12, color="#94A3B8"), x=0, xanchor="left"),
+            yaxis=dict(showgrid=True, gridcolor="rgba(128, 128, 128, 0.15)", zeroline=False,
                        tickfont=dict(size=10, color="#94A3B8"), showline=False),
-            xaxis=dict(tickfont=dict(size=11, color="#374151"), showline=False),
-            plot_bgcolor="white", paper_bgcolor="white",
+            xaxis=dict(tickfont=dict(size=11, color="#94A3B8"), showline=False),
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             margin=dict(t=36, b=16, l=8, r=8),
             height=220,
             showlegend=False,
@@ -3465,14 +3557,14 @@ if menu == "UEQ Analysis":
         ))
         fig_bar.add_trace(go.Bar(
             x=stats_dark["Skala"], y=stats_dark["Mean"], name="Dark Mode",
-            marker_color="#1e293b",
+            marker_color="#a78bfa",
             text=[f"{v:.4f}" for v in stats_dark["Mean"]],
             textposition="outside",
             error_y=dict(
                 type='data',
                 array=stats_dark["Confidence (±)"].tolist(),
                 visible=True,
-                color="#1e293b",
+                color="#a78bfa",
                 thickness=1.5,
                 width=6
             )
@@ -3486,7 +3578,7 @@ if menu == "UEQ Analysis":
             yaxis=dict(range=[-3, 3], title="Mean Score", dtick=0.5),
             barmode="group", height=500,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
@@ -3501,7 +3593,7 @@ if menu == "UEQ Analysis":
         ))
         fig_bar2.add_trace(go.Bar(
             x=stats_dark["Skala"], y=stats_dark["Mean"], name="Dark Mode",
-            marker_color="#1e293b",
+            marker_color="#a78bfa",
             text=[f"{v:.4f}" for v in stats_dark["Mean"]],
             textposition="outside",
         ))
@@ -3514,7 +3606,7 @@ if menu == "UEQ Analysis":
             yaxis=dict(range=[-2, 2], title="Mean Score", dtick=0.5),
             barmode="group", height=480,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_bar2, use_container_width=True)
 
@@ -3548,7 +3640,7 @@ if menu == "UEQ Analysis":
         st.markdown("#### Grafik Mean Per Item dengan Confidence Interval")
         mode_item = st.radio("Mode:", ["Light Mode","Dark Mode"], horizontal=True, key="item_chart_mode")
         item_stats_sel = item_light if mode_item == "Light Mode" else item_dark
-        color_sel = "#6366f1" if mode_item == "Light Mode" else "#1e293b"
+        color_sel = "#6366f1" if mode_item == "Light Mode" else "#a78bfa"
 
         fig_item = go.Figure()
         fig_item.add_trace(go.Scatter(
@@ -3593,7 +3685,7 @@ if menu == "UEQ Analysis":
             yaxis=dict(range=[-3, 3], title="Mean Score", dtick=0.5),
             xaxis=dict(title="Item"),
             height=450,
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             showlegend=True
         )
         st.plotly_chart(fig_item, use_container_width=True)
@@ -3635,7 +3727,7 @@ if menu == "UEQ Analysis":
 
         for i, (label, stats_sel, color) in enumerate([
             ("Light Mode", stats_light, "#6366f1"),
-            ("Dark Mode",  stats_dark,  "#1e293b")
+            ("Dark Mode",  stats_dark,  "#a78bfa")
         ]):
             offset = -0.15 if i == 0 else 0.15
             fig_ci.add_trace(go.Scatter(
@@ -3663,7 +3755,7 @@ if menu == "UEQ Analysis":
             xaxis=dict(tickvals=x_pos, ticktext=skala_names, title="Skala"),
             yaxis=dict(range=[-3, 3], title="Mean Score", dtick=0.5),
             height=450,
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             legend=dict(orientation="h", yanchor="bottom", y=1.02)
         )
         st.plotly_chart(fig_ci, use_container_width=True)
@@ -3727,7 +3819,7 @@ if menu == "UEQ Analysis":
             yaxis=dict(title="Jumlah Responden"),
             xaxis=dict(title="Item"),
             legend=dict(orientation="h", yanchor="bottom", y=1.02),
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_dist, use_container_width=True)
 
@@ -3787,7 +3879,7 @@ if menu == "UEQ Analysis":
         st.markdown("#### Grafik Benchmark")
         mode_bench = st.radio("Mode:", ["Light Mode","Dark Mode"], horizontal=True, key="bench_mode")
         stats_bench = stats_light if mode_bench == "Light Mode" else stats_dark
-        color_bench = "#6366f1" if mode_bench == "Light Mode" else "#1e293b"
+        color_bench = "#6366f1" if mode_bench == "Light Mode" else "#a78bfa"
 
         COLOR_BENCH = {
             "Excellent":     "#27500A",
@@ -3866,7 +3958,7 @@ if menu == "UEQ Analysis":
             barmode="overlay",
             height=520,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_bench, use_container_width=True)
 
@@ -3911,7 +4003,7 @@ if menu == "UEQ Analysis":
             x=stats_dark["Skala"].tolist(),
             y=stats_dark["Mean"].tolist(),
             name="Dark Mode",
-            marker_color="rgba(30,41,59,0.7)",
+            marker_color="rgba(167,139,250,0.7)",
             text=[f"{v:.4f}" for v in stats_dark["Mean"]],
             textposition="outside",
         ))
@@ -3919,7 +4011,7 @@ if menu == "UEQ Analysis":
             barmode="group", height=480,
             yaxis=dict(range=[-1, 3], title="Mean Score", dtick=0.25),
             legend=dict(orientation="h", yanchor="bottom", y=1.02),
-            plot_bgcolor="white", paper_bgcolor="white",
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_bench_cmp, use_container_width=True)
 
@@ -3934,7 +4026,7 @@ if menu == "UEQ Analysis":
 
         def highlight_inkons(row):
             if row["Perlu Dihapus?"].startswith("Ya") or row["Critical Length"].startswith("Ya"):
-                return ["background-color:#FEF3C7"] * len(row)
+                return ["background-color:rgba(245, 158, 11, 0.2)"] * len(row)
             return [""] * len(row)
 
         st.dataframe(
@@ -4199,15 +4291,15 @@ if menu == "Preferensi Responden":
         c1, c2 = st.columns(2)
         with c1:
             st.markdown(f"""
-            <div style="background-color:rgba(99, 102, 241, 0.1); padding:15px; border-radius:10px; border-left:5px solid #6366f1;">
-                <b style="color:#6366f1;">Unggul Light Mode</b><br>
+            <div class="unggul-light-card">
+                <b class="unggul-light-title">Unggul Light Mode</b><br>
                 <p style="font-size:13px; margin-top:8px;">{", ".join(l_aspek) if l_aspek else "Tidak ada"}</p>
             </div>
             """, unsafe_allow_html=True)
         with c2:
             st.markdown(f"""
-            <div style="background-color:rgba(30, 41, 59, 0.1); padding:15px; border-radius:10px; border-left:5px solid #1e293b;">
-                <b style="color:#1e293b;">Unggul Dark Mode</b><br>
+            <div class="unggul-dark-card">
+                <b class="unggul-dark-title">Unggul Dark Mode</b><br>
                 <p style="font-size:13px; margin-top:8px;">{", ".join(d_aspek) if d_aspek else "Tidak ada"}</p>
             </div>
             """, unsafe_allow_html=True)
