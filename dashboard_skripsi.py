@@ -885,49 +885,383 @@ def render_delete_button(file_path, label, columns, default_value=0, key_suffix=
                     st.rerun()
                 except Exception as e:
                     st.error(f"Gagal menghapus: {e}")
+# ── Theme toggle (session_state) — default: light ─────────────────────────
+if "app_theme" not in st.session_state:
+    st.session_state["app_theme"] = "light"   # ← default LIGHT
 
-
-
-theme = st.get_option("theme.base")
-if theme is None or theme == "auto":
-    theme = "dark"
+theme = st.session_state["app_theme"]
 
 if theme == "dark":
     plt.style.use("dark_background")
 else:
     plt.style.use("default")
-    
-if theme == "dark":
 
-    bg_main = "#020617"
-    bg_card = "#0f172a"
+# Python colour variables (used in f-string HTML throughout the file)
+if theme == "dark":
+    bg_main    = "#020617"
+    bg_card    = "#0f172a"
     bg_sidebar = "#020617"
     bg_insight = "#1e293b"
-
-    text_main = "#f1f5f9"
-    text_soft = "#94a3b8"
-
-    border = "#1e293b"
-
+    text_main  = "#f1f5f9"
+    text_soft  = "#94a3b8"
+    border     = "#1e293b"
 else:
-
-    bg_main = "linear-gradient(135deg,#f8fafc,#eef2f7)"
-    bg_card = "#ffffff"
+    bg_main    = "#f8fafc"
+    bg_card    = "#ffffff"
     bg_sidebar = "#f8fafc"
     bg_insight = "#f1f5f9"
+    text_main  = "#111827"
+    text_soft  = "#6b7280"
+    border     = "#e5e7eb"
 
-    text_main = "#111827"
-    text_soft = "#6b7280"
+# ======================
+# DARK MODE CSS OVERRIDE
+# ======================
+# config.toml = light, jadi dark mode butuh override manual yang komprehensif
+if theme == "dark":
+    st.markdown("""
+    <style>
+    /* ══════════════════════════════════════════════════
+       DARK MODE — Comprehensive CSS Override
+       config.toml = light, so we override everything here
+    ══════════════════════════════════════════════════ */
 
-    border = "#e5e7eb"
+    /* 1. CSS Variables */
+    :root {
+        --background-color: #020617 !important;
+        --secondary-background-color: #0f172a !important;
+        --text-color: #f1f5f9 !important;
+        --primary-color: #6366f1 !important;
+    }
 
-icon = Image.open("assets/icon.png")  # sesuaikan nama file-nya
+    /* 2. App & main background */
+    .stApp {
+        background-color: #020617 !important;
+    }
+    section.main, section.main > div, .block-container {
+        background-color: #020617 !important;
+    }
 
-st.set_page_config(
-    page_title="UX Research Dashboard",
-    layout="wide",
-    page_icon=icon
-)
+    /* 3. Global text — use .stApp as scope to allow inline overrides */
+    .stApp p, .stApp li, .stApp td, .stApp th,
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+    .stApp label, .stApp legend,
+    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span,
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] span,
+    [data-testid="stText"], [data-testid="stWidgetLabel"],
+    [data-testid="stCaptionContainer"] {
+        color: #f1f5f9 !important;
+    }
+
+    /* 4. Sidebar — all children inherit dark */
+    [data-testid="stSidebar"] {
+        background-color: #020617 !important;
+    }
+    [data-testid="stSidebar"] > div,
+    [data-testid="stSidebar"] section,
+    [data-testid="stSidebar"] .block-container {
+        background-color: #020617 !important;
+    }
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] div,
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        color: #f1f5f9 !important;
+    }
+
+    /* 5. Sidebar — input, select, number input */
+    [data-testid="stSidebar"] [data-baseweb="input"] > div,
+    [data-testid="stSidebar"] [data-baseweb="select"] > div,
+    [data-testid="stSidebar"] [data-baseweb="textarea"] > div,
+    [data-testid="stSidebar"] input[type="text"],
+    [data-testid="stSidebar"] input[type="number"],
+    [data-testid="stSidebar"] [data-testid="stNumberInput"] > div {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        border-color: #334155 !important;
+    }
+    [data-testid="stSidebar"] input {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+    }
+    [data-testid="stSidebar"] input::placeholder {
+        color: #64748b !important;
+    }
+
+    /* 6. Sidebar — expander & its inner content */
+    [data-testid="stSidebar"] details,
+    [data-testid="stSidebar"] details > div,
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"],
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"] > div {
+        background-color: #0f172a !important;
+        border-color: rgba(99,102,241,0.3) !important;
+    }
+    /* Expander header/summary — background + text */
+    [data-testid="stSidebar"] details summary,
+    [data-testid="stSidebar"] details summary > div,
+    [data-testid="stSidebar"] [data-testid="stExpander"] > div:first-child,
+    [data-testid="stSidebar"] [data-testid="stExpanderToggleIcon"],
+    [data-testid="stSidebar"] [data-testid="stExpanderToggleIcon"] ~ div {
+        background-color: #0f172a !important;
+        color: #6366f1 !important;
+    }
+    /* Streamlit wraps expander in an extra div — force it dark too */
+    [data-testid="stSidebar"] [data-testid="stExpander"] {
+        background-color: #0f172a !important;
+        border: 1px solid rgba(99,102,241,0.3) !important;
+        border-radius: 12px !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stExpander"] > div {
+        background-color: #0f172a !important;
+    }
+
+    /* 7. Main content — input, select */
+    [data-baseweb="input"] > div,
+    [data-baseweb="select"] > div,
+    [data-baseweb="select"] li,
+    [data-baseweb="textarea"] > div,
+    [data-baseweb="input"] input,
+    [data-baseweb="select"] input,
+    input[type="text"], input[type="number"] {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        border-color: #334155 !important;
+    }
+    input::placeholder, textarea::placeholder {
+        color: #64748b !important;
+    }
+
+    /* 8. Dropdown popover */
+    [data-baseweb="popover"],
+    [data-baseweb="popover"] ul,
+    [data-baseweb="menu"],
+    [data-baseweb="popover"] li,
+    [data-baseweb="list"] {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+    }
+    [data-baseweb="popover"] li:hover,
+    [data-baseweb="option"]:hover {
+        background-color: #334155 !important;
+    }
+
+    /* 9. Cards & bordered containers */
+    [data-testid="stVerticalBlockBorderWrapper"] > div,
+    div[data-testid="stMetricV2"],
+    .card, .p-card, .pref-card, .kpi-card,
+    .sidebar-active-card, .sidebar-user-card {
+        background-color: #0f172a !important;
+        border-color: #1e293b !important;
+    }
+
+    /* 10. DataFrames & tables */
+    .stDataFrame, [data-testid="stDataFrame"],
+    .stDataFrame *, [data-testid="stDataFrame"] *,
+    [data-testid="stDataFrameResizable"] * {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+        border-color: #1e293b !important;
+    }
+    [data-testid="stDataFrame"] th,
+    [data-testid="stDataFrameResizable"] th {
+        background-color: #1e293b !important;
+    }
+
+    /* 11. Main area expanders */
+    details, details > div,
+    [data-testid="stExpander"],
+    [data-testid="stExpanderDetails"],
+    [data-testid="stExpanderDetails"] > div {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+        border-color: #1e293b !important;
+    }
+    details summary {
+        color: #f1f5f9 !important;
+    }
+
+    /* 12. File uploader */
+    [data-testid="stFileUploader"],
+    [data-testid="stFileUploader"] > div,
+    [data-testid="stFileUploaderDropzone"] {
+        background-color: #0f172a !important;
+        border-color: #334155 !important;
+        color: #f1f5f9 !important;
+    }
+    [data-testid="stFileUploader"] span,
+    [data-testid="stFileUploader"] p,
+    [data-testid="stFileUploader"] small {
+        color: #94a3b8 !important;
+    }
+
+    /* 13. Radio & checkbox */
+    [data-testid="stRadio"] label,
+    [data-testid="stRadio"] span,
+    [data-testid="stCheckbox"] label,
+    [data-testid="stCheckbox"] span {
+        color: #f1f5f9 !important;
+    }
+
+    /* 14. Tabs */
+    [data-baseweb="tab-list"] {
+        background-color: transparent !important;
+        border-bottom-color: #1e293b !important;
+    }
+    [data-baseweb="tab"] {
+        color: #94a3b8 !important;
+        background-color: transparent !important;
+    }
+    [aria-selected="true"][data-baseweb="tab"] {
+        color: #6366f1 !important;
+        border-bottom-color: #6366f1 !important;
+    }
+    [data-baseweb="tab-panel"] {
+        background-color: transparent !important;
+    }
+
+    /* 15. Alerts */
+    .stAlert, [data-testid="stAlert"] {
+        background-color: rgba(99,102,241,0.1) !important;
+        border-color: rgba(99,102,241,0.3) !important;
+    }
+    [data-testid="stAlert"] p,
+    [data-testid="stAlert"] span {
+        color: #f1f5f9 !important;
+    }
+    /* Info box */
+    [data-testid="stAlert"][data-baseweb="notification"] {
+        background-color: rgba(99,102,241,0.12) !important;
+    }
+
+    /* 16. Metrics */
+    [data-testid="stMetricLabel"] { color: #94a3b8 !important; }
+    [data-testid="stMetricValue"] { color: #f1f5f9 !important; }
+    [data-testid="stMetricDelta"] { color: #94a3b8 !important; }
+
+    /* 17. Number input — polished dark styling */
+    /* Outer wrapper */
+    [data-testid="stNumberInput"] > div {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    /* Focus ring */
+    [data-testid="stNumberInput"] > div:focus-within {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.25) !important;
+    }
+    /* Input field itself */
+    [data-testid="stNumberInput"] input {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 8px 12px !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+    /* Hide browser's built-in clear (X) button */
+    [data-testid="stNumberInput"] input::-webkit-search-cancel-button,
+    [data-testid="stNumberInput"] input::-webkit-inner-spin-button,
+    [data-testid="stNumberInput"] input::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        margin: 0 !important;
+    }
+    [data-testid="stNumberInput"] input[type=number] {
+        -moz-appearance: textfield !important;
+    }
+    /* Step buttons container */
+    [data-testid="stNumberInput"] > div > div:last-child {
+        background-color: #1e293b !important;
+        border-left: 1px solid #334155 !important;
+        gap: 2px !important;
+        padding: 4px !important;
+    }
+    /* +/- buttons */
+    [data-testid="stNumberInput"] button {
+        background-color: #0f172a !important;
+        color: #94a3b8 !important;
+        border: 1px solid #334155 !important;
+        border-radius: 6px !important;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        transition: all 0.18s ease !important;
+        cursor: pointer !important;
+    }
+    /* Hover +/- */
+    [data-testid="stNumberInput"] button:hover {
+        background-color: #6366f1 !important;
+        color: #ffffff !important;
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 10px rgba(99,102,241,0.45) !important;
+        transform: scale(1.08) !important;
+    }
+    /* Active +/- */
+    [data-testid="stNumberInput"] button:active {
+        background-color: #4338ca !important;
+        transform: scale(0.95) !important;
+        box-shadow: none !important;
+    }
+    /* Tooltip help icon */
+    [data-testid="stNumberInput"] svg[data-testid="stTooltipIcon"],
+    [data-testid="stWidgetLabel"] svg {
+        color: #475569 !important;
+        fill: #475569 !important;
+        transition: color 0.2s ease !important;
+    }
+    [data-testid="stWidgetLabel"]:hover svg {
+        color: #6366f1 !important;
+        fill: #6366f1 !important;
+    }
+
+
+    /* 18. Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* 19. HR divider */
+    hr { border-color: #1e293b !important; }
+
+    /* 20. Code & pre */
+    code { background: #1e293b !important; color: #a78bfa !important; }
+    pre { background: #0f172a !important; border-color: #1e293b !important; }
+
+    /* 21. Buttons — default secondary */
+    [data-testid="stBaseButton-secondary"] {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        border-color: #334155 !important;
+    }
+    [data-testid="stBaseButton-secondary"]:hover {
+        background-color: #334155 !important;
+    }
+
+    /* 22. Caption & small */
+    .stCaption, [data-testid="stCaptionContainer"],
+    small { color: #64748b !important; }
+
+    /* 23. Tooltip */
+    [data-testid="stTooltipContent"] {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # ======================
 # CSS MODERN
@@ -1049,8 +1383,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
     color: var(--text-color) !important;
 }
 
-body, p, span, div {
-    color: var(--text-color) !important;
+/* Hanya target Streamlit markdown container, bukan semua elemen inline */
+.stMarkdown {
+    color: var(--text-color);
+}
+.stMarkdown p {
+    color: var(--text-color);
 }
             
 .stAlert {
@@ -1062,6 +1400,43 @@ details {
     background: var(--secondary-background-color) !important;
     border: 1px solid rgba(128, 128, 128, 0.2) !important;
     border-radius: 8px;
+}
+
+/* Inner body content of main-area expanders */
+details > div,
+[data-testid="stExpanderDetails"],
+[data-testid="stExpanderDetails"] > div {
+    background: var(--secondary-background-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Download button in expander - make it stand out */
+[data-testid="stExpander"] [data-testid="stDownloadButton"] button,
+[data-testid="stExpander"] [data-testid="stDownloadButton"] button:focus {
+    background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stExpander"] [data-testid="stDownloadButton"] button:hover {
+    background: linear-gradient(135deg, #818cf8, #6366f1) !important;
+    box-shadow: 0 4px 12px rgba(99,102,241,0.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Radio labels inside expander */
+[data-testid="stExpander"] .stRadio label,
+[data-testid="stExpander"] .stRadio span {
+    color: var(--text-color) !important;
+}
+
+/* Selectbox inside expander */
+[data-testid="stExpander"] [data-baseweb="select"] > div {
+    background: var(--background-color) !important;
+    color: var(--text-color) !important;
+    border-color: rgba(128,128,128,0.3) !important;
 }
 
 div[data-testid="stSidebar"] details {
@@ -1409,6 +1784,19 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {{
     border-color: {border} !important;
     color: {text_main} !important;
 }}
+/* Theme toggle button */
+#btn_theme_toggle, button[key="btn_theme_toggle"],
+[data-testid="stSidebar"] button:has(> div > p:contains("Dark Mode")),
+[data-testid="stSidebar"] button:has(> div > p:contains("Light Mode")) {{
+    background: {'rgba(167,139,250,0.15)' if theme == 'dark' else 'rgba(99,102,241,0.1)'} !important;
+    color: {'#a78bfa' if theme == 'dark' else '#4f46e5'} !important;
+    border: 1px solid {'rgba(167,139,250,0.4)' if theme == 'dark' else 'rgba(99,102,241,0.3)'} !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+    transition: all 0.2s ease !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1459,12 +1847,12 @@ with st.sidebar:
     # ======================
     # BRANDING HEADER (Modern)
     # ======================
-    st.markdown("""
+    st.markdown(f"""
         <div style="
             text-align: center; 
-            padding: 16px 0 24px 0;
+            padding: 16px 0 20px 0;
             margin-bottom: 8px;
-            border-bottom: 2px solid #eef2ff;
+            border-bottom: 2px solid {'rgba(238,242,255,0.15)' if theme == 'dark' else '#eef2ff'};
         ">
             <h1 style="
                 font-size: 28px; 
@@ -1482,6 +1870,16 @@ with st.sidebar:
             ">Universitas Islam Indonesia</p>
         </div>
     """, unsafe_allow_html=True)
+
+    # ======================
+    # THEME TOGGLE
+    # ======================
+    is_dark = (theme == "dark")
+    toggle_label = "🌙 Dark Mode" if is_dark else "☀️ Light Mode"
+    toggle_help  = "Klik untuk Light Mode" if is_dark else "Klik untuk Dark Mode"
+    if st.button(toggle_label, use_container_width=True, key="btn_theme_toggle", help=toggle_help):
+        st.session_state["app_theme"] = "light" if is_dark else "dark"
+        st.rerun()
 
     # ======================
     # SECTION 1: RESEARCH OBJECT (Polished)
