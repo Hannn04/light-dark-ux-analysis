@@ -706,7 +706,7 @@ def render_spss_wilcoxon(pairs_data):
 def dataset_manager(df, expected_columns, save_path, title, filename_base):
 
     st.markdown(f"""
-    <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:8px;">
+    <div style="font-size:16px;font-weight:600;color:{text_main};margin-bottom:8px;">
     Kelola Dataset
     </div>
     """, unsafe_allow_html=True)
@@ -2097,10 +2097,10 @@ if menu == "Overview":
     # ======================
     st.markdown(f"""
     <div style="margin-bottom:28px;">
-        <div style="font-size:24px;font-weight:700;color:#1E293B;letter-spacing:-0.3px;">
+        <div style="font-size:24px;font-weight:700;color:{text_main};letter-spacing:-0.3px;">
             Research Overview
         </div>
-        <div style="font-size:13px;color:#64748B;margin-top:3px;">
+        <div style="font-size:13px;color:{text_soft};margin-top:3px;">
             {app} &nbsp;·&nbsp; {n} responden &nbsp;·&nbsp; Within-Subject Design
         </div>
     </div>
@@ -2262,7 +2262,7 @@ if menu == "Overview":
         with col:
             with st.container(border=True):
                 st.markdown(f"""
-                <div style="font-size:13px;font-weight:600;color:#1E293B;
+                <div style="font-size:13px;font-weight:600;color:{text_main};
                     margin-bottom:12px;">{label}</div>
                 """, unsafe_allow_html=True)
                 if any(v > 0 for v in percent_dict.values()):
@@ -2295,9 +2295,9 @@ if menu == "Overview":
                                 <div style="display:flex;align-items:center;gap:7px;">
                                     <div style="width:7px;height:7px;border-radius:50%;
                                         background:{c};flex-shrink:0;"></div>
-                                    <span style="font-size:11px;color:#374151;">{name}</span>
+                                    <span style="font-size:11px;color:{text_soft};">{name}</span>
                                 </div>
-                                <span style="font-size:11px;font-weight:600;color:#1E293B;">
+                                <span style="font-size:11px;font-weight:600;color:{text_main};">
                                     {round(val,1)}%
                                 </span>
                             </div>"""
@@ -2440,12 +2440,12 @@ if menu == "Overview":
                     '<div style="width:7px;height:7px;border-radius:50%;'
                     'background:' + dot_bg + ';flex-shrink:0;"></div>'
                     '<div>'
-                      '<div style="font-size:13px;font-weight:600;color:#334155;">' + label + '</div>'
+                      f'<div style="font-size:13px;font-weight:600;color:{text_main};">' + label + '</div>'
                       '<div style="font-size:10px;color:#6366F1;margin-top:1px;">' + method + '</div>'
                     '</div>'
                   '</div>'
                   '<div style="text-align:right;">'
-                    '<div style="font-size:14px;font-weight:700;color:' + sig_color + ';">p = ' + p_text + '</div>'
+                    '<div style="font-size:14px;font-weight:700;color:' + sig_color + ';">' + 'p = ' + p_text + '</div>'
                     '<div style="font-size:9px;color:' + sig_color + ';font-weight:600;'
                     'text-transform:uppercase;margin-top:1px;">' + sig_text + '</div>'
                   '</div>'
@@ -2453,8 +2453,8 @@ if menu == "Overview":
             )
 
         card_html = (
-            '<div style="border:1px solid #E2E8F0;border-radius:14px;padding:20px 22px;height:100%;">'
-              '<div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:12px;">'
+            f'<div style="border:1px solid rgba(128,128,128,0.2);border-radius:14px;padding:20px 22px;height:100%;">'
+              f'<div style="font-size:12px;font-weight:600;color:{text_main};margin-bottom:12px;">'
                 'Rincian Metode Analisis'
               '</div>'
             + rows_html +
@@ -2509,20 +2509,20 @@ if menu == "Overview":
         worst_aspect_mode = aspect_scores[worst_aspect]["mode"] if aspect_scores else "—"
 
         sig_label  = "Signifikan" if p_val_final < 0.05 else "Tidak Signifikan"
-        sig_color  = "#166534" if p_val_final < 0.05 else "#92400E"
-        sig_bg     = "#F0FDF4" if p_val_final < 0.05 else "#FFFBEB"
-        rec_color  = "#4338CA" if best_pref == "Light Mode" else "#1E293B"
-        rec_bg     = "#EEF2FF" if best_pref == "Light Mode" else "#F8FAFC"
-        rec_border = "#C7D2FE" if best_pref == "Light Mode" else "#E2E8F0"
+        sig_color  = "#22c55e" if p_val_final < 0.05 else "#f59e0b"
+        sig_bg     = "rgba(34,197,94,0.1)" if p_val_final < 0.05 else "rgba(245,158,11,0.1)"
+        rec_color  = "#6366f1" if best_pref == "Light Mode" else "#a78bfa"
+        rec_bg     = "rgba(99,102,241,0.1)" if best_pref == "Light Mode" else "rgba(167,139,250,0.1)"
+        rec_border = "rgba(99,102,241,0.3)" if best_pref == "Light Mode" else "rgba(167,139,250,0.3)"
 
         # ── build grid cards ──────────────────────────────────────────
         def _grid_card(subtitle, body):
             return (
-                '<div style="background:#F8FAFC;padding:14px 16px;border-radius:10px;">'
-                  '<div style="font-size:11px;font-weight:600;color:#64748B;margin-bottom:4px;">'
+                f'<div style="background:var(--secondary-background-color);border:1px solid rgba(128,128,128,0.2);padding:14px 16px;border-radius:10px;">'
+                  f'<div style="font-size:11px;font-weight:600;color:{text_soft};margin-bottom:4px;">'
                     + subtitle +
                   '</div>'
-                  '<div style="font-size:13px;color:#334155;line-height:1.5;">'
+                  f'<div style="font-size:13px;color:{text_main};line-height:1.5;">'
                     + body +
                   '</div>'
                 '</div>'
@@ -2589,13 +2589,13 @@ if menu == "Overview":
 if menu == "Time on Task":
 
     st.markdown(f"""
-    <div style="font-size:28px;font-weight:700;color:#1e293b;margin-bottom:10px;">
+    <div style="font-size:28px;font-weight:700;color:{text_main};margin-bottom:10px;">
     Time on Task Analysis
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown(f"""
-    <div style="font-size:14px;color:#6b7280;">
+    <div style="font-size:14px;color:{text_soft};">
     Uji normalitas Shapiro-Wilk otomatis · Rekomendasi metode: Paired T-Test atau Wilcoxon Signed Ranks Test
     </div>
     """, unsafe_allow_html=True)
@@ -2872,11 +2872,11 @@ if menu == "Time on Task":
  
         st.markdown("### Statistical Summary")
         st.markdown(f"""
-        <div style="background:#f8fafc;padding:24px;border-radius:12px;
+        <div style="background:var(--secondary-background-color);padding:24px;border-radius:12px;
           border-left:4px solid #6366f1;">
           <div style="font-size:16px;font-weight:700;color:{text_main};margin-bottom:12px;">
             Overall Findings</div>
-          <ul style="font-size:14px;color:#374151;line-height:1.8;margin:0;">
+          <ul style="font-size:14px;color:{text_main};line-height:1.8;margin:0;">
             <li>Metode yang digunakan: <b>{method_name}</b></li>
             <li><b>{significant_tasks}/3 tasks</b> menunjukkan perbedaan signifikan (p &lt; 0.05)</li>
             <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} — {overall_sig}</li>
@@ -2897,13 +2897,13 @@ if menu == "Time on Task":
 if menu == "Error Rate":
 
     st.markdown(f"""
-    <div style="font-size:28px;font-weight:700;color:#1e293b;margin-bottom:10px;">
+    <div style="font-size:28px;font-weight:700;color:{text_main};margin-bottom:10px;">
     Error Rate Analysis
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown(f"""
-    <div style="font-size:14px;color:#6b7280;">
+    <div style="font-size:14px;color:{text_soft};">
     Uji normalitas Shapiro-Wilk otomatis · Rekomendasi metode: Paired T-Test atau Wilcoxon Signed Ranks Test
     </div>
     """, unsafe_allow_html=True)
@@ -3177,11 +3177,11 @@ if menu == "Error Rate":
  
         st.markdown("### Statistical Summary")
         st.markdown(f"""
-        <div style="background:#f8fafc;padding:24px;border-radius:12px;
+        <div style="background:var(--secondary-background-color);padding:24px;border-radius:12px;
           border-left:4px solid #6366f1;">
           <div style="font-size:16px;font-weight:700;color:{text_main};margin-bottom:12px;">
             Overall Findings</div>
-          <ul style="font-size:14px;color:#374151;line-height:1.8;margin:0;">
+          <ul style="font-size:14px;color:{text_main};line-height:1.8;margin:0;">
             <li>Metode yang digunakan: <b>{method_name}</b></li>
             <li><b>{significant_tasks}/3 tasks</b> menunjukkan perbedaan signifikan (p &lt; 0.05)</li>
             <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} — {overall_sig}</li>
@@ -3209,10 +3209,10 @@ if menu == "Error Rate":
 if menu == "UEQ Analysis":
 
     st.markdown(f"""
-    <div style="font-size:24px;font-weight:700;color:#1e293b;margin-bottom:4px;">
+    <div style="font-size:24px;font-weight:700;color:{text_main};margin-bottom:4px;">
     Analisis UEQ (User Experience Questionnaire) — {app}
     </div>
-    <div style="font-size:13px;color:#6b7280;margin-bottom:20px;">
+    <div style="font-size:13px;color:{text_soft};margin-bottom:20px;">
     Logika identik UEQ Data Analysis Tool Version 13
     </div>
     """, unsafe_allow_html=True)
@@ -4058,7 +4058,7 @@ if menu == "UEQ Analysis":
 if menu == "Preferensi Responden":
 
     st.markdown(f"""
-    <div style="font-size:28px;font-weight:700;color:#1e293b;margin-bottom:10px;">
+    <div style="font-size:28px;font-weight:700;color:{text_main};margin-bottom:10px;">
     Preferensi Responden - {app}
     </div>
     """, unsafe_allow_html=True)
@@ -4248,7 +4248,7 @@ if menu == "Preferensi Responden":
                 color_code = "#6366f1"
             elif grand_mean > 4:
                 kecenderungan = "Dark Mode"
-                color_code = "#1e293b"
+                color_code = "#a78bfa"
             else:
                 kecenderungan = "Netral"
                 color_code = "#10b981"
