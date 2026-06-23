@@ -1659,9 +1659,9 @@ with st.sidebar:
 
     /* Secondary button - merah untuk delete */
     div[data-testid="stSidebar"] button[kind="secondary"] {
-        background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
-        color: #dc2626 !important;
-        border: 1px solid #fca5a5 !important;
+        background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(220,38,38,0.15)) !important;
+        color: #ef4444 !important;
+        border: 1px solid rgba(239,68,68,0.4) !important;
         font-size: 12px !important;
     }
 
@@ -1675,8 +1675,8 @@ with st.sidebar:
 
     /* Expander styling */
     [data-testid="stSidebar"] details {
-        background: linear-gradient(135deg, #eef2ff, #f5f3ff) !important;
-        border: 1px solid #c7d2fe !important;
+        background: var(--secondary-background-color) !important;
+        border: 1px solid rgba(99,102,241,0.3) !important;
         border-radius: 12px !important;
     }
 
@@ -1686,7 +1686,7 @@ with st.sidebar:
     }
 
     [data-testid="stSidebar"] summary {
-        color: #4f46e5 !important;
+        color: #6366f1 !important;
         font-weight: 700 !important;
         font-size: 13px !important;
     }
@@ -1719,6 +1719,28 @@ with st.sidebar:
         background: linear-gradient(135deg, #f87171, #ef4444) !important;
         box-shadow: 0 4px 16px rgba(239,68,68,0.5) !important;
         transform: translateY(-2px) !important;
+    }
+
+    /* Inner content area of expander - fix white background */
+    [data-testid="stSidebar"] details > div,
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"],
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"] > div {
+        background: var(--secondary-background-color) !important;
+    }
+
+    /* Input text inside expander */
+    [data-testid="stSidebar"] [data-testid="stExpander"] input[type="text"],
+    [data-testid="stSidebar"] [data-testid="stExpander"] [data-baseweb="input"] > div {
+        background: var(--background-color) !important;
+        color: var(--text-color) !important;
+        border-color: rgba(128,128,128,0.3) !important;
+    }
+
+    /* Select/dropdown inside expander */
+    [data-testid="stSidebar"] [data-testid="stExpander"] [data-baseweb="select"] > div {
+        background: var(--background-color) !important;
+        color: var(--text-color) !important;
+        border-color: rgba(128,128,128,0.3) !important;
     }
     </style>
     """, unsafe_allow_html=True)
