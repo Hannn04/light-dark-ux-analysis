@@ -1291,6 +1291,51 @@ if theme == "dark":
         background-color: #1e293b !important;
         color: #f1f5f9 !important;
     }
+
+    /* 24. Dialog / Modal Dark Mode Override */
+    div[data-testid="stDialog"] [role="dialog"],
+    div[role="dialog"],
+    [data-testid="stModal"] > div {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 16px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    /* Headings and text labels inside dialog */
+    div[data-testid="stDialog"] h1,
+    div[data-testid="stDialog"] h2,
+    div[data-testid="stDialog"] h3,
+    div[data-testid="stDialog"] h4,
+    div[data-testid="stDialog"] h5,
+    div[data-testid="stDialog"] h6,
+    div[data-testid="stDialog"] label,
+    div[data-testid="stDialog"] p,
+    div[data-testid="stDialog"] span,
+    div[data-testid="stDialog"] [data-testid="stMarkdownContainer"] p,
+    div[data-testid="stDialog"] [data-testid="stMarkdownContainer"] span {
+        color: #f1f5f9 !important;
+    }
+
+    /* Close button ("X") styling inside dialog */
+    div[data-testid="stDialog"] button[aria-label="Close"],
+    div[role="dialog"] button[aria-label="Close"] {
+        color: #94a3b8 !important;
+        background-color: transparent !important;
+        border: none !important;
+        transition: all 0.2s ease !important;
+    }
+    div[data-testid="stDialog"] button[aria-label="Close"]:hover,
+    div[role="dialog"] button[aria-label="Close"]:hover {
+        color: #f1f5f9 !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    div[data-testid="stDialog"] button[aria-label="Close"] svg,
+    div[role="dialog"] button[aria-label="Close"] svg {
+        fill: currentColor !important;
+        color: currentColor !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
