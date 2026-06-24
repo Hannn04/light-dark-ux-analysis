@@ -169,6 +169,13 @@ def render_settings_page():
 def render_auth_page():
     controller = get_cookie_controller()
 
+    # ── Inisialisasi tema (diambil dari session_state) ──────────────────────
+    if "app_theme" not in st.session_state:
+        st.session_state["app_theme"] = "light"
+
+    theme = st.session_state["app_theme"]
+    is_dark = (theme == "dark")
+
     if not st.session_state.get("logged_in"):
         try:
             saved_user = controller.get("session_user")
@@ -184,31 +191,306 @@ def render_auth_page():
     if st.session_state.get("logged_in"):
         return True
 
-    st.markdown("""
+    # ── Color Scheme ────────────────────────────────────────────────────────
+    if is_dark:
+        page_bg     = "#0f172a"
+        card_bg     = "#1e293b"
+        card_border = "rgba(99,102,241,0.15)"
+        card_shadow = "0 20px 60px rgba(0,0,0,0.5)"
+        text_main   = "#f1f5f9"
+        text_soft   = "#64748b"
+        input_bg    = "#0f172a"
+        input_bdr   = "#334155"
+        input_focus = "rgba(99,102,241,0.3)"
+        toggle_bg   = "rgba(167,139,250,0.1)"
+        toggle_clr  = "#a78bfa"
+        toggle_bdr  = "rgba(167,139,250,0.3)"
+        sep_clr     = "rgba(255,255,255,0.05)"
+        label_clr   = "#64748b"
+        placeholder = "#475569"
+        alert_fix   = '[data-testid="stAlert"] p, [data-testid="stAlert"] span { color: #f1f5f9 !important; }'
+    else:
+        page_bg     = "#f8fafc"
+        card_bg     = "#ffffff"
+        card_border = "rgba(0,0,0,0.06)"
+        card_shadow = "0 4px 6px -1px rgba(0,0,0,0.05), 0 20px 50px rgba(99,102,241,0.08)"
+        text_main   = "#0f172a"
+        text_soft   = "#94a3b8"
+        input_bg    = "#f8fafc"
+        input_bdr   = "#e2e8f0"
+        input_focus = "rgba(99,102,241,0.15)"
+        toggle_bg   = "rgba(99,102,241,0.06)"
+        toggle_clr  = "#6366f1"
+        toggle_bdr  = "rgba(99,102,241,0.2)"
+        sep_clr     = "rgba(0,0,0,0.06)"
+        label_clr   = "#94a3b8"
+        placeholder = "#cbd5e1"
+        alert_fix   = ""
+
+    dark_input_override = f"""
+        [data-baseweb="input"] > div,
+        [data-baseweb="textarea"] > div,
+        input[type="text"], input[type="password"] {{
+            background-color: {input_bg} !important;
+            color: {text_main} !important;
+            border-color: {input_bdr} !important;
+        }}
+        input::placeholder {{ color: {placeholder} !important; }}
+        [data-testid="stCheckbox"] label,
+        [data-testid="stCheckbox"] span {{ color: {text_main} !important; }}
+        .stApp p, .stApp label,
+        [data-testid="stMarkdownContainer"] p,
+        [data-testid="stWidgetLabel"] {{ color: {text_main} !important; }}
+        {alert_fix}
+    """ if is_dark else f"""
+        input::placeholder {{ color: {placeholder} !important; }}
+        [data-testid="stCheckbox"] label {{ color: {text_soft} !important; }}
+    """
+
+    # ── Toggle button variables ──────────────────────────────────────────────
+    if is_dark:
+        toggle_btn_bg     = "#1e293b"
+        toggle_btn_border = "#334155"
+        toggle_btn_color  = "#60a5fa"
+        toggle_btn_hover_bg = "#0f172a"
+        toggle_btn_hover_border = "#475569"
+    else:
+        toggle_btn_bg     = "#ffffff"
+        toggle_btn_border = "#d1d5db"
+        toggle_btn_color  = "#0c66e4"
+        toggle_btn_hover_bg = "#f8fafc"
+        toggle_btn_hover_border = "#9ca3af"
+
+    # ── Full CSS ────────────────────────────────────────────────────────────
+    st.markdown(f"""
     <style>
-    .block-container { max-width: 480px !important; padding-top: 60px !important; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    /* Hide Streamlit chrome */
+    header[data-testid="stHeader"]  {{ display: none !important; }}
+    [data-testid="stToolbar"]       {{ display: none !important; }}
+    [data-testid="stDecoration"]    {{ display: none !important; }}
+    footer {{ display: none !important; }}
+    #MainMenu {{ display: none !important; }}
+
+    * {{ font-family: 'Inter', -apple-system, sans-serif !important; }}
+
+    /* Prevent page scroll — fit to viewport */
+    html, body {{ overflow: hidden !important; max-height: 100vh !important; }}
+
+    /* Page background */
+    .stApp {{
+        background-color: {page_bg} !important;
+        height: 100vh !important;
+        overflow: hidden !important;
+    }}
+    section.main, section.main > div {{
+        background: transparent !important;
+        overflow: hidden !important;
+    }}
+    [data-testid="stMainBlockContainer"] {{ overflow: hidden !important; }}
+
+    /* Login card */
+    .block-container {{
+        max-width: 400px !important;
+        margin: 0 auto !important;
+        margin-top: 3vh !important;
+        padding: 20px 24px 16px !important;
+        background: {card_bg} !important;
+        border-radius: 18px !important;
+        box-shadow: {card_shadow} !important;
+        border: 1px solid {card_border} !important;
+    }}
+
+    /* Collapse Streamlit element vertical gaps */
+    [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlockBorderWrapper"],
+    [data-testid="stVerticalBlock"] > div {{
+        gap: 0 !important;
+        margin-bottom: 0 !important;
+    }}
+
+    /* Remove inner form card */
+    div[data-testid="stVerticalBlockBorderWrapper"] > div {{
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+    }}
+    [data-testid="stForm"] {{
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+    }}
+
+    /* Inputs */
+    [data-baseweb="input"] > div {{
+        background: {input_bg} !important;
+        border: 1px solid {input_bdr} !important;
+        border-radius: 10px !important;
+        transition: border-color 0.15s, box-shadow 0.15s !important;
+        outline: none !important;
+    }}
+    [data-baseweb="input"] > div:focus-within {{
+        border-color: #6366f1 !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }}
+    [data-baseweb="input"] input {{
+        background: transparent !important;
+        color: {text_main} !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        padding: 9px 12px !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }}
+    [data-baseweb="input"] > div * {{
+        background-color: transparent !important;
+    }}
+    [data-baseweb="input"] button {{
+        border: none !important;
+        color: inherit !important;
+    }}
+    input:focus, input:focus-visible {{
+        outline: none !important;
+        box-shadow: none !important;
+    }}
+    /* Hide 'Press Enter to submit' hint */
+    [data-testid="InputInstructions"] {{ display: none !important; }}
+
+    /* Labels */
+    [data-testid="stWidgetLabel"] p,
+    [data-testid="stWidgetLabel"] span,
+    label {{
+        color: {label_clr} !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+    }}
+
+    /* Tabs */
+    [data-baseweb="tab-list"] {{
+        background: transparent !important;
+        border-bottom: 1px solid {sep_clr} !important;
+        margin-bottom: 10px !important;
+        margin-top: 4px !important;
+    }}
+    [data-baseweb="tab"] {{
+        color: {text_soft} !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        padding: 6px 0 !important;
+        margin-right: 18px !important;
+        background: transparent !important;
+        transition: color 0.15s !important;
+    }}
+    [aria-selected="true"][data-baseweb="tab"] {{
+        color: {text_main} !important;
+        border-bottom: 2px solid #6366f1 !important;
+        margin-bottom: -1px !important;
+    }}
+    [data-baseweb="tab-panel"] {{ background: transparent !important; padding: 0 !important; }}
+
+    /* Primary button */
+    [data-testid="stBaseButton-primary"] {{
+        background: #6366f1 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.2px !important;
+        box-shadow: 0 1px 3px rgba(99,102,241,0.3) !important;
+        transition: all 0.15s ease !important;
+        color: white !important;
+        margin-top: 4px !important;
+    }}
+    [data-testid="stBaseButton-primary"]:hover {{
+        background: #4f46e5 !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.4) !important;
+        transform: translateY(-1px) !important;
+    }}
+
+    /* Toggle — premium rounded button */
+    [data-testid="stBaseButton-secondary"] {{
+        background-color: {toggle_btn_bg} !important;
+        border: 1px solid {toggle_btn_border} !important;
+        border-radius: 10px !important;
+        color: {toggle_btn_color} !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        padding: 4px 12px !important;
+        width: 100% !important;
+        height: 38px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+        transition: all 0.15s ease !important;
+        cursor: pointer !important;
+    }}
+    [data-testid="stBaseButton-secondary"]::before {{
+        display: none !important;
+    }}
+    [data-testid="stBaseButton-secondary"]:hover {{
+        background-color: {toggle_btn_hover_bg} !important;
+        border-color: {toggle_btn_hover_border} !important;
+        transform: translateY(-1px) !important;
+    }}
+
+    /* Alerts */
+    .stAlert, [data-testid="stAlert"] {{ border-radius: 10px !important; font-size: 13px !important; }}
+
+    /* Column padding */
+    div[data-testid="column"] {{ padding: 0 2px !important; }}
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {{ width: 4px; }}
+    ::-webkit-scrollbar-thumb {{ background: rgba(99,102,241,0.25); border-radius: 4px; }}
+
+    {dark_input_override}
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style="text-align:center; margin-bottom:28px;">
-        <h1 style="font-size:28px; font-weight:800; color:#6366f1; margin:0;">UX Analytics</h1>
-        <p style="font-size:11px; color:#94a3b8; text-transform:uppercase;
-           letter-spacing:2px; font-weight:600; margin-top:6px;">
-           Universitas Islam Indonesia
+    # ── Subtle accent dot decoration ────────────────────────────────────────
+    accent = "rgba(99,102,241,0.08)" if not is_dark else "rgba(99,102,241,0.06)"
+    st.markdown(f"""
+    <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;overflow:hidden;">
+        <div style="position:absolute;width:600px;height:600px;background:radial-gradient(circle,{accent} 0%,transparent 70%);top:-200px;right:-200px;"></div>
+        <div style="position:absolute;width:500px;height:500px;background:radial-gradient(circle,{accent} 0%,transparent 70%);bottom:-200px;left:-200px;"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Brand + Heading (digabung satu block) ──────────────────────────────────
+    st.markdown(f"""
+    <div style="margin-bottom:14px;">
+        <span style="font-size:10px; font-weight:700; color:#6366f1;
+                     text-transform:uppercase; letter-spacing:2.5px;">
+            UX Analytics
+        </span>
+        <h1 style="font-size:20px; font-weight:700; color:{text_main};
+                   margin:7px 0 3px 0; letter-spacing:-0.3px; line-height:1.2;">
+            Selamat datang
+        </h1>
+        <p style="font-size:11px; color:{text_soft}; margin:0; line-height:1.4;">
+            Masuk untuk melanjutkan ke dashboard penelitian.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    tab_login, tab_register = st.tabs(["Login", "Daftar Akun"])
+    # ── Tabs + Form ─────────────────────────────────────────────────────────
+    tab_login, tab_register = st.tabs(["Masuk", "Daftar"])
 
     with tab_login:
         with st.form("form_login", clear_on_submit=False):
-            st.markdown("#### Masuk ke Akun Anda")
-            username = st.text_input("Username", placeholder="Masukkan username")
-            password = st.text_input("Password", type="password", placeholder="Masukkan password")
+            username = st.text_input("Username", placeholder="username Anda")
+            password = st.text_input("Password", type="password", placeholder="password")
             remember_me = st.checkbox("Ingat saya selama 24 jam")
-            submitted = st.form_submit_button("Login", use_container_width=True, type="primary")
+            submitted = st.form_submit_button(
+                "Masuk",
+                use_container_width=True, type="primary"
+            )
         if submitted:
             if not username or not password:
                 st.error("Username dan password wajib diisi.")
@@ -218,7 +500,7 @@ def render_auth_page():
                     user = username.strip().lower()
                     st.session_state["logged_in"] = True
                     st.session_state["current_user"] = user
-                    st.session_state["show_logout_confirm"] = False  # tambahkan ini
+                    st.session_state["show_logout_confirm"] = False
                     if remember_me:
                         controller.set("session_user", user, max_age=24 * 60 * 60)
                     else:
@@ -230,11 +512,15 @@ def render_auth_page():
 
     with tab_register:
         with st.form("form_register", clear_on_submit=True):
-            st.markdown("#### Buat Akun Baru")
-            new_username = st.text_input("Username", placeholder="Minimal 3 karakter", key="reg_user")
-            new_password = st.text_input("Password", type="password", placeholder="Minimal 6 karakter", key="reg_pass")
-            confirm_password = st.text_input("Konfirmasi Password", type="password", placeholder="Ulangi password", key="reg_confirm")
-            reg_submitted = st.form_submit_button("Daftar", use_container_width=True, type="primary")
+            new_username = st.text_input("Username", placeholder="minimal 3 karakter", key="reg_user")
+            new_password = st.text_input("Password", type="password",
+                                         placeholder="minimal 6 karakter", key="reg_pass")
+            confirm_password = st.text_input("Konfirmasi Password", type="password",
+                                             placeholder="ulangi password", key="reg_confirm")
+            reg_submitted = st.form_submit_button(
+                "Buat Akun",
+                use_container_width=True, type="primary"
+            )
         if reg_submitted:
             if not new_username or not new_password or not confirm_password:
                 st.error("Semua field wajib diisi.")
@@ -243,5 +529,34 @@ def render_auth_page():
             else:
                 ok, msg = register_user(new_username, new_password)
                 st.success(msg) if ok else st.error(msg)
+
+    # ── Footer + Toggle ─────────────────────────────────────────────────────────
+    mode_label = "Gelap" if is_dark else "Terang"
+    st.markdown(f"""
+    <div style="margin-top:14px; padding-top:10px; border-top:1px solid {sep_clr}; text-align: center; width: 100%;">
+        <p style="font-size:10px; color:{text_soft}; margin:0 0 2px 0; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">
+            Ganti Tampilan
+        </p>
+        <p style="font-size:10px; color:{text_soft}; margin:0 0 8px 0;">
+            Tampilan aktif saat ini: <strong style="color:{text_main};">{mode_label}</strong>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    _, col_btn, _ = st.columns([1, 2, 1])
+    with col_btn:
+        btn_label = "☀️ Light Mode" if is_dark else "🌙 Dark Mode"
+        if st.button(btn_label, key="login_theme_toggle", use_container_width=True,
+                     help="Klik untuk ganti mode tampilan"):
+            st.session_state["app_theme"] = "light" if is_dark else "dark"
+            st.rerun()
+
+    st.markdown(f"""
+    <div style="text-align: center; margin-top: 12px;">
+        <p style="font-size:9px; color:{text_soft}; margin:0; opacity:0.6;">
+            Universitas Islam Indonesia
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     return False
