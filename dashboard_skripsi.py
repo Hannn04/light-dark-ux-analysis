@@ -281,69 +281,77 @@ def render_normality_table(results: list) -> None:
     Kolmogorov-Smirnov (dengan Lilliefors) + Shapiro-Wilk,
     identik dengan output SPSS Explore.
     """
- 
+    is_dark = st.session_state.get("app_theme", "light") == "dark"
+    bg_header = "#1e293b" if is_dark else "#d9d9d9"
+    bg_subheader = "#334155" if is_dark else "#ececec"
+    bg_first_col = "#1e293b" if is_dark else "#f5f5f5"
+    text_color = "#f1f5f9" if is_dark else "#0f172a"
+    text_soft = "#94a3b8" if is_dark else "#64748b"
+    border_color = "#475569" if is_dark else "#aaa"
+    border_cell = "#334155" if is_dark else "#bbb"
+
     def _fmt_p(v):
         if v is None or (isinstance(v, float) and np.isnan(v)):
             return "—"
         if v < 0.001:
             return "<,001"   # ← pakai koma seperti SPSS Indonesia
         return f"{v:.3f}".replace(".", ",")  # ← ganti titik ke koma
- 
+
     def _fmt_stat(v):
         if v is None or (isinstance(v, float) and np.isnan(v)):
             return "—"
         return f"{v:.3f}"
- 
+
     rows_html = ""
     for r in results:
         sw_sig  = (not (isinstance(r["sw_p"], float) and np.isnan(r["sw_p"]))) and r["sw_p"] < 0.05
         ks_sig  = (not (isinstance(r["ks_p"], float) and np.isnan(r["ks_p"]))) and r["ks_p"] < 0.05
-        p_sw_color  = "#c0392b" if sw_sig else "inherit"
-        p_ks_color  = "#c0392b" if ks_sig else "inherit"
- 
+        p_sw_color  = "#ef4444" if sw_sig else "inherit"  # soft red
+        p_ks_color  = "#ef4444" if ks_sig else "inherit"
+
         rows_html += f"""
         <tr>
-          <td style="border:1px solid #bbb;padding:6px 12px;font-weight:600;
-            background:#f5f5f5;white-space:nowrap;">{r['label']}</td>
-          <td style="border:1px solid #bbb;padding:6px 12px;text-align:center;">{_fmt_stat(r['ks_stat'])}</td>
-          <td style="border:1px solid #bbb;padding:6px 12px;text-align:center;">{r['n']}</td>
-          <td style="border:1px solid #bbb;padding:6px 12px;text-align:center;color:{p_ks_color};font-weight:{'700' if ks_sig else '400'};">{_fmt_p(r['ks_p'])}</td>
-          <td style="border:1px solid #bbb;padding:6px 12px;text-align:center;">{_fmt_stat(r['sw_stat'])}</td>
-          <td style="border:1px solid #bbb;padding:6px 12px;text-align:center;">{r['n']}</td>
-          <td style="border:1px solid #bbb;padding:6px 12px;text-align:center;color:{p_sw_color};font-weight:{'700' if sw_sig else '400'};">{_fmt_p(r['sw_p'])}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;font-weight:600;
+            background:{bg_first_col};color:{text_color};white-space:nowrap;">{r['label']}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{_fmt_stat(r['ks_stat'])}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{r['n']}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{p_ks_color};font-weight:{'700' if ks_sig else '400'};">{_fmt_p(r['ks_p'])}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{_fmt_stat(r['sw_stat'])}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{r['n']}</td>
+          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{p_sw_color};font-weight:{'700' if sw_sig else '400'};">{_fmt_p(r['sw_p'])}</td>
         </tr>"""
- 
+
     st.markdown(f"""
     <div style="margin:16px 0 4px 0;overflow-x:auto;">
       <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;
-        min-width:600px;width:100%;">
+        min-width:600px;width:100%;color:{text_color};">
         <thead>
           <tr>
-            <th rowspan="2" style="border:1px solid #aaa;padding:7px 12px;background:#d9d9d9;
-              text-align:left;font-weight:700;font-size:13px;">
+            <th rowspan="2" style="border:1px solid {border_color};padding:7px 12px;background:{bg_header};
+              color:{text_color};text-align:left;font-weight:700;font-size:13px;">
               Tests of Normality
             </th>
-            <th colspan="3" style="border:1px solid #aaa;padding:7px 12px;background:#d9d9d9;
-              text-align:center;font-weight:600;font-size:12px;">
+            <th colspan="3" style="border:1px solid {border_color};padding:7px 12px;background:{bg_header};
+              color:{text_color};text-align:center;font-weight:600;font-size:12px;">
               Kolmogorov-Smirnov<sup>a</sup>
             </th>
-            <th colspan="3" style="border:1px solid #aaa;padding:7px 12px;background:#d9d9d9;
-              text-align:center;font-weight:600;font-size:12px;">
+            <th colspan="3" style="border:1px solid {border_color};padding:7px 12px;background:{bg_header};
+              color:{text_color};text-align:center;font-weight:600;font-size:12px;">
               Shapiro-Wilk
             </th>
           </tr>
-          <tr style="background:#ececec;">
-            <th style="border:1px solid #aaa;padding:6px 12px;text-align:center;font-size:12px;">Statistic</th>
-            <th style="border:1px solid #aaa;padding:6px 12px;text-align:center;font-size:12px;">df</th>
-            <th style="border:1px solid #aaa;padding:6px 12px;text-align:center;font-size:12px;">Sig.</th>
-            <th style="border:1px solid #aaa;padding:6px 12px;text-align:center;font-size:12px;">Statistic</th>
-            <th style="border:1px solid #aaa;padding:6px 12px;text-align:center;font-size:12px;">df</th>
-            <th style="border:1px solid #aaa;padding:6px 12px;text-align:center;font-size:12px;">Sig.</th>
+          <tr style="background:{bg_subheader};color:{text_color};">
+            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Statistic</th>
+            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">df</th>
+            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Sig.</th>
+            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Statistic</th>
+            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">df</th>
+            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Sig.</th>
           </tr>
         </thead>
         <tbody>{rows_html}</tbody>
       </table>
-      <div style="font-size:11px;color:#444;margin-top:4px;font-style:italic;">
+      <div style="font-size:11px;color:{text_soft};margin-top:4px;font-style:italic;">
         a. Lilliefors Significance Correction
       </div>
     </div>
@@ -429,7 +437,15 @@ def compute_paired_ttest_pair(light: pd.Series, dark: pd.Series,
  
 def render_spss_paired_ttest(pairs_data: list) -> None:
     """Output Paired T-Test identik SPSS: Statistics + Correlations + Test."""
- 
+    is_dark = st.session_state.get("app_theme", "light") == "dark"
+    bg_header = "#1e293b" if is_dark else "#d9d9d9"
+    bg_subheader = "#334155" if is_dark else "#ececec"
+    bg_first_col = "#1e293b" if is_dark else "#f5f5f5"
+    text_color = "#f1f5f9" if is_dark else "#0f172a"
+    text_soft = "#94a3b8" if is_dark else "#64748b"
+    border_color = "#475569" if is_dark else "#aaa"
+    border_cell = "#334155" if is_dark else "#bbb"
+
     # ---- Statistics ----
     stat_rows = ""
     for idx, p in enumerate(pairs_data):
@@ -439,15 +455,15 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
         ]:
             stat_rows += f"""
             <tr>
-              <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;
-                background:#f5f5f5;white-space:nowrap;">{role}</td>
-              <td style="border:1px solid #bbb;padding:7px 12px;">{lbl}</td>
-              <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{mean:.4f}</td>
-              <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['n']}</td>
-              <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{std:.4f}</td>
-              <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{se:.4f}</td>
+              <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;
+                background:{bg_first_col};color:{text_color};white-space:nowrap;">{role}</td>
+              <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">{lbl}</td>
+              <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{mean:.4f}</td>
+              <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['n']}</td>
+              <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{std:.4f}</td>
+              <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{se:.4f}</td>
             </tr>"""
- 
+
     # ---- Correlations ----
     corr_rows = ""
     for idx, p in enumerate(pairs_data):
@@ -455,95 +471,101 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
         cp = f"{p['corr_p']:.3f}" if not np.isnan(p["corr_p"]) else "—"
         corr_rows += f"""
         <tr>
-          <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;
-            background:#f5f5f5;">Pair {idx+1}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;">
+          <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;
+            background:{bg_first_col};color:{text_color};">Pair {idx+1}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">
             {p['light_lbl']} &amp; {p['dark_lbl']}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['n']}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{cr}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{cp}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['n']}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{cr}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{cp}</td>
         </tr>"""
- 
+
     # ---- Test ----
     test_rows = ""
     for idx, p in enumerate(pairs_data):
         sig2   = f"{p['p_two']:.3f}" if not np.isnan(p["p_two"]) else "—"
         is_sig = (not np.isnan(p["p_two"])) and p["p_two"] < 0.05
-        sig_bg = "#f0fdf4" if is_sig else "#eaf4ff"
+        if is_dark:
+            sig_bg = "rgba(74, 222, 128, 0.15)" if is_sig else "rgba(96, 165, 250, 0.15)"
+            sig_color = "#4ade80" if is_sig else "#60a5fa"
+        else:
+            sig_bg = "#f0fdf4" if is_sig else "#eaf4ff"
+            sig_color = "#15803d" if is_sig else "#1d4ed8"
+
         test_rows += f"""
         <tr>
-          <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;
-            background:#f5f5f5;white-space:nowrap;">Pair {idx+1}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;">
+          <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;
+            background:{bg_first_col};color:{text_color};white-space:nowrap;">Pair {idx+1}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">
             {p['light_lbl']} − {p['dark_lbl']}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['diff_mean']:.4f}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['diff_std']:.4f}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['diff_se']:.4f}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['ci_low']:.4f}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['ci_up']:.4f}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['t']:.3f}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p['df']}</td>
-          <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;
-            background:{sig_bg};font-weight:700;">{sig2}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['diff_mean']:.4f}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['diff_std']:.4f}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['diff_se']:.4f}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['ci_low']:.4f}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['ci_up']:.4f}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['t']:.3f}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['df']}</td>
+          <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;
+            background:{sig_bg};color:{sig_color};font-weight:700;">{sig2}</td>
         </tr>"""
- 
+
     st.markdown(f"""
-    <div style="margin:20px 0 8px 0;">
-      <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;
+    <div style="margin:20px 0 8px 0;color:{text_color};">
+      <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};
         padding-bottom:4px;">Paired Samples Statistics</div>
-      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
-        <thead><tr style="background:#d9d9d9;">
-          <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Mean</th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">N</th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Std. Deviation</th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Std. Error Mean</th>
+      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+        <thead><tr style="background:{bg_header};">
+          <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Mean</th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">N</th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Std. Deviation</th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Std. Error Mean</th>
         </tr></thead>
         <tbody>{stat_rows}</tbody>
       </table>
     </div>
- 
-    <div style="margin:16px 0 8px 0;">
-      <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;
+
+    <div style="margin:16px 0 8px 0;color:{text_color};">
+      <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};
         padding-bottom:4px;">Paired Samples Correlations</div>
-      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
-        <thead><tr style="background:#d9d9d9;">
-          <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">N</th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Correlation</th>
-          <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Sig.</th>
+      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+        <thead><tr style="background:{bg_header};">
+          <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">N</th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Correlation</th>
+          <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Sig.</th>
         </tr></thead>
         <tbody>{corr_rows}</tbody>
       </table>
     </div>
- 
-    <div style="margin:16px 0 24px 0;">
-      <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;
+
+    <div style="margin:16px 0 24px 0;color:{text_color};">
+      <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};
         padding-bottom:4px;">Paired Samples Test</div>
-      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
+      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
         <thead>
-          <tr style="background:#d9d9d9;">
-            <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
-            <th colspan="5" style="border:1px solid #aaa;padding:7px 12px;text-align:center;">
+          <tr style="background:{bg_header};">
+            <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
+            <th colspan="5" style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">
               Paired Differences</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">t</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">df</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;background:#eaf4ff;">
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">t</th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">df</th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;background:{bg_subheader};color:{text_color};">
               Sig. (2-tailed)</th>
           </tr>
-          <tr style="background:#ececec;">
-            <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Mean</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Std. Deviation</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Std. Error Mean</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">CI Lower 95%</th>
-            <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">CI Upper 95%</th>
-            <th colspan="3" style="border:1px solid #aaa;"></th>
+          <tr style="background:{bg_subheader};">
+            <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Mean</th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Std. Deviation</th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Std. Error Mean</th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">CI Lower 95%</th>
+            <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">CI Upper 95%</th>
+            <th colspan="3" style="border:1px solid {border_color};"></th>
           </tr>
         </thead>
         <tbody>{test_rows}</tbody>
       </table>
-      <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;">
+      <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;">
         α = 0.05 · Two-tailed · 95% Confidence Interval of the Difference
       </div>
     </div>""", unsafe_allow_html=True)
@@ -553,6 +575,16 @@ def render_spss_wilcoxon(pairs_data):
     Render output Wilcoxon identik dengan SPSS Style.
     Menampilkan tabel Ranks dan Test Statistics.
     """
+    is_dark = st.session_state.get("app_theme", "light") == "dark"
+    bg_header = "#1e293b" if is_dark else "#d9d9d9"
+    bg_subheader = "#334155" if is_dark else "#ececec"
+    bg_first_col = "#1e293b" if is_dark else "#f5f5f5"
+    bg_sig_col = "rgba(96, 165, 250, 0.15)" if is_dark else "#eaf4ff" # light blue sig highlight
+    text_color = "#f1f5f9" if is_dark else "#0f172a"
+    text_soft = "#94a3b8" if is_dark else "#64748b"
+    border_color = "#475569" if is_dark else "#aaa"
+    border_cell = "#334155" if is_dark else "#bbb"
+
     ranks_rows = ""
     footnotes = []
     abc = "abcdefghijklmnopqrstuvwxyz"
@@ -581,49 +613,49 @@ def render_spss_wilcoxon(pairs_data):
 
         ranks_rows += f"""
         <tr>
-            <td rowspan="4" style="border:1px solid #bbb;padding:7px 12px;font-weight:600;
-                background:#f5f5f5;vertical-align:middle;white-space:nowrap;">{vn}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;">Negative Ranks</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_n']}{labels[0]}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_mean']}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['neg_sum']}</td>
+            <td rowspan="4" style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;
+                background:{bg_first_col};color:{text_color};vertical-align:middle;white-space:nowrap;">{vn}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">Negative Ranks</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['neg_n']}{labels[0]}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['neg_mean']}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['neg_sum']}</td>
         </tr>
         <tr>
-            <td style="border:1px solid #bbb;padding:7px 12px;">Positive Ranks</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_n']}{labels[1]}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_mean']}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['pos_sum']}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">Positive Ranks</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['pos_n']}{labels[1]}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['pos_mean']}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['pos_sum']}</td>
         </tr>
         <tr>
-            <td style="border:1px solid #bbb;padding:7px 12px;">Ties</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{pd_item['ties_n']}{labels[2]}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">Ties</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{pd_item['ties_n']}{labels[2]}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};"></td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};"></td>
         </tr>
         <tr>
-            <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;">Total</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;text-align:right;font-weight:600;">{pd_item['total_n']}</td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
-            <td style="border:1px solid #bbb;padding:7px 12px;"></td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;color:{text_color};">Total</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;font-weight:600;color:{text_color};">{pd_item['total_n']}</td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};"></td>
+            <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};"></td>
         </tr>"""
 
     footnote_html = "<br>".join(footnotes) if footnotes else ""
 
     ranks_html = f"""
-    <div style="margin:20px 0 8px 0;">
-        <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:0;">Ranks</div>
-        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
+    <div style="margin:20px 0 8px 0;color:{text_color};">
+        <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};padding-bottom:4px;margin-bottom:0;">Ranks</div>
+        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
             <thead>
-                <tr style="background:#d9d9d9;">
-                    <th colspan="2" style="border:1px solid #aaa;padding:7px 12px;"></th>
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">N</th>
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Mean Rank</th>
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:center;">Sum of Ranks</th>
+                <tr style="background:{bg_header};color:{text_color};">
+                    <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
+                    <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">N</th>
+                    <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Mean Rank</th>
+                    <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Sum of Ranks</th>
                 </tr>
             </thead>
             <tbody>{ranks_rows}</tbody>
         </table>
-        <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;line-height:1.6;">
+        <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;line-height:1.6;">
             {footnote_html}
         </div>
     </div>"""
@@ -649,7 +681,7 @@ def render_spss_wilcoxon(pairs_data):
 
     # Header kolom: nama variabel tiap pasangan
     test_stat_headers = "".join([
-        f'<th style="border:1px solid #aaa;padding:7px 12px;text-align:center;font-size:12px;">{p["var_name"]}</th>'
+        f'<th style="border:1px solid {border_color};padding:7px 12px;text-align:center;font-size:12px;color:{text_color};">{p["var_name"]}</th>'
         for p in pairs_data
     ])
 
@@ -660,41 +692,40 @@ def render_spss_wilcoxon(pairs_data):
         sup, note = get_z_superscript(p)
         if sup and sup not in z_footnotes_dict:
             z_footnotes_dict[sup] = note
-        z_cells += f'<td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p["z_val"]:.3f}<sup>{sup}</sup></td>'
+        z_cells += f'<td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p["z_val"]:.3f}<sup>{sup}</sup></td>'
 
     # Baris Asymp. Sig
-    p_cells = "".join([
-        f'<td style="border:1px solid #bbb;padding:7px 12px;text-align:right;">{p["p_val"]:.3f}</td>'
-        for p in pairs_data
-    ])
+    p_cells = ""
+    for p in pairs_data:
+        p_cells += f'<td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p["p_val"]:.3f}</td>'
 
     # Footnote Z
     z_footnote_html = "<br>".join(z_footnotes_dict.values())
 
     test_stats_html = f"""
-    <div style="margin:16px 0 24px 0;">
-        <div style="font-weight:700;font-size:14px;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:0;">
+    <div style="margin:16px 0 24px 0;color:{text_color};">
+        <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};padding-bottom:4px;margin-bottom:0;">
             Test Statistics<sup>a</sup>
         </div>
-        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;">
+        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
             <thead>
-                <tr style="background:#d9d9d9;">
-                    <th style="border:1px solid #aaa;padding:7px 12px;text-align:left;"></th>
+                <tr style="background:{bg_header};color:{text_color};">
+                    <th style="border:1px solid {border_color};padding:7px 12px;text-align:left;"></th>
                     {test_stat_headers}
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;background:#f5f5f5;">Z</td>
+                    <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;background:{bg_first_col};color:{text_color};">Z</td>
                     {z_cells}
                 </tr>
                 <tr>
-                    <td style="border:1px solid #bbb;padding:7px 12px;font-weight:600;background:#eaf4ff;">Asymp. Sig. (2-tailed)</td>
+                    <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;background:{bg_sig_col};color:{text_color};">Asymp. Sig. (2-tailed)</td>
                     {p_cells}
                 </tr>
             </tbody>
         </table>
-        <div style="font-size:11px;color:#444;margin-top:5px;font-style:italic;line-height:1.8;">
+        <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;line-height:1.8;">
             a. Wilcoxon Signed Ranks Test<br>
             {z_footnote_html}
         </div>
@@ -1849,27 +1880,19 @@ with st.sidebar:
     # ======================
     st.markdown(f"""
         <!-- macOS-like window controls -->
-        <div style="display: flex; gap: 6px; margin-bottom: 20px; padding-left: 2px;">
+        <div class="window-controls-container" style="display: flex; gap: 6px; margin-bottom: 12px; padding-left: 2px;">
             <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff5f56; display: inline-block;"></span>
             <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ffbd2e; display: inline-block;"></span>
             <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #27c93f; display: inline-block;"></span>
         </div>
         
         <!-- Logo and Title -->
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-left: 2px;">
+        <div class="brand-logo-container" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-left: 2px;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="10" fill="#3b82f6" />
                 <polygon points="16.2,7.8 13.8,13.8 7.8,16.2 10.2,10.2" fill="white" />
             </svg>
-            <span style="font-size: 18px; font-weight: 700; color: {text_main}; font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">UX Analytics</span>
-        </div>
-        
-        <!-- Search bar -->
-        <div style="position: relative; margin-bottom: 18px; padding-left: 2px;">
-            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: {text_soft}; display: flex; align-items: center; opacity: 0.6;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </span>
-            <input type="text" placeholder="Search" disabled style="width: 100%; height: 34px; padding: 0 12px 0 34px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.15); background-color: {'rgba(255,255,255,0.05)' if theme == 'dark' else 'rgba(148,163,184,0.06)'}; color: {text_soft}; font-size: 13px; font-weight: 500; font-family: 'Inter', sans-serif; cursor: not-allowed; outline: none; opacity: 0.8;" />
+            <span class="brand-title-text" style="font-size: 18px; font-weight: 700; color: {text_main}; font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">UX Analytics</span>
         </div>
     """, unsafe_allow_html=True)
 
@@ -1878,7 +1901,7 @@ with st.sidebar:
     # ======================
     st.markdown("""
         <div style="padding-top: 4px; padding-bottom: 2px;">
-            <div style="
+            <div class="section-header" style="
                 font-size: 10px;
                 font-weight: 700;
                 color: #4f46e5;
@@ -1911,7 +1934,7 @@ with st.sidebar:
     # ======================
     st.markdown("""
         <div style="padding-top: 4px; padding-bottom: 2px;">
-            <div style="
+            <div class="section-header" style="
                 font-size: 10px;
                 font-weight: 700;
                 color: #6366f1;
@@ -1957,7 +1980,7 @@ with st.sidebar:
     # ======================
     st.markdown("""
         <div style="padding-top: 4px; padding-bottom: 2px;">
-            <div style="
+            <div class="section-header" style="
                 font-size: 10px;
                 font-weight: 700;
                 color: #059669;
@@ -1979,8 +2002,6 @@ with st.sidebar:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)  # Push to bottom
-
     # ======================
     # STYLING OVERRIDES
     # ======================
@@ -1992,10 +2013,10 @@ with st.sidebar:
     <style>
     /* Adjust sidebar padding and spacing to add breathing room while preventing scrollbars */
     [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {{
-        padding: 20px 16px 14px 16px !important;
+        padding: 16px 12px 14px 12px !important;
     }}
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
-        gap: 12px !important;
+        gap: 10px !important;
     }}
 
     /* Styling untuk semua tombol di sidebar */
@@ -2077,7 +2098,7 @@ with st.sidebar:
     [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label {{
         display: flex !important;
         align-items: center !important;
-        padding: 10px 14px !important;
+        padding: 7px 12px !important;
         background: transparent !important;
         border: 1px solid transparent !important;
         border-radius: 8px !important;
@@ -2210,16 +2231,28 @@ with st.sidebar:
 
     /* Hide the hidden logout button elements */
     .hidden-logout-btn,
-    div:has(.hidden-logout-btn),
-    div:has(.hidden-logout-btn) + div {{
+    [data-testid="stSidebar"] div[data-testid="element-container"]:has(.hidden-logout-btn),
+    [data-testid="stSidebar"] div[data-testid="stElementContainer"]:has(.hidden-logout-btn) {{
         display: none !important;
+    }}
+
+    [data-testid="stSidebar"] div[data-testid="element-container"]:has(.hidden-logout-btn) + div[data-testid="element-container"],
+    [data-testid="stSidebar"] div[data-testid="stElementContainer"]:has(.hidden-logout-btn) + div[data-testid="stElementContainer"] {{
+        position: absolute !important;
+        width: 0px !important;
         height: 0px !important;
+        min-height: 0px !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
         margin: 0 !important;
         padding: 0 !important;
+        border: none !important;
     }}
 
     /* Sibling selector for Reset Data button */
-    div:has(.reset-btn-wrapper) ~ div.stButton button {{
+    [data-testid="stSidebar"] div.element-container:has(.reset-btn-wrapper) + div.element-container button,
+    [data-testid="stSidebar"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer button {{
         background: transparent !important;
         border: 1px solid rgba(148, 163, 184, 0.25) !important;
         color: {text_soft} !important;
@@ -2231,16 +2264,316 @@ with st.sidebar:
         transition: all 0.2s ease !important;
         height: 32px !important;
     }}
-    div:has(.reset-btn-wrapper) ~ div.stButton button p {{
+    [data-testid="stSidebar"] div.element-container:has(.reset-btn-wrapper) + div.element-container button p,
+    [data-testid="stSidebar"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer button p {{
         margin: 0 !important;
         font-size: 11px !important;
         font-weight: 600 !important;
         color: inherit !important;
     }}
-    div:has(.reset-btn-wrapper) ~ div.stButton button:hover {{
+    [data-testid="stSidebar"] div.element-container:has(.reset-btn-wrapper) + div.element-container button:hover,
+    [data-testid="stSidebar"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer button:hover {{
         background: rgba(239, 68, 68, 0.08) !important;
         border-color: #ef4444 !important;
         color: #ef4444 !important;
+    }}
+
+    /* ========================================================
+       COLLAPSED SIDEBAR DOCK STYLES (Ultra-Sleek Vertical Dock)
+       ======================================================== */
+    
+    /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
+    [data-testid="stSidebar"][data-collapsed="true"] {{
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin-left: 0px !important;
+        left: 0px !important;
+        transform: translate3d(0px, 0px, 0px) !important;
+        min-width: 70px !important;
+        max-width: 70px !important;
+        width: 70px !important;
+        transition: all 0.2s ease !important;
+        border-right: 1px solid rgba(128,128,128,0.15) !important;
+        background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
+        z-index: 100000 !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stSidebarUserContent"] {{
+        display: flex !important;
+        flex-direction: column !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        padding: 20px 8px 14px 8px !important;
+        height: 100% !important;
+    }}
+    
+    /* Adjust main content layout spacing and width when sidebar is collapsed to prevent overlapping */
+    [data-testid="stAppViewContainer"][data-sidebar-state="collapsed"] {{
+        padding-left: 0px !important;
+    }}
+    [data-testid="stAppViewContainer"][data-sidebar-state="collapsed"] [data-testid="stMainViewContainer"] {{
+        margin-left: 70px !important;
+        padding-left: 0px !important;
+        width: calc(100% - 70px) !important;
+    }}
+    
+    /* Style the floating expand button control when collapsed */
+    [data-sidebar-state="collapsed"] [data-testid="stSidebarCollapsedControl"] {{
+        left: 0px !important;
+        top: 0px !important;
+        width: 70px !important;
+        height: 50px !important;
+        background: transparent !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: none !important;
+        border: none !important;
+        z-index: 100001 !important;
+    }}
+    [data-sidebar-state="collapsed"] [data-testid="stSidebarCollapsedControl"] button {{
+        background: transparent !important;
+        border: none !important;
+        color: {text_soft} !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }}
+    [data-sidebar-state="collapsed"] [data-testid="stSidebarCollapsedControl"]:hover button {{
+        color: #6366f1 !important;
+    }}
+    
+    /* Style the collapse button inside the sidebar */
+    [data-testid="stSidebar"] button[class*="CollapseButton"] {{
+        top: 12px !important;
+        right: 12px !important;
+        background: transparent !important;
+        border: 1px solid rgba(128, 128, 128, 0.15) !important;
+        border-radius: 8px !important;
+        color: {text_soft} !important;
+        transition: all 0.2s ease !important;
+    }}
+    [data-testid="stSidebar"] button[class*="CollapseButton"]:hover {{
+        background: rgba(148, 163, 184, 0.08) !important;
+        border-color: rgba(99, 102, 241, 0.4) !important;
+        color: #6366f1 !important;
+    }}
+    
+    /* Styling for the branding layout when collapsed */
+    [data-testid="stSidebar"][data-collapsed="true"] .window-controls-container {{
+        justify-content: center !important;
+        padding-left: 0 !important;
+        margin-top: 50px !important; /* Push down to clear expand button */
+        margin-bottom: 24px !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] .brand-logo-container {{
+        justify-content: center !important;
+        padding-left: 0 !important;
+        margin-bottom: 24px !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] .brand-title-text {{
+        display: none !important;
+    }}
+    
+    /* Hide section headers when collapsed */
+    [data-testid="stSidebar"][data-collapsed="true"] .section-header {{
+        display: none !important;
+    }}
+    
+    /* Hide the selectbox widget (Research Object) and its container when collapsed */
+    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(div.stSelectbox),
+    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(div.stSelectbox),
+    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(.manage-btn-wrapper),
+    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(.manage-btn-wrapper) {{
+        display: none !important;
+        height: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+    
+    /* Hide the parameters widget (Sample Size) when collapsed */
+    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(div.stNumberInput),
+    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(div.stNumberInput) {{
+        display: none !important;
+        height: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+    
+    /* Hide the Reset Data button and container when collapsed */
+    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(.reset-btn-wrapper),
+    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(.reset-btn-wrapper),
+    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(.reset-btn-wrapper) + div.element-container,
+    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer {{
+        display: none !important;
+        height: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+    
+    /* Style radio navigation items as centered squares when collapsed */
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label {{
+        justify-content: center !important;
+        padding: 0 !important;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 10px !important;
+        margin: 0 auto !important;
+        position: relative !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
+        display: block !important;
+        position: absolute !important;
+        left: 60px !important;
+        top: 50% !important;
+        transform: translateY(-50%) scale(0.9) !important;
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+        padding: 6px 12px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: all 0.15s ease-in-out !important;
+        z-index: 99999 !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label:hover p {{
+        opacity: 1 !important;
+        transform: translateY(-50%) scale(1) !important;
+        pointer-events: auto !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label::before {{
+        margin-right: 0 !important;
+        width: 20px !important;
+        height: 20px !important;
+    }}
+    
+    /* Style collapsed toggle switch to look like a centered moon icon button */
+    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(div.stToggle),
+    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(div.stToggle) {{
+        display: flex !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label {{
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 10px !important;
+        cursor: pointer !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label:hover {{
+        background: rgba(148, 163, 184, 0.08) !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label > div {{
+        display: none !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label p {{
+        display: block !important;
+        position: absolute !important;
+        left: 60px !important;
+        top: 50% !important;
+        transform: translateY(-50%) scale(0.9) !important;
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+        padding: 6px 12px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: all 0.15s ease-in-out !important;
+        z-index: 99999 !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label:hover p {{
+        opacity: 1 !important;
+        transform: translateY(-50%) scale(1) !important;
+        pointer-events: auto !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label::before {{
+        margin-right: 0 !important;
+        width: 20px !important;
+        height: 20px !important;
+        background-color: {text_soft} !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label:hover::before {{
+        background-color: {text_main} !important;
+    }}
+    
+    /* Style collapsed user card */
+    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card {{
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        position: relative !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card .user-name-wrapper,
+    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card .logout-link-btn {{
+        display: none !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card::after {{
+        content: "Keluar Akun ({current_user})" !important;
+        display: block !important;
+        position: absolute !important;
+        left: 60px !important;
+        top: 50% !important;
+        transform: translateY(-50%) scale(0.9) !important;
+        background-color: #ef4444 !important;
+        color: #ffffff !important;
+        padding: 6px 12px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: all 0.15s ease-in-out !important;
+        z-index: 99999 !important;
+    }}
+    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card:hover::after {{
+        opacity: 1 !important;
+        transform: translateY(-50%) scale(1) !important;
+        pointer-events: auto !important;
+    }}
+    
+    /* Expanded state user card styling overrides to prevent Streamlit from forcing black text */
+    .sidebar-user-card .user-name-wrapper div {{
+        color: {text_main} !important;
+    }}
+    .sidebar-user-card .logout-link-btn {{
+        color: {text_soft} !important;
+        border-color: rgba(148, 163, 184, 0.25) !important;
+    }}
+    
+    /* Force overflow: visible on all sidebar containers to allow tooltips to show outside the dock */
+    [data-testid="stSidebar"][data-collapsed="true"],
+    [data-testid="stSidebar"][data-collapsed="true"] > div,
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stSidebarUserContent"],
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stVerticalBlock"],
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"],
+    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] {{
+        overflow: visible !important;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -2270,25 +2603,59 @@ with st.sidebar:
     first_char = current_user[0].upper() if current_user else "U"
     st.markdown(f"""<div class="sidebar-user-card" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px;">
 <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex-grow: 1;">
-<div style="position: relative; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">
+<a href="#" id="avatar-logout-sidebar" style="position: relative; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; text-decoration: none;" title="Keluar Akun">
 {first_char}
 <span style="position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background-color: #10B981; border: 2px solid {'#020617' if theme == 'dark' else '#ffffff'};"></span>
-</div>
-<div style="min-width: 0; flex-grow: 1;">
+</a>
+<div class="user-name-wrapper" style="min-width: 0; flex-grow: 1;">
 <div style="font-size: 14px; font-weight: 700; color: {text_main}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
 {current_user}
 </div>
 </div>
 </div>
-<a href="#" onclick="try {{ document.querySelector('.hidden-logout-btn').parentElement.parentElement.nextElementSibling.querySelector('button').click(); }} catch(e) {{}} return false;" class="logout-link-btn" title="Keluar Akun" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.25); color: {text_soft}; text-decoration: none; transition: all 0.2s; flex-shrink: 0;">
+<button id="btn-logout-sidebar" class="logout-link-btn" title="Keluar Akun" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.25); color: {text_soft}; background: transparent; cursor: pointer; transition: all 0.2s; flex-shrink: 0; padding: 0;">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-</a>
+</button>
 </div>""", unsafe_allow_html=True)
     
+    # Bridge click events from the sidebar card to the hidden Streamlit button
+    import streamlit.components.v1 as components
+    components.html("""
+    <script>
+        const parentDoc = window.parent.document;
+        if (!window.parent.__logoutListenerAttached) {
+            window.parent.__logoutListenerAttached = true;
+            parentDoc.addEventListener('click', function(e) {
+                const target = e.target.closest('#btn-logout-sidebar, #avatar-logout-sidebar');
+                if (target) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let hiddenBtn = parentDoc.querySelector('[data-testid="stSidebar"] div[data-testid="stElementContainer"]:has(.hidden-logout-btn) + div[data-testid="stElementContainer"] button');
+                    if (!hiddenBtn) {
+                        const m = parentDoc.querySelector('.hidden-logout-btn');
+                        const container = m ? m.closest('[data-testid="stElementContainer"], [data-testid="element-container"]') : null;
+                        const sibling = container ? container.nextElementSibling : null;
+                        hiddenBtn = sibling ? sibling.querySelector('button') : null;
+                    }
+                    if (!hiddenBtn) {
+                        const btns = Array.from(parentDoc.querySelectorAll('button'));
+                        hiddenBtn = btns.find(b => (b.textContent || b.innerText || '').toLowerCase().includes('hidden out'));
+                    }
+                    if (hiddenBtn) {
+                        hiddenBtn.click();
+                    }
+                }
+            }, true);
+        }
+    </script>
+    """, height=0, width=0)
+
     # Hidden Streamlit button for logout
     st.markdown('<div class="hidden-logout-btn" style="display:none; width:0; height:0;"></div>', unsafe_allow_html=True)
     if st.button("Hidden Out", key="btn_logout_hidden"):
+        print("DEBUG: btn_logout_hidden clicked!")
         st.session_state["show_logout_confirm"] = True
+        st.rerun()
 
 @st.dialog("Konfirmasi Reset Data")
 def reset_dialog():
