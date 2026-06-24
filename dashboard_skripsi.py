@@ -1845,66 +1845,51 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
 with st.sidebar:
 
     # ======================
-    # BRANDING HEADER (Modern)
+    # BRANDING HEADER (Orbicular style)
     # ======================
     st.markdown(f"""
-        <div style="
-            text-align: center; 
-            padding: 16px 0 20px 0;
-            margin-bottom: 8px;
-            border-bottom: 2px solid {'rgba(238,242,255,0.15)' if theme == 'dark' else '#eef2ff'};
-        ">
-            <h1 style="
-                font-size: 28px; 
-                font-weight: 800; 
-                color: #4f46e5; 
-                margin-bottom: 4px;
-                letter-spacing: -0.5px;
-            ">UX Analytics</h1>
-            <p style="
-                font-size: 11px; 
-                color: #94a3b8; 
-                text-transform: uppercase; 
-                letter-spacing: 2px; 
-                font-weight: 600;
-            ">Universitas Islam Indonesia</p>
+        <!-- macOS-like window controls -->
+        <div style="display: flex; gap: 6px; margin-bottom: 20px; padding-left: 2px;">
+            <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff5f56; display: inline-block;"></span>
+            <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ffbd2e; display: inline-block;"></span>
+            <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #27c93f; display: inline-block;"></span>
+        </div>
+        
+        <!-- Logo and Title -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-left: 2px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="#3b82f6" />
+                <polygon points="16.2,7.8 13.8,13.8 7.8,16.2 10.2,10.2" fill="white" />
+            </svg>
+            <span style="font-size: 18px; font-weight: 700; color: {text_main}; font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">UX Analytics</span>
+        </div>
+        
+        <!-- Search bar -->
+        <div style="position: relative; margin-bottom: 18px; padding-left: 2px;">
+            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: {text_soft}; display: flex; align-items: center; opacity: 0.6;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="text" placeholder="Search" disabled style="width: 100%; height: 34px; padding: 0 12px 0 34px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.15); background-color: {'rgba(255,255,255,0.05)' if theme == 'dark' else 'rgba(148,163,184,0.06)'}; color: {text_soft}; font-size: 13px; font-weight: 500; font-family: 'Inter', sans-serif; cursor: not-allowed; outline: none; opacity: 0.8;" />
         </div>
     """, unsafe_allow_html=True)
 
     # ======================
-    # THEME TOGGLE
-    # ======================
-    is_dark = (theme == "dark")
-    toggle_label = "🌙 Dark Mode" if is_dark else "☀️ Light Mode"
-    toggle_help  = "Klik untuk Light Mode" if is_dark else "Klik untuk Dark Mode"
-    if st.button(toggle_label, use_container_width=True, key="btn_theme_toggle", help=toggle_help):
-        st.session_state["app_theme"] = "light" if is_dark else "dark"
-        st.rerun()
-
-    # ======================
-    # SECTION 1: RESEARCH OBJECT (Polished)
+    # SECTION 1: RESEARCH OBJECT (Compact Layout)
     # ======================
     st.markdown("""
-        <div style="padding: 12px 0;">
+        <div style="padding-top: 4px; padding-bottom: 2px;">
             <div style="
-                font-size: 12px;
+                font-size: 10px;
                 font-weight: 700;
                 color: #4f46e5;
                 text-transform: uppercase;
-                letter-spacing: 1.2px;
-                margin-bottom: 16px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
+                letter-spacing: 1px;
+                margin-bottom: 6px;
             ">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.5">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
                 Research Object
             </div>
     """, unsafe_allow_html=True)
     
-    # Pilih aplikasi aktif (larger font)
     app = st.selectbox(
         "Aplikasi Analisis", 
         st.session_state.app_list, 
@@ -1912,93 +1897,78 @@ with st.sidebar:
         help="Pilih objek penelitian yang akan dianalisis"
     )
     
-    # Kelola Aplikasi (Pop-over style expander)
-    with st.expander("Kelola Objek Penelitian", expanded=False):
+    st.markdown('<div class="manage-btn-wrapper">', unsafe_allow_html=True)
+    if st.button("Manage Objects", use_container_width=True, key="btn_manage_objects", help="Kelola Objek Penelitian"):
+        st.session_state["show_manage_objects"] = True
+    st.markdown('</div>', unsafe_allow_html=True)
+        
+    st.markdown("</div>", unsafe_allow_html=True)
 
-        # Notifikasi add berhasil
-        if st.session_state.get("app_added"):
-            st.success(f"✓ '{st.session_state.app_added}' berhasil ditambahkan!")
-            st.session_state["app_added"] = None
+    st.markdown("<div style='margin: 4px 0;'></div>", unsafe_allow_html=True)
 
-        # Notifikasi delete berhasil
-        if st.session_state.get("app_deleted"):
-            st.warning(f"✓ '{st.session_state.app_deleted}' berhasil dihapus!")
-            st.session_state["app_deleted"] = None
-
-        if "input_key" not in st.session_state:
-            st.session_state["input_key"] = 0
-
-        new_app = st.text_input(
-            "Nama Aplikasi Baru",
-            placeholder="Contoh: Instagram, Spotify, TikTok",
-            key=f"new_app_input_{st.session_state['input_key']}"
-        )
-
-        if st.button("Tambah Objek", use_container_width=True, key="btn_add_app", type="primary"):
-            if new_app and new_app.strip() not in st.session_state.app_list:
-                nama = new_app.strip()
-                st.session_state.app_list.append(nama)
-                save_app_list(current_user, st.session_state.app_list)
-                st.session_state["app_added"] = nama
-                st.session_state["input_key"] = st.session_state.get("input_key", 0) + 1
-                st.rerun()
-            elif new_app and new_app.strip() in st.session_state.app_list:
-                st.error("Aplikasi sudah ada dalam daftar!")
-
-        if st.session_state.app_list:
-            st.markdown("---")
-            st.markdown("""
-                <div style="font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 10px;">
-                    HAPUS OBJEK
-                </div>
-            """, unsafe_allow_html=True)
-            app_delete = st.selectbox(
-                "Pilih Aplikasi yang Ingin Dihapus",
-                st.session_state.app_list,
-                key="del_select"
-            )
-
-            if st.button("Hapus Objek", use_container_width=True, key="btn_del_app", type="secondary"):
-                nama_del = app_delete
-                st.session_state.app_list.remove(app_delete)
-                save_app_list(current_user, st.session_state.app_list)
-                st.session_state["app_deleted"] = nama_del
-                st.rerun()
-
-    st.markdown("</div>", unsafe_allow_html=True)  # Close research object card
-
-    st.markdown("<div style='margin: 16px 0;'></div>", unsafe_allow_html=True)
-
-    # --- SECTION 2: MAIN NAVIGATION (Larger) ---
-    menu = st.selectbox(
-        "Pilih Menu", 
-        ["Home", "Overview", "Time on Task", "Error Rate", "UEQ Analysis", "Preferensi Responden", "Settings"],
-        label_visibility="collapsed"
-    )
-
-    # --- SECTION 3: PARAMETERS (Polished) ---
+    # ======================
+    # SECTION 2: MAIN NAVIGATION (Modern Vertical List)
+    # ======================
     st.markdown("""
-        <div style="padding: 12px 0;">
+        <div style="padding-top: 4px; padding-bottom: 2px;">
             <div style="
-                font-size: 12px;
+                font-size: 10px;
+                font-weight: 700;
+                color: #6366f1;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 6px;
+            ">
+                Menu Dashboard
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    menu_options = [
+        "Home", 
+        "Overview", 
+        "Time on Task", 
+        "Error Rate", 
+        "UEQ Analysis", 
+        "Preferensi Responden", 
+        "Settings"
+    ]
+    
+    default_idx = 0
+    if "current_page" in st.session_state:
+        try:
+            default_idx = menu_options.index(st.session_state.current_page)
+        except ValueError:
+            pass
+
+    menu = st.radio(
+        "Menu Navigasi",
+        menu_options,
+        index=default_idx,
+        label_visibility="collapsed",
+        key="sidebar_menu_radio"
+    )
+    st.session_state["current_page"] = menu
+
+    st.markdown("<div style='margin: 2px 0;'></div>", unsafe_allow_html=True)
+
+    # ======================
+    # SECTION 3: PARAMETERS (Compact)
+    # ======================
+    st.markdown("""
+        <div style="padding-top: 4px; padding-bottom: 2px;">
+            <div style="
+                font-size: 10px;
                 font-weight: 700;
                 color: #059669;
                 text-transform: uppercase;
-                letter-spacing: 1.2px;
-                margin-bottom: 16px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
+                letter-spacing: 1px;
+                margin-bottom: 6px;
             ">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-                Parameter Studi
+                Study Parameter
             </div>
     """, unsafe_allow_html=True)
     
-    # Sample Size dengan larger font
     n = st.number_input(
         "Sample Size (N)", 
         min_value=1, 
@@ -2007,151 +1977,317 @@ with st.sidebar:
         help="Jumlah responden dalam penelitian ini"
     )
 
-    # Info Card Aktif (larger and more prominent)
-    st.markdown(f"""
-        <div class="sidebar-active-card">
-            <div class="sidebar-active-label">
-                Objek Studi Aktif
-            </div>
-            <div class="sidebar-active-value">
-                {app if app else "Belum dipilih"}
-            </div>
-            <div style="font-size: 12px; color: #64748B; display: flex; align-items: center; gap: 8px;">
-                <span style="
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background-color: #10B981;
-                "></span>
-                <span style="font-weight: 600; color: var(--text-color) !important; opacity: 0.7;">Active Analysis</span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)  # Close parameter card
+    st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)  # Push to bottom
-    
-    st.markdown("---")
-    
-    # ======================
-    # USER INFO CARD
-    # ======================
-    st.markdown(f"""
-        <div class="sidebar-user-card">
-            Login sebagai <b style="color: #6366F1; font-weight: 700;">{current_user}</b>
-        </div>
-    """, unsafe_allow_html=True)
 
     # ======================
     # STYLING OVERRIDES
     # ======================
-    st.markdown("""
+    is_dark = (theme == "dark")
+    text_main = "#f1f5f9" if is_dark else "#0f172a"
+    text_soft = "#94a3b8" if is_dark else "#64748b"
+
+    st.markdown(f"""
     <style>
+    /* Adjust sidebar padding and spacing to add breathing room while preventing scrollbars */
+    [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {{
+        padding: 20px 16px 14px 16px !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        gap: 12px !important;
+    }}
+
     /* Styling untuk semua tombol di sidebar */
-    div[data-testid="stSidebar"] button {
-        border-radius: 10px !important;
-        font-weight: 700 !important;
-    }
-
-    /* Secondary button - merah untuk delete */
-    div[data-testid="stSidebar"] button[kind="secondary"] {
-        background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(220,38,38,0.15)) !important;
-        color: #ef4444 !important;
-        border: 1px solid rgba(239,68,68,0.4) !important;
-        font-size: 12px !important;
-    }
-
-    /* Primary button - ungu untuk logout */
-    div[data-testid="stSidebar"] button[kind="primary"] {
-        background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-        color: white !important;
-        border: none !important;
-        font-size: 12px !important;
-    }
-
-    /* Expander styling */
-    [data-testid="stSidebar"] details {
-        background: var(--secondary-background-color) !important;
-        border: 1px solid rgba(99,102,241,0.3) !important;
-        border-radius: 12px !important;
-    }
-
-    [data-testid="stSidebar"] details:hover {
+    div[data-testid="stSidebar"] button {{
+        height: 32px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border-radius: 6px !important;
+        background: transparent !important;
+        border: 1px solid rgba(128,128,128,0.2) !important;
+        color: var(--text-color) !important;
+        transition: all 0.2s ease !important;
+    }}
+    div[data-testid="stSidebar"] button:hover {{
+        background: rgba(99, 102, 241, 0.06) !important;
         border-color: #6366f1 !important;
-        box-shadow: 0 4px 12px rgba(99,102,241,0.15) !important;
-    }
-
-    [data-testid="stSidebar"] summary {
         color: #6366f1 !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-    }
+    }}
 
-    /* Primary button dalam expander - hijau */
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"] {
-        background: linear-gradient(135deg, #10b981, #059669) !important;
-        color: white !important;
-        border: none !important;
+    /* Aesthetic dashed outline button for Manage Objects placed below */
+    .manage-btn-wrapper button {{
+        width: 100% !important;
+        height: 32px !important;
+        background: transparent !important;
+        border: 1px dashed rgba(148, 163, 184, 0.35) !important;
+        color: {text_soft} !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        transition: all 0.2s ease !important;
+    }}
+    .manage-btn-wrapper button::before {{
+        content: "" !important;
+        display: inline-block !important;
+        width: 13px !important;
+        height: 13px !important;
+        background-color: currentColor !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'%3E%3C/path%3E%3Cpath d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'%3E%3C/path%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'%3E%3C/path%3E%3Cpath d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'%3E%3C/path%3E%3C/svg%3E") !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        flex-shrink: 0 !important;
+        transition: all 0.2s ease !important;
+    }}
+    .manage-btn-wrapper button p {{
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        white-space: nowrap !important;
+        color: inherit !important;
+        line-height: 1 !important;
+    }}
+    .manage-btn-wrapper button:hover {{
+        border: 1px solid #3b82f6 !important;
+        background: rgba(59, 130, 246, 0.05) !important;
+        color: #3b82f6 !important;
+    }}
+
+    /* Style the radio sidebar navigation as menu items */
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-testid="stWidgetLabel"] {{
+        display: none !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {{
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label {{
+        display: flex !important;
+        align-items: center !important;
+        padding: 10px 14px !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
         border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(16,185,129,0.3) !important;
-    }
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        margin: 0 !important;
+        color: {text_soft} !important;
+    }}
+    /* Hide default radio circle icon */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
+        display: none !important;
+    }}
+    /* Style radio text */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        margin: 0 !important;
+        color: inherit !important;
+    }}
+    /* Hover and active states for radio items */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover {{
+        background: rgba(148, 163, 184, 0.08) !important;
+        color: {text_main} !important;
+        transform: translateX(4px) !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {{
+        background: {'rgba(59, 130, 246, 0.1)' if not is_dark else '#3b82f6'} !important;
+        border-color: transparent !important;
+        color: {'#2563eb' if not is_dark else '#ffffff'} !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p {{
+        font-weight: 600 !important;
+    }}
 
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #34d399, #10b981) !important;
-        box-shadow: 0 4px 16px rgba(16,185,129,0.5) !important;
-        transform: translateY(-2px) !important;
-    }
+    /* CSS Mask-based Outline Icons for Radio Labels */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label::before {{
+        content: "" !important;
+        display: inline-block !important;
+        width: 18px !important;
+        height: 18px !important;
+        margin-right: 12px !important;
+        background-color: currentColor !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        flex-shrink: 0 !important;
+    }}
+    
+    /* DOM index selectors (robust against input value changes) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="0"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="Home"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E") !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="1"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="Overview"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='7' height='9' x='3' y='3' rx='1'/%3E%3Crect width='7' height='5' x='14' y='3' rx='1'/%3E%3Crect width='7' height='9' x='14' y='12' rx='1'/%3E%3Crect width='7' height='5' x='3' y='16' rx='1'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='7' height='9' x='3' y='3' rx='1'/%3E%3Crect width='7' height='5' x='14' y='3' rx='1'/%3E%3Crect width='7' height='9' x='14' y='12' rx='1'/%3E%3Crect width='7' height='5' x='3' y='16' rx='1'/%3E%3C/svg%3E") !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="2"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="Time on Task"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(4)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="3"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="Error Rate"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='15' x2='9' y1='9' y2='15'/%3E%3Cline x1='9' x2='15' y1='9' y2='15'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='15' x2='9' y1='9' y2='15'/%3E%3Cline x1='9' x2='15' y1='9' y2='15'/%3E%3C/svg%3E") !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(5)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="4"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="UEQ Analysis"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' x2='18' y1='20' y2='10'/%3E%3Cline x1='12' x2='12' y1='20' y2='4'/%3E%3Cline x1='6' x2='6' y1='20' y2='14'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' x2='18' y1='20' y2='10'/%3E%3Cline x1='12' x2='12' y1='20' y2='4'/%3E%3Cline x1='6' x2='6' y1='20' y2='14'/%3E%3C/svg%3E") !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(6)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="5"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="Preferensi Responden"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/%3E%3C/svg%3E") !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(7)::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="6"])::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input[value="Settings"])::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E") !important;
+    }}
 
-    /* Secondary button dalam expander - merah */
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"] {
-        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(239,68,68,0.3) !important;
-    }
+    /* Add Moon icon to Dark Mode toggle label */
+    [data-testid="stSidebar"] label:has(input[id*="theme_toggle_switch"])::before {{
+        content: "" !important;
+        display: inline-block !important;
+        width: 16px !important;
+        height: 16px !important;
+        margin-right: 8px !important;
+        background-color: currentColor !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+    }}
 
-    [data-testid="stSidebar"] [data-testid="stExpander"] button[kind="secondary"]:hover {
-        background: linear-gradient(135deg, #f87171, #ef4444) !important;
-        box-shadow: 0 4px 16px rgba(239,68,68,0.5) !important;
-        transform: translateY(-2px) !important;
-    }
+    /* User card styling */
+    .sidebar-user-card {{
+        padding: 6px 10px !important;
+        background: rgba(148, 163, 184, 0.06) !important;
+        border: 1px solid rgba(148, 163, 184, 0.15) !important;
+        border-radius: 10px !important;
+    }}
+    
+    /* Custom HTML logout link button styling */
+    .logout-link-btn:hover {{
+        border-color: #ef4444 !important;
+        background: rgba(239, 68, 68, 0.05) !important;
+        color: #ef4444 !important;
+    }}
 
-    /* Inner content area of expander - fix white background */
-    [data-testid="stSidebar"] details > div,
-    [data-testid="stSidebar"] [data-testid="stExpanderDetails"],
-    [data-testid="stSidebar"] [data-testid="stExpanderDetails"] > div {
-        background: var(--secondary-background-color) !important;
-    }
+    /* Hide the hidden logout button elements */
+    .hidden-logout-btn,
+    div:has(.hidden-logout-btn),
+    div:has(.hidden-logout-btn) + div {{
+        display: none !important;
+        height: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
 
-    /* Input text inside expander */
-    [data-testid="stSidebar"] [data-testid="stExpander"] input[type="text"],
-    [data-testid="stSidebar"] [data-testid="stExpander"] [data-baseweb="input"] > div {
-        background: var(--background-color) !important;
-        color: var(--text-color) !important;
-        border-color: rgba(128,128,128,0.3) !important;
-    }
-
-    /* Select/dropdown inside expander */
-    [data-testid="stSidebar"] [data-testid="stExpander"] [data-baseweb="select"] > div {
-        background: var(--background-color) !important;
-        color: var(--text-color) !important;
-        border-color: rgba(128,128,128,0.3) !important;
-    }
+    /* Sibling selector for Reset Data button */
+    div:has(.reset-btn-wrapper) ~ div.stButton button {{
+        background: transparent !important;
+        border: 1px solid rgba(148, 163, 184, 0.25) !important;
+        color: {text_soft} !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border-radius: 6px !important;
+        transition: all 0.2s ease !important;
+        height: 32px !important;
+    }}
+    div:has(.reset-btn-wrapper) ~ div.stButton button p {{
+        margin: 0 !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: inherit !important;
+    }}
+    div:has(.reset-btn-wrapper) ~ div.stButton button:hover {{
+        background: rgba(239, 68, 68, 0.08) !important;
+        border-color: #ef4444 !important;
+        color: #ef4444 !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
     # ======================
-    # ACTION BUTTONS
+    # COMPACT BOTTOM AREA
     # ======================
-    if st.button("Reset All Data", use_container_width=True, type="secondary", key="btn_reset_split"):
+    is_dark = (theme == "dark")
+    
+    # Reset button (Full width, clean outline text)
+    st.markdown('<div class="reset-btn-wrapper">', unsafe_allow_html=True)
+    if st.button("Reset Data", use_container_width=True, key="btn_reset_compact", help="Reset Semua Data"):
         st.session_state["show_reset_confirm"] = True
+    st.markdown('</div>', unsafe_allow_html=True)
+        
+    st.markdown("<div style='margin-top: 4px;'></div>", unsafe_allow_html=True)
+    
+    # Toggle Dark Mode (styled switch)
+    is_dark_toggle = st.toggle("Dark Mode", value=is_dark, key="theme_toggle_switch")
+    if is_dark_toggle != is_dark:
+        st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
+        st.rerun()
 
-    st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
 
-    if st.button("Logout", use_container_width=True, type="primary", key="btn_logout"):
+    # Profile Avatar + Name + Logout Row (Unified Flexbox layout)
+    first_char = current_user[0].upper() if current_user else "U"
+    st.markdown(f"""<div class="sidebar-user-card" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px;">
+<div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex-grow: 1;">
+<div style="position: relative; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #6366f1); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">
+{first_char}
+<span style="position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background-color: #10B981; border: 2px solid {'#020617' if theme == 'dark' else '#ffffff'};"></span>
+</div>
+<div style="min-width: 0; flex-grow: 1;">
+<div style="font-size: 14px; font-weight: 700; color: {text_main}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+{current_user}
+</div>
+</div>
+</div>
+<a href="#" onclick="try {{ document.querySelector('.hidden-logout-btn').parentElement.parentElement.nextElementSibling.querySelector('button').click(); }} catch(e) {{}} return false;" class="logout-link-btn" title="Keluar Akun" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.25); color: {text_soft}; text-decoration: none; transition: all 0.2s; flex-shrink: 0;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+</a>
+</div>""", unsafe_allow_html=True)
+    
+    # Hidden Streamlit button for logout
+    st.markdown('<div class="hidden-logout-btn" style="display:none; width:0; height:0;"></div>', unsafe_allow_html=True)
+    if st.button("Hidden Out", key="btn_logout_hidden"):
         st.session_state["show_logout_confirm"] = True
 
 @st.dialog("Konfirmasi Reset Data")
@@ -2203,6 +2339,62 @@ def logout_dialog():
 
 if st.session_state.get("show_logout_confirm") == True:
     logout_dialog()
+
+@st.dialog("Kelola Objek Penelitian")
+def manage_objects_dialog():
+    # Notifikasi add berhasil
+    if st.session_state.get("app_added"):
+        st.success(f"✓ '{st.session_state.app_added}' berhasil ditambahkan!")
+        st.session_state["app_added"] = None
+
+    # Notifikasi delete berhasil
+    if st.session_state.get("app_deleted"):
+        st.warning(f"✓ '{st.session_state.app_deleted}' berhasil dihapus!")
+        st.session_state["app_deleted"] = None
+
+    if "input_key" not in st.session_state:
+        st.session_state["input_key"] = 0
+
+    new_app = st.text_input(
+        "Nama Aplikasi Baru",
+        placeholder="Contoh: Instagram, Spotify, TikTok",
+        key=f"new_app_input_{st.session_state['input_key']}"
+    )
+
+    if st.button("Tambah Objek", use_container_width=True, key="btn_add_app", type="primary"):
+        if new_app and new_app.strip() not in st.session_state.app_list:
+            nama = new_app.strip()
+            st.session_state.app_list.append(nama)
+            save_app_list(st.session_state.get("current_user", "default"), st.session_state.app_list)
+            st.session_state["app_added"] = nama
+            st.session_state["input_key"] = st.session_state.get("input_key", 0) + 1
+            st.rerun()
+        elif new_app and new_app.strip() in st.session_state.app_list:
+            st.error("Aplikasi sudah ada dalam daftar!")
+
+    if st.session_state.app_list:
+        st.markdown("---")
+        st.markdown("""
+            <div style="font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 10px;">
+                HAPUS OBJEK
+            </div>
+        """, unsafe_allow_html=True)
+        app_delete = st.selectbox(
+            "Pilih Aplikasi yang Ingin Dihapus",
+            st.session_state.app_list,
+            key="del_select"
+        )
+
+        if st.button("Hapus Objek", use_container_width=True, key="btn_del_app", type="secondary"):
+            nama_del = app_delete
+            st.session_state.app_list.remove(app_delete)
+            save_app_list(st.session_state.get("current_user", "default"), st.session_state.app_list)
+            st.session_state["app_deleted"] = nama_del
+            st.rerun()
+
+if st.session_state.get("show_manage_objects") == True:
+    st.session_state["show_manage_objects"] = False
+    manage_objects_dialog()
 
 # ======================
 # PATH REFERENSI (tidak digunakan sebagai file lokal)

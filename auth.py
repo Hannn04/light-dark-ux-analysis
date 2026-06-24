@@ -229,11 +229,15 @@ def render_auth_page():
 
     dark_input_override = f"""
         [data-baseweb="input"] > div,
-        [data-baseweb="textarea"] > div,
-        input[type="text"], input[type="password"] {{
+        [data-baseweb="textarea"] > div {{
             background-color: {input_bg} !important;
             color: {text_main} !important;
             border-color: {input_bdr} !important;
+        }}
+        input[type="text"], input[type="password"] {{
+            background-color: transparent !important;
+            color: {text_main} !important;
+            border: none !important;
         }}
         input::placeholder {{ color: {placeholder} !important; }}
         [data-testid="stCheckbox"] label,
@@ -261,7 +265,9 @@ def render_auth_page():
         toggle_btn_hover_bg = "#f8fafc"
         toggle_btn_hover_border = "#9ca3af"
 
-    # ── Full CSS ────────────────────────────────────────────────────────────
+    accent = "rgba(99,102,241,0.06)" if is_dark else "rgba(99,102,241,0.08)"
+
+    # ── Merged Layout: CSS + Accent Blobs + Brand Header ─────────────────────
     st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -275,27 +281,33 @@ def render_auth_page():
 
     * {{ font-family: 'Inter', -apple-system, sans-serif !important; }}
 
-    /* Prevent page scroll — fit to viewport */
-    html, body {{ overflow: hidden !important; max-height: 100vh !important; }}
+    /* Clean layout and scrolling behavior */
+    html, body {{
+        overflow-y: auto !important;
+        min-height: 100vh !important;
+    }}
 
     /* Page background */
     .stApp {{
         background-color: {page_bg} !important;
-        height: 100vh !important;
-        overflow: hidden !important;
+        min-height: 100vh !important;
+        overflow-y: auto !important;
     }}
     section.main, section.main > div {{
         background: transparent !important;
-        overflow: hidden !important;
+        overflow: visible !important;
     }}
-    [data-testid="stMainBlockContainer"] {{ overflow: hidden !important; }}
+    [data-testid="stMainBlockContainer"] {{
+        overflow: visible !important;
+    }}
 
     /* Login card */
     .block-container {{
         max-width: 400px !important;
         margin: 0 auto !important;
-        margin-top: 3vh !important;
-        padding: 20px 24px 16px !important;
+        margin-top: 4vh !important;
+        margin-bottom: 4vh !important;
+        padding: 24px 28px 28px 28px !important;
         background: {card_bg} !important;
         border-radius: 18px !important;
         box-shadow: {card_shadow} !important;
@@ -342,6 +354,7 @@ def render_auth_page():
         font-size: 14px !important;
         font-weight: 400 !important;
         padding: 9px 12px !important;
+        border: none !important;
         outline: none !important;
         box-shadow: none !important;
     }}
@@ -370,12 +383,23 @@ def render_auth_page():
         letter-spacing: 0.8px !important;
     }}
 
+    /* Overrides for checkbox labels to prevent uppercase and make them look clean */
+    [data-testid="stCheckbox"] label,
+    [data-testid="stCheckbox"] span,
+    [data-testid="stCheckbox"] p {{
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: {text_main} !important;
+    }}
+
     /* Tabs */
     [data-baseweb="tab-list"] {{
         background: transparent !important;
         border-bottom: 1px solid {sep_clr} !important;
-        margin-bottom: 10px !important;
-        margin-top: 4px !important;
+        margin-bottom: 6px !important;
+        margin-top: 0px !important;
     }}
     [data-baseweb="tab"] {{
         color: {text_soft} !important;
@@ -445,35 +469,37 @@ def render_auth_page():
     /* Column padding */
     div[data-testid="column"] {{ padding: 0 2px !important; }}
 
+    /* Collapse horizontal block gap and vertical spacing */
+    [data-testid="stHorizontalBlock"] {{
+        gap: 0 !important;
+        margin-top: 4px !important;
+        margin-bottom: 4px !important;
+    }}
+
     /* Scrollbar */
     ::-webkit-scrollbar {{ width: 4px; }}
     ::-webkit-scrollbar-thumb {{ background: rgba(99,102,241,0.25); border-radius: 4px; }}
 
     {dark_input_override}
     </style>
-    """, unsafe_allow_html=True)
 
-    # ── Subtle accent dot decoration ────────────────────────────────────────
-    accent = "rgba(99,102,241,0.08)" if not is_dark else "rgba(99,102,241,0.06)"
-    st.markdown(f"""
+    <!-- Subtle accent dot decoration -->
     <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;overflow:hidden;">
         <div style="position:absolute;width:600px;height:600px;background:radial-gradient(circle,{accent} 0%,transparent 70%);top:-200px;right:-200px;"></div>
         <div style="position:absolute;width:500px;height:500px;background:radial-gradient(circle,{accent} 0%,transparent 70%);bottom:-200px;left:-200px;"></div>
     </div>
-    """, unsafe_allow_html=True)
 
-    # ── Brand + Heading (digabung satu block) ──────────────────────────────────
-    st.markdown(f"""
-    <div style="margin-bottom:14px;">
+    <!-- Brand + Heading -->
+    <div style="margin-bottom:12px; margin-top:-8px;">
         <span style="font-size:10px; font-weight:700; color:#6366f1;
-                     text-transform:uppercase; letter-spacing:2.5px;">
+                     text-transform:uppercase; letter-spacing:1.0px;">
             UX Analytics
         </span>
-        <h1 style="font-size:20px; font-weight:700; color:{text_main};
-                   margin:7px 0 3px 0; letter-spacing:-0.3px; line-height:1.2;">
+        <h1 style="font-size:18px; font-weight:700; color:{text_main};
+                   margin:4px 0 2px 0; letter-spacing:-0.3px; line-height:1.2;">
             Selamat datang
         </h1>
-        <p style="font-size:11px; color:{text_soft}; margin:0; line-height:1.4;">
+        <p style="font-size:11px; color:{text_soft}; margin:0; line-height:1.3;">
             Masuk untuk melanjutkan ke dashboard penelitian.
         </p>
     </div>
@@ -533,11 +559,11 @@ def render_auth_page():
     # ── Footer + Toggle ─────────────────────────────────────────────────────────
     mode_label = "Gelap" if is_dark else "Terang"
     st.markdown(f"""
-    <div style="margin-top:14px; padding-top:10px; border-top:1px solid {sep_clr}; text-align: center; width: 100%;">
+    <div style="margin-top:8px; padding-top:6px; border-top:1px solid {sep_clr}; text-align: center; width: 100%;">
         <p style="font-size:10px; color:{text_soft}; margin:0 0 2px 0; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">
             Ganti Tampilan
         </p>
-        <p style="font-size:10px; color:{text_soft}; margin:0 0 8px 0;">
+        <p style="font-size:10px; color:{text_soft}; margin:0 0 6px 0;">
             Tampilan aktif saat ini: <strong style="color:{text_main};">{mode_label}</strong>
         </p>
     </div>
@@ -552,8 +578,8 @@ def render_auth_page():
             st.rerun()
 
     st.markdown(f"""
-    <div style="text-align: center; margin-top: 12px;">
-        <p style="font-size:9px; color:{text_soft}; margin:0; opacity:0.6;">
+    <div style="text-align: center; margin-top: 16px;">
+        <p style="font-size:10px; color:{text_soft}; margin:0; opacity:0.6; font-weight:500;">
             Universitas Islam Indonesia
         </p>
     </div>
