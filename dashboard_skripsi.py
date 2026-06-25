@@ -2218,7 +2218,8 @@ with st.sidebar:
     }}
 
     /* Aesthetic dashed outline button for Manage Objects placed below */
-    .manage-btn-wrapper button {{
+    div.element-container:has(.manage-btn-wrapper) + div.element-container button,
+    div.stElementContainer:has(.manage-btn-wrapper) + div.stElementContainer button {{
         width: 100% !important;
         height: 32px !important;
         background: transparent !important;
@@ -2233,7 +2234,8 @@ with st.sidebar:
         gap: 6px !important;
         transition: all 0.2s ease !important;
     }}
-    .manage-btn-wrapper button::before {{
+    div.element-container:has(.manage-btn-wrapper) + div.element-container button::before,
+    div.stElementContainer:has(.manage-btn-wrapper) + div.stElementContainer button::before {{
         content: "" !important;
         display: inline-block !important;
         width: 13px !important;
@@ -2248,7 +2250,8 @@ with st.sidebar:
         flex-shrink: 0 !important;
         transition: all 0.2s ease !important;
     }}
-    .manage-btn-wrapper button p {{
+    div.element-container:has(.manage-btn-wrapper) + div.element-container button p,
+    div.stElementContainer:has(.manage-btn-wrapper) + div.stElementContainer button p {{
         margin: 0 !important;
         padding: 0 !important;
         font-size: 11px !important;
@@ -2259,7 +2262,8 @@ with st.sidebar:
         color: inherit !important;
         line-height: 1 !important;
     }}
-    .manage-btn-wrapper button:hover {{
+    div.element-container:has(.manage-btn-wrapper) + div.element-container button:hover,
+    div.stElementContainer:has(.manage-btn-wrapper) + div.stElementContainer button:hover {{
         border: 1px solid #3b82f6 !important;
         background: rgba(59, 130, 246, 0.05) !important;
         color: #3b82f6 !important;
@@ -2517,7 +2521,21 @@ with st.sidebar:
         border-right: 1px solid rgba(128,128,128,0.15) !important;
         background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
         z-index: 100000 !important;
+        position: relative !important;
     }}
+    
+    /* Invisible drag-to-expand handle on the right edge of the collapsed sidebar */
+    [data-testid="stSidebar"][aria-expanded="false"]::after {{
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 12px !important;
+        height: 100% !important;
+        cursor: ew-resize !important;
+        z-index: 100002 !important;
+    }}
+    
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
         display: flex !important;
         flex-direction: column !important;
@@ -2583,19 +2601,23 @@ with st.sidebar:
         color: #6366f1 !important;
     }}
     
-    /* Styling for the branding layout when collapsed */
+    /* Hide window controls and title but center the brand logo when collapsed */
     [data-testid="stSidebar"][aria-expanded="false"] .window-controls-container {{
-        justify-content: center !important;
-        padding-left: 0 !important;
-        margin-top: 50px !important; /* Push down to clear expand button */
-        margin-bottom: 24px !important;
+        display: none !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container {{
+        display: flex !important;
         justify-content: center !important;
-        padding-left: 0 !important;
-        margin-bottom: 24px !important;
+        align-items: center !important;
+        margin: 10px auto 20px auto !important;
+        padding: 0 !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .brand-title-text {{
+        display: none !important;
+    }}
+    
+    /* Hide the collapse button inside the sidebar when collapsed */
+    [data-testid="stSidebar"][aria-expanded="false"] button[class*="CollapseButton"] {{
         display: none !important;
     }}
     
@@ -2608,7 +2630,11 @@ with st.sidebar:
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stSelectbox),
     [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stSelectbox),
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.manage-btn-wrapper),
-    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.manage-btn-wrapper) {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.manage-btn-wrapper),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.manage-btn-wrapper) + div.element-container,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.manage-btn-wrapper) + div.stElementContainer,
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.manage-btn-wrapper) + div.element-container + div.element-container,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.manage-btn-wrapper) + div.stElementContainer + div.stElementContainer {{
         display: none !important;
         height: 0px !important;
         margin: 0 !important;
@@ -2628,7 +2654,9 @@ with st.sidebar:
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.reset-btn-wrapper),
     [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.reset-btn-wrapper),
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.reset-btn-wrapper) + div.element-container,
-    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer,
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.reset-btn-wrapper) + div.element-container + div.element-container,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer + div.stElementContainer {{
         display: none !important;
         height: 0px !important;
         margin: 0 !important;
@@ -2675,115 +2703,85 @@ with st.sidebar:
         height: 20px !important;
     }}
     
-    /* Style collapsed toggle switch to look like a centered moon icon button */
-    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stToggle),
-    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stToggle) {{
+    /* Style collapsed toggle switch to center it and hide its label text */
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(input[id*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(input[id*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has([data-testid="stCheckbox"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has([data-testid="stCheckbox"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stCheckbox),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stCheckbox) {{
         display: flex !important;
         justify-content: center !important;
-        margin: 0 !important;
+        height: auto !important;
+        margin: 15px 0 !important;
         padding: 0 !important;
     }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label {{
+    [data-testid="stSidebar"][aria-expanded="false"] label:has(input[id*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"],
+    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox {{
         display: flex !important;
+        justify-content: center !important;
         align-items: center !important;
-        justify-content: center !important;
-        width: 44px !important;
-        height: 44px !important;
-        border-radius: 10px !important;
-        cursor: pointer !important;
-        margin: 0 !important;
-        padding: 0 !important;
         background: transparent !important;
-        transition: all 0.2s ease !important;
-        position: relative !important;
+        border: none !important;
+        padding: 0 !important;
+        width: auto !important;
+        margin: 0 auto !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
     }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label:hover {{
-        background: rgba(148, 163, 184, 0.08) !important;
-    }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label > div {{
+    [data-testid="stSidebar"][aria-expanded="false"] label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] [data-testid="stWidgetLabel"],
+    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox [data-testid="stWidgetLabel"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] div[data-testid="stMarkdownContainer"],
+    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox div[data-testid="stMarkdownContainer"] {{
         display: none !important;
-    }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label p {{
-        display: block !important;
-        position: absolute !important;
-        left: 60px !important;
-        top: 50% !important;
-        transform: translateY(-50%) scale(0.9) !important;
-        background-color: #3b82f6 !important;
-        color: #ffffff !important;
-        padding: 6px 12px !important;
-        border-radius: 6px !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        white-space: nowrap !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        visibility: hidden !important;
         opacity: 0 !important;
-        pointer-events: none !important;
-        transition: all 0.15s ease-in-out !important;
-        z-index: 99999 !important;
-    }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label:hover p {{
-        opacity: 1 !important;
-        transform: translateY(-50%) scale(1) !important;
-        pointer-events: auto !important;
-    }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label::before {{
-        margin-right: 0 !important;
-        width: 20px !important;
-        height: 20px !important;
-        background-color: {text_soft} !important;
-    }}
-    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label:hover::before {{
-        background-color: {text_main} !important;
     }}
     
-    /* Style collapsed user card */
+    /* Style collapsed user card to show only the logout icon centered */
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.sidebar-user-card),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.sidebar-user-card) {{
+        display: flex !important;
+        justify-content: center !important;
+        height: auto !important;
+        margin: 15px 0 !important;
+        padding: 0 !important;
+    }}
     [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card {{
         background: transparent !important;
         border: none !important;
         padding: 0 !important;
         display: flex !important;
         justify-content: center !important;
+        align-items: center !important;
         width: 100% !important;
-        position: relative !important;
+        box-shadow: none !important;
     }}
-    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card .user-name-wrapper,
-    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card .logout-link-btn {{
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card div,
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card a {{
         display: none !important;
     }}
-    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card::after {{
-        content: "Keluar Akun ({current_user})" !important;
-        display: block !important;
-        position: absolute !important;
-        left: 60px !important;
-        top: 50% !important;
-        transform: translateY(-50%) scale(0.9) !important;
-        background-color: #ef4444 !important;
-        color: #ffffff !important;
-        padding: 6px 12px !important;
-        border-radius: 6px !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        white-space: nowrap !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        transition: all 0.15s ease-in-out !important;
-        z-index: 99999 !important;
-    }}
-    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card:hover::after {{
-        opacity: 1 !important;
-        transform: translateY(-50%) scale(1) !important;
-        pointer-events: auto !important;
-    }}
-    
-    /* Expanded state user card styling overrides to prevent Streamlit from forcing black text */
-    .sidebar-user-card .user-name-wrapper div {{
-        color: {text_main} !important;
-    }}
-    .sidebar-user-card .logout-link-btn {{
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card button.logout-link-btn {{
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 auto !important;
+        border: none !important;
+        background: transparent !important;
+        width: 44px !important;
+        height: 44px !important;
         color: {text_soft} !important;
-        border-color: rgba(148, 163, 184, 0.25) !important;
+        padding: 0 !important;
+    }}
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card button.logout-link-btn:hover {{
+        color: #ef4444 !important;
+        background: transparent !important;
+        border: none !important;
     }}
     
     /* Force overflow: visible on all sidebar containers to allow tooltips to show outside the dock */
@@ -2839,11 +2837,13 @@ with st.sidebar:
 </button>
 </div>""", unsafe_allow_html=True)
     
-    # Bridge click events from the sidebar card to the hidden Streamlit button
+    # Bridge click/drag events for custom sidebar interactions
     import streamlit.components.v1 as components
     components.html("""
     <script>
         const parentDoc = window.parent.document;
+        
+        // 1. Logout bridge
         if (!window.parent.__logoutListenerAttached) {
             window.parent.__logoutListenerAttached = true;
             parentDoc.addEventListener('click', function(e) {
@@ -2868,6 +2868,234 @@ with st.sidebar:
                 }
             }, true);
         }
+        
+        // 2. Drag-to-expand and click-empty-space-to-expand bridge for collapsed sidebar
+        
+        // Clean up any old listeners if they exist to allow hot-reloading new code
+        if (window.parent.__sidebarMouseDownHandler) {
+            parentDoc.removeEventListener('mousedown', window.parent.__sidebarMouseDownHandler);
+        }
+        if (window.parent.__sidebarMouseMoveHandler) {
+            parentDoc.removeEventListener('mousemove', window.parent.__sidebarMouseMoveHandler);
+        }
+        if (window.parent.__sidebarMouseUpHandler) {
+            parentDoc.removeEventListener('mouseup', window.parent.__sidebarMouseUpHandler);
+        }
+        if (window.parent.__sidebarTouchStartHandler) {
+            parentDoc.removeEventListener('touchstart', window.parent.__sidebarTouchStartHandler);
+        }
+        if (window.parent.__sidebarTouchMoveHandler) {
+            parentDoc.removeEventListener('touchmove', window.parent.__sidebarTouchMoveHandler);
+        }
+        if (window.parent.__sidebarTouchEndHandler) {
+            parentDoc.removeEventListener('touchend', window.parent.__sidebarTouchEndHandler);
+        }
+        
+        let isDragging = false;
+        let startX = 0;
+        const COLLAPSED_WIDTH = 70;
+        const EXPAND_THRESHOLD = 80;
+        
+        window.parent.__sidebarMouseDownHandler = function(e) {
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            if (!sidebar) return;
+            
+            // Allow drag starting from anywhere on the collapsed sidebar (except interactive elements)
+            if (sidebar.contains(e.target) || e.target === sidebar) {
+                if (e.target.closest('a, button, label, input, [role="radiogroup"]')) {
+                    return;
+                }
+                isDragging = true;
+                startX = e.clientX;
+                
+                // Disable CSS transitions during drag for raw real-time performance
+                sidebar.style.setProperty('transition', 'none', 'important');
+                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+                if (mainContainer) {
+                    mainContainer.style.setProperty('transition', 'none', 'important');
+                }
+            }
+        };
+        
+        window.parent.__sidebarMouseMoveHandler = function(e) {
+            if (!isDragging) return;
+            
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            if (!sidebar) {
+                isDragging = false;
+                return;
+            }
+            
+            const deltaX = e.clientX - startX;
+            if (deltaX > 0) {
+                // Adjust sidebar width in real time
+                const currentWidth = COLLAPSED_WIDTH + deltaX;
+                sidebar.style.setProperty('width', currentWidth + 'px', 'important');
+                sidebar.style.setProperty('min-width', currentWidth + 'px', 'important');
+                sidebar.style.setProperty('max-width', currentWidth + 'px', 'important');
+                
+                // Push the main view container to the right in real time
+                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+                if (mainContainer) {
+                    mainContainer.style.setProperty('margin-left', currentWidth + 'px', 'important');
+                    mainContainer.style.setProperty('width', `calc(100% - ${currentWidth}px)`, 'important');
+                }
+                
+                // If they drag it very far (instant trigger)
+                if (deltaX > 140) {
+                    triggerExpand(sidebar);
+                }
+            }
+        };
+        
+        window.parent.__sidebarMouseUpHandler = function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            if (!sidebar) return;
+            
+            const deltaX = e.clientX - startX;
+            
+            if (deltaX > EXPAND_THRESHOLD) {
+                triggerExpand(sidebar);
+            } else {
+                // Snap back to collapsed state smoothly
+                sidebar.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                sidebar.style.setProperty('width', COLLAPSED_WIDTH + 'px', 'important');
+                sidebar.style.setProperty('min-width', COLLAPSED_WIDTH + 'px', 'important');
+                sidebar.style.setProperty('max-width', COLLAPSED_WIDTH + 'px', 'important');
+                
+                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+                if (mainContainer) {
+                    mainContainer.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                    mainContainer.style.setProperty('margin-left', COLLAPSED_WIDTH + 'px', 'important');
+                    mainContainer.style.setProperty('width', `calc(100% - ${COLLAPSED_WIDTH}px)`, 'important');
+                }
+                
+                // Clear temporary styles after animation
+                setTimeout(() => {
+                    sidebar.style.removeProperty('transition');
+                    if (mainContainer) mainContainer.style.removeProperty('transition');
+                }, 250);
+                
+                // Also support click-to-expand on simple click
+                if (deltaX < 5 && (sidebar.contains(e.target) || e.target === sidebar)) {
+                    if (!e.target.closest('a, button, label, input, [role="radiogroup"]')) {
+                        triggerExpand(sidebar);
+                    }
+                }
+            }
+        };
+        
+        function triggerExpand(sidebar) {
+            isDragging = false;
+            // Remove override inline styles
+            sidebar.style.removeProperty('width');
+            sidebar.style.removeProperty('min-width');
+            sidebar.style.removeProperty('max-width');
+            sidebar.style.removeProperty('transition');
+            
+            const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+            if (mainContainer) {
+                mainContainer.style.removeProperty('margin-left');
+                mainContainer.style.removeProperty('width');
+                mainContainer.style.removeProperty('transition');
+            }
+            
+            // Click expand button
+            const expandBtn = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
+            if (expandBtn) {
+                expandBtn.click();
+            }
+        }
+        
+        // Touch Support for mobile
+        let touchStartX = 0;
+        window.parent.__sidebarTouchStartHandler = function(e) {
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            if (!sidebar) return;
+            
+            if (sidebar.contains(e.target) || e.target === sidebar) {
+                if (e.target.closest('a, button, label, input, [role="radiogroup"]')) {
+                    return;
+                }
+                isDragging = true;
+                touchStartX = e.touches[0].clientX;
+                sidebar.style.setProperty('transition', 'none', 'important');
+                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+                if (mainContainer) {
+                    mainContainer.style.setProperty('transition', 'none', 'important');
+                }
+            }
+        };
+        
+        window.parent.__sidebarTouchMoveHandler = function(e) {
+            if (!isDragging) return;
+            
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            if (!sidebar) {
+                isDragging = false;
+                return;
+            }
+            
+            const deltaX = e.touches[0].clientX - touchStartX;
+            if (deltaX > 0) {
+                const currentWidth = COLLAPSED_WIDTH + deltaX;
+                sidebar.style.setProperty('width', currentWidth + 'px', 'important');
+                sidebar.style.setProperty('min-width', currentWidth + 'px', 'important');
+                sidebar.style.setProperty('max-width', currentWidth + 'px', 'important');
+                
+                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+                if (mainContainer) {
+                    mainContainer.style.setProperty('margin-left', currentWidth + 'px', 'important');
+                    mainContainer.style.setProperty('width', `calc(100% - ${currentWidth}px)`, 'important');
+                }
+                
+                if (deltaX > 140) {
+                    triggerExpand(sidebar);
+                }
+            }
+        };
+        
+        window.parent.__sidebarTouchEndHandler = function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            if (!sidebar) return;
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaX = touchEndX - touchStartX;
+            
+            if (deltaX > EXPAND_THRESHOLD) {
+                triggerExpand(sidebar);
+            } else {
+                sidebar.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                sidebar.style.setProperty('width', COLLAPSED_WIDTH + 'px', 'important');
+                sidebar.style.setProperty('min-width', COLLAPSED_WIDTH + 'px', 'important');
+                sidebar.style.setProperty('max-width', COLLAPSED_WIDTH + 'px', 'important');
+                
+                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+                if (mainContainer) {
+                    mainContainer.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                    mainContainer.style.setProperty('margin-left', COLLAPSED_WIDTH + 'px', 'important');
+                    mainContainer.style.setProperty('width', `calc(100% - ${COLLAPSED_WIDTH}px)`, 'important');
+                }
+                
+                setTimeout(() => {
+                    sidebar.style.removeProperty('transition');
+                    if (mainContainer) mainContainer.style.removeProperty('transition');
+                }, 250);
+            }
+        };
+        
+        // Attach new listeners
+        parentDoc.addEventListener('mousedown', window.parent.__sidebarMouseDownHandler);
+        parentDoc.addEventListener('mousemove', window.parent.__sidebarMouseMoveHandler);
+        parentDoc.addEventListener('mouseup', window.parent.__sidebarMouseUpHandler);
+        parentDoc.addEventListener('touchstart', window.parent.__sidebarTouchStartHandler);
+        parentDoc.addEventListener('touchmove', window.parent.__sidebarTouchMoveHandler);
     </script>
     """, height=0, width=0)
 
