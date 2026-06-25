@@ -18,7 +18,9 @@ HEADERS = {
 
 
 def get_cookie_controller():
-    return CookieController()
+    if "cookie_controller" not in st.session_state:
+        st.session_state["cookie_controller"] = CookieController()
+    return st.session_state["cookie_controller"]
 
 
 def hash_password(password: str) -> str:
@@ -108,18 +110,14 @@ def delete_account(username: str, password: str):
 
 
 def logout():
-
     controller = get_cookie_controller()
-
     controller.remove("session_user")
-
     keys = list(st.session_state.keys())
-
     for k in keys:
-        del st.session_state[k]
-
+        if k not in ["cookie_controller", "app_theme"]:
+            st.session_state.pop(k, None)
+    st.session_state["logged_out"] = True
     st.query_params.clear()
-
     st.rerun()
 
 
@@ -187,7 +185,7 @@ def render_auth_page():
         
     is_dark = (theme == "dark")
 
-    if not st.session_state.get("logged_in"):
+    if not st.session_state.get("logged_in") and not st.session_state.get("logged_out"):
         saved_user = controller.get("session_user") if st.query_params.get("force_auth") != "true" else None
         if saved_user and saved_user in load_users():
             st.session_state.update({"logged_in": True, "current_user": saved_user})
@@ -202,107 +200,226 @@ def render_auth_page():
         bg_gradient = "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)"
         card_bg = "#1e293b"
         card_border = "rgba(255, 255, 255, 0.08)"
-        btn_border = "rgba(255, 255, 255, 0.15)"
+        toggle_bg = "#111827"
         input_bg = "#111827"
         input_border = "rgba(255, 255, 255, 0.1)"
         input_text = "#f9fafb"
         text_primary = "#f9fafb"
         text_secondary = "#94a3b8"
-        logo_gradient = "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
-        text_title_color = "#f9fafb"
-        toggle_bg = "#111827"
-        toggle_border = "rgba(255, 255, 255, 0.1)"
+        text_active = "#818cf8"  # Higher contrast light purple for dark mode active tab
     else:
         bg_gradient = "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)"
         card_bg = "#ffffff"
-        card_border = "rgba(0, 0, 0, 0.03)"
-        btn_border = "rgba(0, 0, 0, 0.08)"
-        input_bg = "#ffffff"
+        card_border = "#e2e8f0"
+        toggle_bg = "#ffffff"
+        input_bg = "#f8fafc"
         input_border = "#cbd5e1"
         input_text = "#0f172a"
         text_primary = "#0f172a"
         text_secondary = "#64748b"
-        logo_gradient = "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%)"
-        text_title_color = "#0f172a"
-        toggle_bg = "#ffffff"
-        toggle_border = "#cbd5e1"
+        text_active = "#4f46e5"  # Rich purple for light mode active tab
 
     # Fullscreen CSS injection & Scroll Lock (Premium Design Match)
     css = f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    /* Force Inter font globally on absolutely all elements */
+    /* Force Plus Jakarta Sans font globally on absolutely all elements */
     * {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }}
 
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main, section.main > div {{
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {{
         background: {bg_gradient} !important;
-        overflow-y: auto !important;
         min-height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important; /* Top align to allow scrolling */
+        align-items: center !important;
         padding: 0 !important;
         margin: 0 !important;
+        width: 100% !important;
     }}
     
-    header[data-testid="stHeader"] {{
+    header, footer {{
         display: none !important;
     }}
-    footer {{
+    
+    /* Hide sidebar and sidebar collapse button completely on login screen */
+    [data-testid="stSidebar"], [data-testid="stSidebarCollapseButton"] {{
         display: none !important;
     }}
-    
-    [data-testid="stElementContainer"] {{
-        margin-bottom: 0px !important;
-    }}
 
-    
-    
-    .main .block-container {{
-        max-width: 1100px !important;
-        padding: 1.5rem 2rem !important;
-        margin: auto !important;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-height: 100vh !important;
-        background: transparent !important;
-        box-sizing: border-box !important;
-    }}
-    
-    div[data-testid="stHorizontalBlock"] {{
-        align-items: center !important;
-        gap: 3rem !important;
-    }}
-
-    /* Force the nested sub-columns row under the card to never stack vertically */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stHorizontalBlock"] {{
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        gap: 12px !important;
-        margin-top: 12px !important;
+    /* Reset margins/paddings that Streamlit calculates for the sidebar */
+    [data-testid="stMainViewContainer"] {{
+        margin-left: 0px !important;
+        padding-left: 0px !important;
         width: 100% !important;
     }}
 
-    div[data-testid="stHorizontalBlock"] div[data-testid="stHorizontalBlock"] > div {{
-        width: auto !important;
-        min-width: 0 !important;
-        flex: 1 1 auto !important;
+    [data-testid="stElementContainer"] {{
+        margin-bottom: 0px !important;
     }}
     
-    /* Compact White Card styling */
-    div[data-testid="stForm"] {{
+    /* Center Card styling directly on block-container with top spacing */
+    [data-testid="stMain"] .block-container {{
+        width: 100% !important;
+        max-width: 420px !important;
+        margin-top: 60px !important;
+        margin-bottom: 60px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
         background-color: {card_bg} !important;
         border: 1px solid {card_border} !important;
-        border-radius: 32px !important;
-        padding: 32px 40px !important;
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, {0.2 if is_dark else 0.03}) !important;
-        margin-bottom: 0px !important;
-        overflow: visible !important;
+        border-radius: 24px !important;
+        padding: 40px 36px !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, {0.15 if is_dark else 0.05}), 0 10px 10px -5px rgba(0, 0, 0, {0.1 if is_dark else 0.03}) !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important; /* Stretch card children */
+        min-height: auto !important;
+        height: auto !important;
+    }}
+
+    /* Reset default st.form inside the login card */
+    div[data-testid="stForm"] {{
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }}
+
+    /* Theme toggle styling using marker */
+    .theme-toggle-marker {{
+        display: none !important;
+    }}
+
+    /* Style the column wrapper to position the theme toggle absolute in the card top-right */
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
+        position: absolute !important;
+        top: 36px !important;
+        right: 36px !important;
+        width: auto !important;
+        min-width: 0 !important;
+        z-index: 999 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+
+    /* Style the checkbox label as a premium text toggle button */
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] label {{
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 8px 16px !important;
+        border-radius: 30px !important;
+        border: 1px solid {card_border} !important;
+        background-color: {toggle_bg} !important;
+        cursor: pointer !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-sizing: border-box !important;
+        width: auto !important;
+        height: auto !important;
     }}
     
+    /* Modern Switch Hover style */
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] label:hover {{
+        border-color: #4f46e5 !important;
+        background-color: {toggle_bg} !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1) !important;
+    }}
+
+    /* Hide the checkbox checkmark box (which is the first child of the label) */
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] label > :first-child {{
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }}
+
+    /* Style the markdown container holding the text */
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] {{
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }}
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] p {{
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        color: {text_secondary} !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+        letter-spacing: 1px !important;
+        white-space: nowrap !important; /* Prevent text wrapping */
+    }}
+
+    /* Tab markers and wrapper styling */
+    .auth-tab {{
+        display: none !important;
+    }}
+
+    /* Flat Tab Row Container - Sleek & Minimalist */
+    div[data-testid="stHorizontalBlock"]:has(.auth-tab) {{
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0px !important;
+        padding: 0 !important;
+        gap: 0px !important;
+        margin-bottom: 24px !important;
+        border-bottom: 1px solid {card_border} !important;
+    }}
+
+    /* Remove column spacing */
+    div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stColumn"] {{
+        padding: 0 !important;
+        margin: 0 !important;
+    }}
+
+    /* Base tab button style inside flat row */
+    div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button {{
+        border: none !important;
+        box-shadow: none !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        height: 40px !important;
+        width: 100% !important;
+        transition: all 0.2s ease !important;
+        margin: 0 !important;
+        text-transform: none !important;
+        letter-spacing: 0.5px !important;
+        background-color: transparent !important;
+        border-radius: 0px !important;
+        border-bottom: 2px solid transparent !important;
+    }}
+
+    /* Active Tab Button Style - flat bottom line */
+    div[data-testid="stColumn"]:has(.active-tab) div[data-testid="stButton"] button {{
+        color: {text_active} !important;
+        font-weight: 700 !important;
+        border-bottom: 2px solid {text_active} !important;
+    }}
+
+    /* Inactive Tab Button Style - transparent line */
+    div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button {{
+        color: {text_secondary} !important;
+        border-bottom: 2px solid transparent !important;
+    }}
+    div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button:hover {{
+        color: {text_primary} !important;
+        border-bottom: 2px solid {card_border} !important;
+    }}
+
+    /* Form wrappers */
     div[data-testid="stForm"] div.element-container,
     div[data-testid="stForm"] div[data-testid="element-container"],
     div[data-testid="stForm"] div[data-testid="stVerticalBlock"],
@@ -310,21 +427,39 @@ def render_auth_page():
         margin-bottom: 0px !important;
         overflow: visible !important;
         height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        box-sizing: border-box !important;
     }}
     
     div[data-testid="stForm"] div.stTextInput,
     div[data-testid="stForm"] div.stTextInput > div,
     div[data-testid="stForm"] div[data-testid*="Input"],
-    div[data-testid="stForm"] div[data-testid*="Input"] > div {{
+    div[data-testid="stForm"] div[data-testid*="Input"] > div,
+    div[data-testid="stForm"] [data-testid*="password"],
+    div[data-testid="stForm"] [data-testid*="Password"],
+    div[data-testid="stForm"] [data-testid*="password"] > div,
+    div[data-testid="stForm"] [data-testid*="Password"] > div,
+    div[data-testid="stForm"] [data-testid*="text"],
+    div[data-testid="stForm"] [data-testid*="Text"],
+    div[data-testid="stForm"] [data-baseweb="input"],
+    div[data-testid="stForm"] [data-baseweb="input"] > div,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"],
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div {{
         background-color: transparent !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         overflow: visible !important;
         height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        box-sizing: border-box !important;
     }}
 
-    /* Force height on immediate widget containers to match the 50px input container */
+    /* Force height on immediate widget containers */
     div[data-testid="stForm"] [data-testid="stInputWidgetLink"],
     div[data-testid="stForm"] [data-baseweb="input"] {{
         background-color: transparent !important;
@@ -335,36 +470,48 @@ def render_auth_page():
         height: 50px !important;
         min-height: 50px !important;
         max-height: 50px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        box-sizing: border-box !important;
     }}
 
-    /* Style actual input containers to avoid dark mode white patches - supporting all Streamlit input types and widget links */
+    /* Style actual input containers */
     div[data-testid="stForm"] [data-baseweb="input"] > div,
     div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div,
     div[data-testid="stForm"] div.stTextInput > div > div,
-    div[data-testid="stForm"] div[data-testid*="Input"] > div > div {{
+    div[data-testid="stForm"] div[data-testid*="Input"] > div > div,
+    div[data-testid="stForm"] [data-testid*="password"] > div > div,
+    div[data-testid="stForm"] [data-testid*="Password"] > div > div {{
         background-color: {input_bg} !important;
-        border-radius: 14px !important;
+        border-radius: 8px !important;
         border: 1px solid {input_border} !important;
         height: 50px !important;
         min-height: 50px !important;
         max-height: 50px !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         box-shadow: none !important;
         display: flex !important;
         align-items: center !important;
         overflow: visible !important;
         box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
     }}
 
+    /* Modern input hover & focus ring */
+    div[data-testid="stForm"] [data-baseweb="input"] > div:hover,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div:hover {{
+        border-color: #a5b4fc !important;
+    }}
     div[data-testid="stForm"] [data-baseweb="input"] > div:focus-within,
-    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div:focus-within,
-    div[data-testid="stForm"] div.stTextInput > div > div:focus-within,
-    div[data-testid="stForm"] div[data-testid*="Input"] > div > div:focus-within {{
-        border-color: #1d4ed8 !important;
-        box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.1) !important;
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div:focus-within {{
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15) !important;
     }}
 
-    /* Make all nested child elements inside the input wrapper completely transparent to avoid white patches, except the input itself */
+    /* Make all nested child elements inside the input wrapper transparent, except the input itself */
     div[data-testid="stForm"] [data-baseweb="input"] > div :not(input),
     div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div :not(input),
     div[data-testid="stForm"] div.stTextInput > div > div :not(input),
@@ -374,28 +521,12 @@ def render_auth_page():
         box-shadow: none !important;
     }}
 
-    /* Style actual input elements inside wrappers */
-    div[data-testid="stForm"] input[type="text"] {{
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
-        background-repeat: no-repeat !important;
-        background-position: 16px center !important;
-        background-size: 18px !important;
-        padding-left: 46px !important;
-        border: none !important;
-        height: 100% !important;
-        font-size: 14px !important;
-        color: {input_text} !important;
-        background-color: transparent !important;
-        outline: none !important;
-        box-shadow: none !important;
-    }}
-
+    /* Plain style actual input elements inside wrappers */
+    div[data-testid="stForm"] input[type="text"],
     div[data-testid="stForm"] input[type="password"] {{
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>") !important;
-        background-repeat: no-repeat !important;
-        background-position: 16px center !important;
-        background-size: 18px !important;
-        padding-left: 46px !important;
+        background-image: none !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
         border: none !important;
         height: 100% !important;
         font-size: 14px !important;
@@ -405,7 +536,7 @@ def render_auth_page():
         box-shadow: none !important;
     }}
 
-    /* Set text secondary color specifically for input visibility button and force transparency */
+    /* Visibility show/hide password buttons color */
     div[data-testid="stForm"] div.stTextInput button,
     div[data-testid="stForm"] div[data-testid*="Input"] button,
     div[data-testid="stForm"] [data-testid="stInputWidgetLink"] button,
@@ -425,173 +556,75 @@ def render_auth_page():
     div[data-testid="stForm"] input::placeholder {{
         color: #cbd5e1 !important;
     }}
+
+    /* Style the normal form checkboxes (e.g. remember_me) */
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] label {{
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        width: auto !important;
+        height: auto !important;
+        border: none !important;
+        background-color: transparent !important;
+        padding: 4px 0px !important;
+        margin: 16px 0px !important;
+        cursor: pointer !important;
+    }}
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] label > :not([data-testid="stMarkdownContainer"]) {{
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }}
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] p {{
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.8px !important;
+        text-transform: uppercase !important;
+        color: {text_secondary} !important;
+        transition: color 0.2s ease !important;
+    }}
     
-    /* Submit button */
+    /* Micro-animation hover checkbox text */
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] label:hover [data-testid="stMarkdownContainer"] p {{
+        color: {text_primary} !important;
+    }}
+    
+    /* Submit button - Solid Purple Background with Modern Hover Translation & Shadow */
     div[data-testid="stFormSubmitButton"] button {{
-        background-color: #1d4ed8 !important;
+        background-color: #4f46e5 !important;
         color: #ffffff !important;
         border: none !important;
-        border-radius: 14px !important;
+        border-radius: 12px !important;
         font-weight: 700 !important;
         padding: 0px 24px !important;
         height: 50px !important;
         font-size: 15px !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
         width: 100% !important;
-        box-shadow: 0 8px 16px -4px rgba(29, 78, 216, 0.3) !important;
+        box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.3) !important;
     }}
     div[data-testid="stFormSubmitButton"] button:hover {{
-        background-color: #1e40af !important;
-        box-shadow: 0 10px 20px -4px rgba(29, 78, 216, 0.4) !important;
+        background-color: #4338ca !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 10px 20px -2px rgba(79, 70, 229, 0.35) !important;
+    }}
+    div[data-testid="stFormSubmitButton"] button:active {{
+        transform: translateY(1px) !important;
+        box-shadow: 0 4px 8px -2px rgba(79, 70, 229, 0.3) !important;
     }}
 
-    /* Under-card text link toggle container and button styling using Streamlit testid */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button {{
-        background-color: transparent !important;
-        border: none !important;
-        color: #1d4ed8 !important;
-        font-size: 11px !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.8px !important;
-        text-transform: uppercase !important;
-        padding: 0 !important;
-        width: auto !important;
-        cursor: pointer !important;
-        box-shadow: none !important;
-        height: auto !important;
-        display: inline-block !important;
-        margin-top: 16px !important;
-        white-space: nowrap !important;
-    }}
-    
-    div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {{
-        color: #1e40af !important;
-        background-color: transparent !important;
-        text-decoration: underline !important;
-    }}
-
-    /* Premium pill-shaped theme toggle switch matching the mockup using Streamlit testid */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label {{
-        display: flex !important;
-        flex-direction: row-reverse !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        background-color: {toggle_bg} !important;
-        border: 1px solid {toggle_border} !important;
-        padding: 0px 14px !important;
-        height: 38px !important;
-        border-radius: 30px !important;
-        width: 100% !important;
-        max-width: 160px !important;
-        margin-top: 16px !important;
-        float: right !important;
-        box-sizing: border-box !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-    }}
-    
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label:hover {{
-        border-color: #3b82f6 !important;
-    }}
-
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label div[data-testid="stMarkdownContainer"] {{
-        display: flex !important;
-        align-items: center !important;
-    }}
-
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label div[data-testid="stMarkdownContainer"] p {{
-        font-size: 10px !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.8px !important;
-        text-transform: uppercase !important;
-        color: {text_secondary} !important;
-        margin: 0 !important;
-        white-space: nowrap !important;
-    }}
-
-    /* Sun icon before toggle label text */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label div[data-testid="stMarkdownContainer"]::before {{
-        content: "" !important;
-        display: inline-block !important;
-        width: 14px !important;
-        height: 14px !important;
-        margin-right: 6px !important;
-        background-color: currentColor !important;
-        -webkit-mask-repeat: no-repeat !important;
-        mask-repeat: no-repeat !important;
-        -webkit-mask-size: contain !important;
-        mask-size: contain !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
-        flex-shrink: 0 !important;
-    }}
-
-    /* Moon icon when checked (Dark Mode) */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label:has(input:checked) div[data-testid="stMarkdownContainer"]::before {{
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E") !important;
-    }}
-
-    /* Track styles */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label > div:first-child {{
-        background-color: #cbd5e1 !important;
-    }}
-    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label:has(input:checked) > div:first-child {{
-        background-color: #1d4ed8 !important;
-    }}
-
-    /* Media query for mobile & tablet responsiveness */
-    @media (max-width: 1199px) {{
-        html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main, section.main > div {{
-            overflow-y: auto !important;
-            height: auto !important;
-            max-height: none !important;
-        }}
-
-        .main .block-container {{
-            height: auto !important;
-            min-height: 100vh !important;
-            max-height: none !important;
-            padding: 2rem 1.5rem !important;
-            justify-content: flex-start !important;
-        }}
-
-        /* Stack main columns vertically */
-        div[data-testid="stHorizontalBlock"] {{
-            flex-direction: column !important;
-            gap: 2rem !important;
-            align-items: stretch !important;
-        }}
-
-        div[data-testid="stHorizontalBlock"] > div {{
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 100% !important;
-        }}
-
-        /* Center content of the title column */
-        div[data-testid="stHorizontalBlock"] > div:first-child {{
-            text-align: center !important;
-        }}
-        
-        div[data-testid="stHorizontalBlock"] > div:first-child div[style*="display: flex"] {{
-            justify-content: center !important;
-        }}
-
-        div[data-testid="stHorizontalBlock"] > div:first-child p {{
-            margin: auto !important;
-        }}
-
-        /* Responsive typography */
-        h1 {{
-            font-size: 32px !important;
-            text-align: center !important;
-        }}
-
-        /* Compact card padding on mobile */
-        div[data-testid="stForm"] {{
+    /* Responsive adjustments */
+    @media (max-width: 480px) {{
+        [data-testid="stMain"] .block-container {{
             padding: 24px 20px !important;
-            border-radius: 24px !important;
+            border-radius: 16px !important;
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+        }}
+        div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
+            top: 24px !important;
+            right: 20px !important;
         }}
     }}
 
@@ -599,86 +632,98 @@ def render_auth_page():
     """
     st.markdown(css, unsafe_allow_html=True)
 
-    col1, col2 = st.columns([1.1, 0.9], gap="large")
+    # Main Card Container
+    with st.container():
+        st.markdown('<div class="login-card-marker"></div>', unsafe_allow_html=True)
+        
+        # Row 1: Logo & Theme Toggle
+        col_logo, col_toggle = st.columns([2, 1])
+        with col_logo:
+            st.markdown(
+                f'<div style="display: flex; align-items: center; padding-top: 12px;">'
+                f'<span style="font-size: 14px; font-weight: 800; color: #4f46e5; letter-spacing: 1.5px; text-transform: uppercase;">UX</span>'
+                f'<span style="font-size: 14px; font-weight: 400; color: {text_secondary}; letter-spacing: 1.5px; text-transform: uppercase; margin-left: 4px;">Analytics</span>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+        with col_toggle:
+            st.markdown('<div class="theme-toggle-marker"></div>', unsafe_allow_html=True)
+            is_dark_toggle = st.checkbox(
+                label="LIGHT MODE" if is_dark else "DARK MODE",
+                value=is_dark,
+                key="theme_toggle_checkbox"
+            )
+            if is_dark_toggle != is_dark:
+                st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
+                st.query_params["theme"] = "dark" if is_dark_toggle else "light"
+                st.rerun()
 
-    with col1:
-        st.markdown(
-            f'<div style="padding-top: 0.5rem;">'
-            f'<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">'
-            f'<div style="background-color: #1d4ed8; color: white; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">'
-            f'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>'
-            f'</div>'
-            f'<div style="font-size: 11px; font-weight: 800; color: #1d4ed8; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">'
-            f'UX Analytics <span style="display: inline-block; width: 24px; height: 1px; background-color: rgba(29, 78, 216, 0.3);"></span>'
-            f'</div>'
-            f'</div>'
-            f'<h1 style="font-size: 48px; font-weight: 800; line-height: 1.1; color: {text_title_color}; margin-bottom: 16px; letter-spacing: -2px;">'
-            f'Dashboard Hasil<br>'
-            f'<span style="color: #1d4ed8;">Penelitian</span> UX<br>'
-            f'Analytics'
-            f'</h1>'
-            f'<p style="font-size: 14px; color: {text_secondary}; line-height: 1.5; font-weight: 400; max-width: 480px; margin-bottom: 0;">'
-            f'Platform analitik canggih untuk mengolah dan memvisualisasikan data pengalaman pengguna antara Light Mode dan Dark Mode dengan presisi tinggi.'
-            f'</p>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
+        # Spacer
+        st.markdown('<div style="margin-top: 24px;"></div>', unsafe_allow_html=True)
 
-    with col2:
+        # Row 2: Welcome Text - Explicitly stating the dashboard context
+        if st.session_state["auth_mode"] == "login":
+            st.markdown(
+                f'<div style="margin-bottom: 28px;">'
+                f'<div style="font-size: 24px; font-weight: 700; color: {text_primary}; letter-spacing: -0.5px; margin-bottom: 6px;">Selamat Datang</div>'
+                f'<div style="font-size: 12px; font-weight: 600; color: #4f46e5; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px;">Penelitian Light Mode vs Dark Mode</div>'
+                f'<div style="font-size: 13px; color: {text_secondary}; line-height: 1.5; font-weight: 400;">Silakan masuk untuk mengakses hasil analisis data dan perbandingan pengalaman pengguna (UX).</div>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                f'<div style="margin-bottom: 28px;">'
+                f'<div style="font-size: 24px; font-weight: 700; color: {text_primary}; letter-spacing: -0.5px; margin-bottom: 6px;">Daftar Akun</div>'
+                f'<div style="font-size: 12px; font-weight: 600; color: #4f46e5; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px;">Penelitian Light Mode vs Dark Mode</div>'
+                f'<div style="font-size: 13px; color: {text_secondary}; line-height: 1.5; font-weight: 400;">Lengkapi formulir untuk membuat akun baru dan mengakses dashboard analitik.</div>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+
+        # Row 3: Tabs "Masuk" & "Daftar"
+        is_login = (st.session_state["auth_mode"] == "login")
+        col_tab1, col_tab2 = st.columns([1, 1], gap="small")
+        with col_tab1:
+            st.markdown(f'<div class="auth-tab {"active-tab" if is_login else "inactive-tab"}"></div>', unsafe_allow_html=True)
+            if st.button("Masuk", key="tab_login_btn", use_container_width=True):
+                st.session_state["auth_mode"] = "login"
+                st.rerun()
+        with col_tab2:
+            st.markdown(f'<div class="auth-tab {"inactive-tab" if is_login else "active-tab"}"></div>', unsafe_allow_html=True)
+            if st.button("Daftar", key="tab_register_btn", use_container_width=True):
+                st.session_state["auth_mode"] = "register"
+                st.rerun()
+
+        # Row 4: Forms
         if st.session_state["auth_mode"] == "login":
             with st.form("login_form"):
-                st.markdown(
-                    f'<div style="margin-bottom: 24px;">'
-                    f'<div style="font-size: 34px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 6px;">'
-                    f'Selamat Datang'
-                    f'</div>'
-                    f'<div style="font-size: 13px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
-                    f'Silakan masuk untuk mengakses dashboard eksklusif Anda'
-                    f'</div>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-                
-                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase;">Username</div>', unsafe_allow_html=True)
                 user = st.text_input("Username", placeholder="Masukkan username", label_visibility="collapsed").strip().lower()
-                
-                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 14px; margin-bottom: 8px;">PASSWORD</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 6px; text-transform: uppercase;">Password</div>', unsafe_allow_html=True)
                 pw = st.text_input("Password", type="password", placeholder="Masukkan password", label_visibility="collapsed")
-                
-                st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
-                if st.form_submit_button("Masuk ➔", use_container_width=True):
+                remember_me = st.checkbox("INGAT SAYA", value=True)
+                if st.form_submit_button("Masuk", use_container_width=True):
                     ok, msg = login_user(user, pw)
                     if ok:
                         st.session_state.update({"logged_in": True, "current_user": user})
-                        controller.set("session_user", user)
+                        st.session_state.pop("logged_out", None)
+                        if remember_me:
+                            controller.set("session_user", user)
+                        else:
+                            controller.remove("session_user")
                         st.rerun()
                     else:
                         st.error(msg)
         else:
             with st.form("reg_form"):
-                st.markdown(
-                    f'<div style="margin-bottom: 24px;">'
-                    f'<div style="font-size: 34px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 6px;">'
-                    f'Daftar Akun Baru'
-                    f'</div>'
-                    f'<div style="font-size: 13px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
-                    f'Silakan isi data di bawah untuk mendaftar'
-                    f'</div>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-                
-                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
-                u = st.text_input("Username", placeholder="Pilih username minimal 3 karakter", label_visibility="collapsed").strip().lower()
-                
-                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 16px; margin-bottom: 8px;">PASSWORD</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase;">Username</div>', unsafe_allow_html=True)
+                u = st.text_input("Username", placeholder="Pilih username", label_visibility="collapsed").strip().lower()
+                st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 6px; text-transform: uppercase;">Password</div>', unsafe_allow_html=True)
                 p = st.text_input("Password", type="password", placeholder="Minimal 6 karakter", label_visibility="collapsed")
-                
-                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 16px; margin-bottom: 8px;">KONFIRMASI PASSWORD</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 6px; text-transform: uppercase;">Konfirmasi Password</div>', unsafe_allow_html=True)
                 cp = st.text_input("Konfirmasi Password", type="password", placeholder="Ulangi password", label_visibility="collapsed")
-                
-                st.markdown('<div style="margin-top: 24px;"></div>', unsafe_allow_html=True)
-                if st.form_submit_button("Daftar ➔", use_container_width=True):
+                if st.form_submit_button("Daftar", use_container_width=True):
                     if p != cp:
                         st.error("Password tidak cocok")
                     else:
@@ -690,33 +735,11 @@ def render_auth_page():
                         else:
                             st.error(msg)
 
-        # Place secondary buttons side-by-side to save height
-        col_btn1, col_btn2 = st.columns([1.2, 0.8])
-        with col_btn1:
-            st.markdown('<div class="toggle-link-container">', unsafe_allow_html=True)
-            if st.session_state["auth_mode"] == "login":
-                if st.button("BELUM PUNYA AKUN? DAFTAR SEKARANG", use_container_width=False, key="btn_toggle_reg"):
-                    st.session_state["auth_mode"] = "register"
-                    st.rerun()
-            else:
-                if st.button("SUDAH PUNYA AKUN? MASUK", use_container_width=False, key="btn_toggle_login"):
-                    st.session_state["auth_mode"] = "login"
-                    st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-        with col_btn2:
-            toggle_label = "Dark mode" if is_dark else "Light mode"
-            is_dark_toggle = st.toggle(toggle_label, value=is_dark, key="login_theme_toggle_switch")
-            if is_dark_toggle != is_dark:
-                st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
-                st.query_params["theme"] = "dark" if is_dark_toggle else "light"
-                st.rerun()
-
     st.markdown(
-        f'<div style="text-align: center; margin-top: 32px; font-size: 11px; color: {text_secondary}; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">'
+        f'<div style="text-align: center; margin-top: 32px; font-size: 11px; color: {text_secondary};">'
         f'Universitas Islam Indonesia'
         f'</div>',
         unsafe_allow_html=True
     )
 
     return False
-
