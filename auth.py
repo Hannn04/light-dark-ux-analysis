@@ -367,45 +367,42 @@ def render_auth_page():
     col1, col2 = st.columns([1.1, 0.9], gap="large")
 
     with col1:
-        st.markdown(dedent(f"""
-        <div style="padding-top: 0.5rem;">
-            <!-- Logo Section -->
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px;">
-                <div style="background-color: #1d4ed8; color: white; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                </div>
-                <div style="font-size: 11px; font-weight: 800; color: #1d4ed8; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">
-                    UX Analytics <span style="display: inline-block; width: 24px; height: 1px; background-color: rgba(29, 78, 216, 0.3);"></span>
-                </div>
-            </div>
-
-            <!-- Title Section -->
-            <h1 style="font-size: 56px; font-weight: 800; line-height: 1.1; color: {text_title_color}; margin-bottom: 24px; letter-spacing: -2px;">
-                Dashboard Hasil<br>
-                <span style="color: #1d4ed8;">Penelitian</span> UX<br>
-                Analytics
-            </h1>
-
-            <!-- Description -->
-            <p style="font-size: 15px; color: {text_secondary}; line-height: 1.6; font-weight: 400; max-width: 480px; margin-bottom: 0;">
-                Platform analitik canggih untuk mengolah dan memvisualisasikan data pengalaman pengguna antara Light Mode dan Dark Mode dengan presisi tinggi.
-            </p>
-        </div>
-        """), unsafe_allow_html=True)
+        st.markdown(
+            f'<div style="padding-top: 0.5rem;">'
+            f'<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px;">'
+            f'<div style="background-color: #1d4ed8; color: white; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">'
+            f'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>'
+            f'</div>'
+            f'<div style="font-size: 11px; font-weight: 800; color: #1d4ed8; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">'
+            f'UX Analytics <span style="display: inline-block; width: 24px; height: 1px; background-color: rgba(29, 78, 216, 0.3);"></span>'
+            f'</div>'
+            f'</div>'
+            f'<h1 style="font-size: 56px; font-weight: 800; line-height: 1.1; color: {text_title_color}; margin-bottom: 24px; letter-spacing: -2px;">'
+            f'Dashboard Hasil<br>'
+            f'<span style="color: #1d4ed8;">Penelitian</span> UX<br>'
+            f'Analytics'
+            f'</h1>'
+            f'<p style="font-size: 15px; color: {text_secondary}; line-height: 1.6; font-weight: 400; max-width: 480px; margin-bottom: 0;">'
+            f'Platform analitik canggih untuk mengolah dan memvisualisasikan data pengalaman pengguna antara Light Mode dan Dark Mode dengan presisi tinggi.'
+            f'</p>'
+            f'</div>',
+            unsafe_allow_html=True
+        )
 
     with col2:
         if st.session_state["auth_mode"] == "login":
             with st.form("login_form"):
-                st.markdown(f"""
-                <div style="margin-bottom: 28px;">
-                    <div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">
-                        Selamat Datang
-                    </div>
-                    <div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">
-                        Silakan masuk untuk mengakses dashboard eksklusif Anda
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(
+                    f'<div style="margin-bottom: 28px;">'
+                    f'<div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">'
+                    f'Selamat Datang'
+                    f'</div>'
+                    f'<div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
+                    f'Silakan masuk untuk mengakses dashboard eksklusif Anda'
+                    f'</div>'
+                    f'</div>',
+                    unsafe_allow_html=True
+                )
                 
                 st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
                 user = st.text_input("Username", placeholder="Masukkan username", label_visibility="collapsed").strip().lower()
@@ -424,16 +421,17 @@ def render_auth_page():
                         st.error(msg)
         else:
             with st.form("reg_form"):
-                st.markdown(f"""
-                <div style="margin-bottom: 28px;">
-                    <div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">
-                        Daftar Akun Baru
-                    </div>
-                    <div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">
-                        Silakan isi data di bawah untuk mendaftar
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(
+                    f'<div style="margin-bottom: 28px;">'
+                    f'<div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">'
+                    f'Daftar Akun Baru'
+                    f'</div>'
+                    f'<div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
+                    f'Silakan isi data di bawah untuk mendaftar'
+                    f'</div>'
+                    f'</div>',
+                    unsafe_allow_html=True
+                )
                 
                 st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
                 u = st.text_input("Username", placeholder="Pilih username minimal 3 karakter", label_visibility="collapsed").strip().lower()
@@ -478,11 +476,12 @@ def render_auth_page():
                 st.query_params["theme"] = "dark" if is_dark_toggle else "light"
                 st.rerun()
 
-    st.markdown(f"""
-    <div style="text-align: center; margin-top: 64px; font-size: 11px; color: {text_secondary}; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">
-        Universitas Islam Indonesia
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="text-align: center; margin-top: 64px; font-size: 11px; color: {text_secondary}; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">'
+        f'Universitas Islam Indonesia'
+        f'</div>',
+        unsafe_allow_html=True
+    )
 
     return False
 
