@@ -1033,27 +1033,9 @@ if theme == "dark":
     [data-testid="stSidebar"] input {
         background-color: #1e293b !important;
         color: #f1f5f9 !important;
-        caret-color: transparent !important;
     }
     [data-testid="stSidebar"] input::placeholder {
         color: #64748b !important;
-    }
-    
-    /* Selectbox - hilangkan caret */
-    [data-baseweb="select"] input{
-        caret-color: transparent !important;
-        color: transparent !important;
-        text-shadow: 0 0 0 #f1f5f9 !important;
-    }
-
-    [data-baseweb="select"] input:focus{
-        caret-color: transparent !important;
-        outline: none !important;
-        box-shadow: none !important;
-    }
-
-    [data-baseweb="select"] input::selection{
-        background: transparent !important;
     }
 
     /* 6. Sidebar — expander & its inner content */
@@ -1413,60 +1395,20 @@ if theme == "dark":
 st.markdown("""
 <style>
 
-/* =========================
-   Responsive Sidebar
-========================= */
-
-[data-testid="stSidebar"]{
-    width:320px !important;
-    min-width:320px !important;
-    max-width:320px !important;
-    height:100vh !important;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
+.stButton > button[kind="secondary"] {
+    border-radius: 30px !important;
+    border: 1px solid var(--secondary-color) !important;
+    background-color: transparent !important;
+    color: var(--secondary-color) !important;
+    padding: 8px 16px !important;
+    transition: all 0.3s ease !important;
 }
 
-[data-testid="stSidebarContent"]{
-
-    height:100vh !important;
-
-    display:flex !important;
-    flex-direction:column !important;
-
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-
-    -webkit-overflow-scrolling:touch;
-
-    padding-bottom:80px !important;
+.stButton > button[kind="secondary"]:hover {
+    background-color: var(--secondary-color) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3) !important;
 }
-
-/* Tablet */
-@media (max-width:1024px){
-
-[data-testid="stSidebar"]{
-
-    width:280px !important;
-    min-width:280px !important;
-    max-width:280px !important;
-
-}
-
-}
-
-/* Mobile */
-@media (max-width:768px){
-
-[data-testid="stSidebar"]{
-
-    width:100vw !important;
-    min-width:100vw !important;
-    max-width:100vw !important;
-
-}
-
-}
-
 /* Sembunyikan header Streamlit (Deploy & Menu) */
 header[data-testid="stHeader"] {
     display: none !important;
@@ -1809,7 +1751,6 @@ section[data-testid="stSidebar"] [data-baseweb="select"],
 section[data-testid="stSidebar"] [data-baseweb="select"] *,
 section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
-    pointer-events: none !important;
 }
             
 /* Manage Applications expander — styling keren */
