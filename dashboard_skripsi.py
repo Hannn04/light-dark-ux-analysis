@@ -1092,15 +1092,20 @@ if theme == "dark":
 
     /* 10. DataFrames & tables */
     .stDataFrame, [data-testid="stDataFrame"],
-    .stDataFrame *, [data-testid="stDataFrame"] *,
-    [data-testid="stDataFrameResizable"] * {
-        background-color: #0f172a !important;
-        color: #f1f5f9 !important;
+    [data-testid="stDataFrameResizable"] {
         border-color: #1e293b !important;
     }
-    [data-testid="stDataFrame"] th,
-    [data-testid="stDataFrameResizable"] th {
-        background-color: #1e293b !important;
+    
+    /* HTML tables (st.table) styling in Dark Mode */
+    .stTable, [data-testid="stTable"],
+    .stTable tr, [data-testid="stTable"] tr {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+    }
+    .stTable td, .stTable th, [data-testid="stTable"] td, [data-testid="stTable"] th {
+        border-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        background-color: #0f172a !important;
     }
 
     /* 11. Main area expanders */
