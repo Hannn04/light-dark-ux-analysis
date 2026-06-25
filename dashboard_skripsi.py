@@ -1198,6 +1198,13 @@ if theme == "dark":
         height: 100% !important;
         display: flex !important;
         align-items: center !important;
+        background-color: transparent !important;
+    }
+    [data-testid="stNumberInput"] [data-baseweb="input"],
+    [data-testid="stNumberInput"] [data-baseweb="input"] > div,
+    [data-testid="stNumberInput"] [data-baseweb="input"] * {
+        background-color: transparent !important;
+        border: none !important;
     }
     [data-testid="stNumberInput"] input {
         background-color: transparent !important;
@@ -2114,6 +2121,14 @@ with st.sidebar:
         height: 100% !important;
         display: flex !important;
         align-items: center !important;
+        background-color: transparent !important;
+    }}
+
+    [data-testid="stNumberInput"] [data-baseweb="input"],
+    [data-testid="stNumberInput"] [data-baseweb="input"] > div,
+    [data-testid="stNumberInput"] [data-baseweb="input"] * {{
+        background-color: transparent !important;
+        border: none !important;
     }}
 
     [data-testid="stNumberInput"] input {{
