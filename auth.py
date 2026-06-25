@@ -499,7 +499,7 @@ def render_auth_page():
                 Dashboard Hasil Penelitian UX Analytics
             </h1>
             <p style="font-size: 14px; color: {text_secondary}; line-height: 1.5; font-family: system-ui, -apple-system, sans-serif; font-weight: 400; max-width: 480px;">
-                Analisis preferensi dan kenyamanan pengguna antara tampilan Light Mode dan Dark Mode berdasarkan data kuesioner UEQ dan metrik performa secara real-time.
+                Platform analitik untuk mengolah, menganalisis, dan memvisualisasikan data penelitian pengalaman pengguna antara Light Mode dan Dark Mode berdasarkan metrik Time on Task, Error Rate, User Experience Questionnaire (UEQ), dan preferensi pengguna.
             </p>
         </div>
         """, unsafe_allow_html=True)
