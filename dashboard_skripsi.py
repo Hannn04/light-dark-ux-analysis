@@ -1,4 +1,10 @@
 import streamlit as st
+st.set_page_config(
+    page_title="Dashboard Analitik UX",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -2871,6 +2877,8 @@ with st.sidebar:
         
         // 2. Drag-to-expand and click-empty-space-to-expand bridge for collapsed sidebar
         
+        // 2. Drag-to-expand and Drag-to-collapse bridge
+        
         // Clean up any old listeners if they exist to allow hot-reloading new code
         if (window.parent.__sidebarMouseDownHandler) {
             parentDoc.removeEventListener('mousedown', window.parent.__sidebarMouseDownHandler);
@@ -2891,60 +2899,81 @@ with st.sidebar:
             parentDoc.removeEventListener('touchend', window.parent.__sidebarTouchEndHandler);
         }
         
+        // Clean up any persistent inline styles from previous drag implementations
+        const sidebarEl = parentDoc.querySelector('[data-testid="stSidebar"]');
+        if (sidebarEl) {
+            sidebarEl.style.removeProperty('width');
+            sidebarEl.style.removeProperty('min-width');
+            sidebarEl.style.removeProperty('max-width');
+            sidebarEl.style.removeProperty('transition');
+        }
+        const mainContainerEl = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
+        if (mainContainerEl) {
+            mainContainerEl.style.removeProperty('margin-left');
+            mainContainerEl.style.removeProperty('width');
+            mainContainerEl.style.removeProperty('transition');
+        }
+        
         let isDragging = false;
         let startX = 0;
-        const COLLAPSED_WIDTH = 70;
-        const EXPAND_THRESHOLD = 80;
+        let startY = 0;
+        let draggedState = 'collapsed'; // 'collapsed' or 'expanded'
+        let dragTriggered = false;
+        
+        function triggerExpand() {
+            isDragging = false;
+            dragTriggered = true;
+            const expandBtn = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
+            if (expandBtn) {
+                expandBtn.click();
+            }
+        }
+        
+        function triggerCollapse() {
+            isDragging = false;
+            dragTriggered = true;
+            const collapseBtn = parentDoc.querySelector('[data-testid="stSidebar"] button[data-testid="stSidebarCollapseButton"], [data-testid="stSidebar"] button[class*="CollapseButton"]');
+            if (collapseBtn) {
+                collapseBtn.click();
+            }
+        }
         
         window.parent.__sidebarMouseDownHandler = function(e) {
-            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
             if (!sidebar) return;
+            const isCollapsed = sidebar.getAttribute('aria-expanded') === 'false';
             
-            // Allow drag starting from anywhere on the collapsed sidebar (except interactive elements)
             if (sidebar.contains(e.target) || e.target === sidebar) {
-                if (e.target.closest('a, button, label, input, [role="radiogroup"]')) {
+                // Ignore interactive inputs/buttons to allow regular clicks
+                if (e.target.closest('a, button, label, input, select, textarea, [role="radiogroup"]')) {
                     return;
                 }
                 isDragging = true;
+                draggedState = isCollapsed ? 'collapsed' : 'expanded';
                 startX = e.clientX;
-                
-                // Disable CSS transitions during drag for raw real-time performance
-                sidebar.style.setProperty('transition', 'none', 'important');
-                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-                if (mainContainer) {
-                    mainContainer.style.setProperty('transition', 'none', 'important');
-                }
+                startY = e.clientY;
+                dragTriggered = false;
             }
         };
         
         window.parent.__sidebarMouseMoveHandler = function(e) {
             if (!isDragging) return;
+            if (dragTriggered) return;
             
-            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
-            if (!sidebar) {
-                isDragging = false;
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            
+            // Ignore if movement is primarily vertical
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
                 return;
             }
             
-            const deltaX = e.clientX - startX;
-            if (deltaX > 0) {
-                // Adjust sidebar width in real time
-                const currentWidth = COLLAPSED_WIDTH + deltaX;
-                sidebar.style.setProperty('width', currentWidth + 'px', 'important');
-                sidebar.style.setProperty('min-width', currentWidth + 'px', 'important');
-                sidebar.style.setProperty('max-width', currentWidth + 'px', 'important');
-                
-                // Push the main view container to the right in real time
-                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-                if (mainContainer) {
-                    mainContainer.style.setProperty('margin-left', currentWidth + 'px', 'important');
-                    mainContainer.style.setProperty('width', `calc(100% - ${currentWidth}px)`, 'important');
-                }
-                
-                // If they drag it very far (instant trigger)
-                if (deltaX > 140) {
-                    triggerExpand(sidebar);
-                }
+            if (draggedState === 'collapsed' && deltaX > 10) {
+                e.preventDefault();
+                triggerExpand();
+            } else if (draggedState === 'expanded' && deltaX < -40) {
+                e.preventDefault();
+                triggerCollapse();
             }
         };
         
@@ -2952,109 +2981,49 @@ with st.sidebar:
             if (!isDragging) return;
             isDragging = false;
             
-            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
-            if (!sidebar) return;
-            
             const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
             
-            if (deltaX > EXPAND_THRESHOLD) {
-                triggerExpand(sidebar);
-            } else {
-                // Snap back to collapsed state smoothly
-                sidebar.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
-                sidebar.style.setProperty('width', COLLAPSED_WIDTH + 'px', 'important');
-                sidebar.style.setProperty('min-width', COLLAPSED_WIDTH + 'px', 'important');
-                sidebar.style.setProperty('max-width', COLLAPSED_WIDTH + 'px', 'important');
-                
-                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-                if (mainContainer) {
-                    mainContainer.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
-                    mainContainer.style.setProperty('margin-left', COLLAPSED_WIDTH + 'px', 'important');
-                    mainContainer.style.setProperty('width', `calc(100% - ${COLLAPSED_WIDTH}px)`, 'important');
-                }
-                
-                // Clear temporary styles after animation
-                setTimeout(() => {
-                    sidebar.style.removeProperty('transition');
-                    if (mainContainer) mainContainer.style.removeProperty('transition');
-                }, 250);
-                
-                // Also support click-to-expand on simple click
-                if (deltaX < 5 && (sidebar.contains(e.target) || e.target === sidebar)) {
-                    if (!e.target.closest('a, button, label, input, [role="radiogroup"]')) {
-                        triggerExpand(sidebar);
-                    }
-                }
+            // If they clicked the empty space without dragging, expand the collapsed sidebar
+            if (!dragTriggered && Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5 && draggedState === 'collapsed') {
+                triggerExpand();
             }
         };
         
-        function triggerExpand(sidebar) {
-            isDragging = false;
-            // Remove override inline styles
-            sidebar.style.removeProperty('width');
-            sidebar.style.removeProperty('min-width');
-            sidebar.style.removeProperty('max-width');
-            sidebar.style.removeProperty('transition');
-            
-            const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-            if (mainContainer) {
-                mainContainer.style.removeProperty('margin-left');
-                mainContainer.style.removeProperty('width');
-                mainContainer.style.removeProperty('transition');
-            }
-            
-            // Click expand button
-            const expandBtn = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
-            if (expandBtn) {
-                expandBtn.click();
-            }
-        }
-        
-        // Touch Support for mobile
-        let touchStartX = 0;
         window.parent.__sidebarTouchStartHandler = function(e) {
-            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
+            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
             if (!sidebar) return;
+            const isCollapsed = sidebar.getAttribute('aria-expanded') === 'false';
             
             if (sidebar.contains(e.target) || e.target === sidebar) {
-                if (e.target.closest('a, button, label, input, [role="radiogroup"]')) {
+                if (e.target.closest('a, button, label, input, select, textarea, [role="radiogroup"]')) {
                     return;
                 }
                 isDragging = true;
-                touchStartX = e.touches[0].clientX;
-                sidebar.style.setProperty('transition', 'none', 'important');
-                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-                if (mainContainer) {
-                    mainContainer.style.setProperty('transition', 'none', 'important');
-                }
+                draggedState = isCollapsed ? 'collapsed' : 'expanded';
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                dragTriggered = false;
             }
         };
         
         window.parent.__sidebarTouchMoveHandler = function(e) {
             if (!isDragging) return;
+            if (dragTriggered) return;
             
-            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
-            if (!sidebar) {
-                isDragging = false;
+            const deltaX = e.touches[0].clientX - startX;
+            const deltaY = e.touches[0].clientY - startY;
+            
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
                 return;
             }
             
-            const deltaX = e.touches[0].clientX - touchStartX;
-            if (deltaX > 0) {
-                const currentWidth = COLLAPSED_WIDTH + deltaX;
-                sidebar.style.setProperty('width', currentWidth + 'px', 'important');
-                sidebar.style.setProperty('min-width', currentWidth + 'px', 'important');
-                sidebar.style.setProperty('max-width', currentWidth + 'px', 'important');
-                
-                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-                if (mainContainer) {
-                    mainContainer.style.setProperty('margin-left', currentWidth + 'px', 'important');
-                    mainContainer.style.setProperty('width', `calc(100% - ${currentWidth}px)`, 'important');
-                }
-                
-                if (deltaX > 140) {
-                    triggerExpand(sidebar);
-                }
+            if (draggedState === 'collapsed' && deltaX > 10) {
+                e.preventDefault();
+                triggerExpand();
+            } else if (draggedState === 'expanded' && deltaX < -40) {
+                e.preventDefault();
+                triggerCollapse();
             }
         };
         
@@ -3062,31 +3031,14 @@ with st.sidebar:
             if (!isDragging) return;
             isDragging = false;
             
-            const sidebar = parentDoc.querySelector('[data-testid="stSidebar"][aria-expanded="false"]');
-            if (!sidebar) return;
-            
+            if (e.changedTouches.length === 0) return;
             const touchEndX = e.changedTouches[0].clientX;
-            const deltaX = touchEndX - touchStartX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - startX;
+            const deltaY = touchEndY - startY;
             
-            if (deltaX > EXPAND_THRESHOLD) {
-                triggerExpand(sidebar);
-            } else {
-                sidebar.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
-                sidebar.style.setProperty('width', COLLAPSED_WIDTH + 'px', 'important');
-                sidebar.style.setProperty('min-width', COLLAPSED_WIDTH + 'px', 'important');
-                sidebar.style.setProperty('max-width', COLLAPSED_WIDTH + 'px', 'important');
-                
-                const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-                if (mainContainer) {
-                    mainContainer.style.setProperty('transition', 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
-                    mainContainer.style.setProperty('margin-left', COLLAPSED_WIDTH + 'px', 'important');
-                    mainContainer.style.setProperty('width', `calc(100% - ${COLLAPSED_WIDTH}px)`, 'important');
-                }
-                
-                setTimeout(() => {
-                    sidebar.style.removeProperty('transition');
-                    if (mainContainer) mainContainer.style.removeProperty('transition');
-                }, 250);
+            if (!dragTriggered && Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5 && draggedState === 'collapsed') {
+                triggerExpand();
             }
         };
         
@@ -3096,6 +3048,7 @@ with st.sidebar:
         parentDoc.addEventListener('mouseup', window.parent.__sidebarMouseUpHandler);
         parentDoc.addEventListener('touchstart', window.parent.__sidebarTouchStartHandler);
         parentDoc.addEventListener('touchmove', window.parent.__sidebarTouchMoveHandler);
+        parentDoc.addEventListener('touchend', window.parent.__sidebarTouchEndHandler);
     </script>
     """, height=0, width=0)
 
