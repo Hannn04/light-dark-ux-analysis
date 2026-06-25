@@ -267,7 +267,7 @@ def render_auth_page():
     }}
     
     /* Custom style for input fields */
-    div[data-testid="stForm"] input[placeholder="Masukkan username"] {{
+    div[data-testid="stForm"] input[type="text"] {{
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
         background-repeat: no-repeat !important;
         background-position: 16px center !important;
@@ -323,14 +323,13 @@ def render_auth_page():
         box-shadow: 0 12px 24px -5px rgba(29, 78, 216, 0.4) !important;
     }}
 
-    /* Under-card text link toggle */
-    div.element-container:has(button[key="btn_toggle_reg"]),
-    div.element-container:has(button[key="btn_toggle_login"]) {{
-        width: auto !important;
+    /* Under-card text link toggle container and button styling */
+    .toggle-link-container {{
+        display: inline-block !important;
+        margin-top: 12px !important;
     }}
     
-    button[key="btn_toggle_reg"],
-    button[key="btn_toggle_login"] {{
+    .toggle-link-container button {{
         background-color: transparent !important;
         border: none !important;
         color: #1d4ed8 !important;
@@ -345,8 +344,8 @@ def render_auth_page():
         height: auto !important;
         display: inline-block !important;
     }}
-    button[key="btn_toggle_reg"]:hover,
-    button[key="btn_toggle_login"]:hover {{
+    
+    .toggle-link-container button:hover {{
         color: #1e40af !important;
         background-color: transparent !important;
         text-decoration: underline !important;
@@ -368,7 +367,7 @@ def render_auth_page():
     col1, col2 = st.columns([1.1, 0.9], gap="large")
 
     with col1:
-        st.markdown(f"""
+        st.markdown(dedent(f"""
         <div style="padding-top: 0.5rem;">
             <!-- Logo Section -->
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px;">
@@ -392,7 +391,7 @@ def render_auth_page():
                 Platform analitik canggih untuk mengolah dan memvisualisasikan data pengalaman pengguna antara Light Mode dan Dark Mode dengan presisi tinggi.
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
     with col2:
         if st.session_state["auth_mode"] == "login":
@@ -461,6 +460,7 @@ def render_auth_page():
         # Place secondary buttons side-by-side to save height
         col_btn1, col_btn2 = st.columns([1.2, 0.8])
         with col_btn1:
+            st.markdown('<div class="toggle-link-container">', unsafe_allow_html=True)
             if st.session_state["auth_mode"] == "login":
                 if st.button("Belum punya akun? Daftar Sekarang", use_container_width=False, key="btn_toggle_reg"):
                     st.session_state["auth_mode"] = "register"
@@ -469,6 +469,7 @@ def render_auth_page():
                 if st.button("Sudah punya akun? Masuk", use_container_width=False, key="btn_toggle_login"):
                     st.session_state["auth_mode"] = "login"
                     st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
         with col_btn2:
             toggle_label = "Dark mode" if is_dark else "Light mode"
             is_dark_toggle = st.toggle(toggle_label, value=is_dark, key="login_theme_toggle_switch")
