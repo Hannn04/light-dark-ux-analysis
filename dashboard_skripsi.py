@@ -2427,7 +2427,7 @@ with st.sidebar:
         white-space: nowrap !important;
     }}
 
-    /* Add Moon icon to Dark Mode toggle label */
+    /* Default/Dark Mode: Moon Icon on the left */
     label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
@@ -2439,9 +2439,54 @@ with st.sidebar:
         mask-repeat: no-repeat !important;
         -webkit-mask-size: contain !important;
         mask-size: contain !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
         flex-shrink: 0 !important;
+    }}
+
+    /* Light Mode: Sun Icon on the left (when switch is NOT checked) */
+    label:has(input[id*="theme_toggle_switch"]):not(:has(input[id*="theme_toggle_switch"]:checked)) div[data-testid="stMarkdownContainer"]::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+    }}
+
+    /* Style the Track background of the toggle */
+    label:has(input[id*="theme_toggle_switch"]) input + div {{
+        background-color: #e2e8f0 !important;
+        transition: background-color 0.2s ease !important;
+    }}
+    /* When active (Dark Mode is checked), track is light purple */
+    label:has(input[id*="theme_toggle_switch"]) input:checked + div {{
+        background-color: #c7d2fe !important;
+    }}
+    
+    /* Style the Knob (Handle) of the toggle */
+    label:has(input[id*="theme_toggle_switch"]) input + div > div {{
+        background-color: #1e293b !important;
+        position: relative !important;
+        transition: transform 0.2s ease, background-color 0.2s ease !important;
+    }}
+    /* When checked, knob is dark slate */
+    label:has(input[id*="theme_toggle_switch"]) input:checked + div > div {{
+        background-color: #0f172a !important;
+    }}
+    
+    /* Draw white moon icon outline inside the toggle knob in both states */
+    label:has(input[id*="theme_toggle_switch"]) input + div > div::after {{
+        content: "" !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 10px !important;
+        height: 10px !important;
+        background-color: #ffffff !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
     }}
 
     /* User card styling */
@@ -2623,7 +2668,8 @@ with st.sidebar:
     }}
     
     /* Hide the collapse button inside the sidebar when collapsed */
-    [data-testid="stSidebar"][aria-expanded="false"] button[class*="CollapseButton"] {{
+    [data-testid="stSidebar"][aria-expanded="false"] button[class*="CollapseButton"],
+    [data-testid="stSidebar"][aria-expanded="false"] button[data-testid="stSidebarCollapseButton"] {{
         display: none !important;
     }}
     
@@ -2816,7 +2862,8 @@ with st.sidebar:
     st.markdown("<div style='margin-top: 4px;'></div>", unsafe_allow_html=True)
     
     # Toggle Dark Mode (styled switch)
-    is_dark_toggle = st.toggle("Dark Mode", value=is_dark, key="theme_toggle_switch")
+    toggle_label = "Dark mode" if is_dark else "Light mode"
+    is_dark_toggle = st.toggle(toggle_label, value=is_dark, key="theme_toggle_switch")
     if is_dark_toggle != is_dark:
         st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
         st.query_params["theme"] = "dark" if is_dark_toggle else "light"
@@ -2875,9 +2922,13 @@ with st.sidebar:
             }, true);
         }
         
-        // 2. Drag-to-expand and click-empty-space-to-expand bridge for collapsed sidebar
+        // 2. Clean Drag-to-expand and Drag-to-collapse bridge
         
-        // 2. Drag-to-expand and Drag-to-collapse bridge
+        // Clean up debug overlay if it exists
+        const oldConsole = parentDoc.getElementById('js-debug-console');
+        if (oldConsole) {
+            oldConsole.remove();
+        }
         
         // Clean up any old listeners if they exist to allow hot-reloading new code
         if (window.parent.__sidebarMouseDownHandler) {
@@ -2897,6 +2948,9 @@ with st.sidebar:
         }
         if (window.parent.__sidebarTouchEndHandler) {
             parentDoc.removeEventListener('touchend', window.parent.__sidebarTouchEndHandler);
+        }
+        if (window.parent.__sidebarClickHandler) {
+            parentDoc.removeEventListener('click', window.parent.__sidebarClickHandler, true);
         }
         
         // Clean up any persistent inline styles from previous drag implementations
@@ -2918,12 +2972,12 @@ with st.sidebar:
         let startX = 0;
         let startY = 0;
         let draggedState = 'collapsed'; // 'collapsed' or 'expanded'
-        let dragTriggered = false;
+        window.parent.__sidebarDragTriggered = false;
         
         function triggerExpand() {
             isDragging = false;
-            dragTriggered = true;
-            const expandBtn = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
+            window.parent.__sidebarDragTriggered = true;
+            const expandBtn = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button, button[data-testid="stSidebarCollapsedControl"], button[class*="CollapsedControl"]');
             if (expandBtn) {
                 expandBtn.click();
             }
@@ -2931,7 +2985,7 @@ with st.sidebar:
         
         function triggerCollapse() {
             isDragging = false;
-            dragTriggered = true;
+            window.parent.__sidebarDragTriggered = true;
             const collapseBtn = parentDoc.querySelector('[data-testid="stSidebar"] button[data-testid="stSidebarCollapseButton"], [data-testid="stSidebar"] button[class*="CollapseButton"]');
             if (collapseBtn) {
                 collapseBtn.click();
@@ -2944,21 +2998,21 @@ with st.sidebar:
             const isCollapsed = sidebar.getAttribute('aria-expanded') === 'false';
             
             if (sidebar.contains(e.target) || e.target === sidebar) {
-                // Ignore interactive inputs/buttons to allow regular clicks
-                if (e.target.closest('a, button, label, input, select, textarea, [role="radiogroup"]')) {
+                // Ignore interactive inputs, links, buttons to allow regular clicks, but allow dragging from navigation labels/tabs
+                if (e.target.closest('a, button, input, select, textarea')) {
                     return;
                 }
                 isDragging = true;
                 draggedState = isCollapsed ? 'collapsed' : 'expanded';
                 startX = e.clientX;
                 startY = e.clientY;
-                dragTriggered = false;
+                window.parent.__sidebarDragTriggered = false;
             }
         };
         
         window.parent.__sidebarMouseMoveHandler = function(e) {
             if (!isDragging) return;
-            if (dragTriggered) return;
+            if (window.parent.__sidebarDragTriggered) return;
             
             const deltaX = e.clientX - startX;
             const deltaY = e.clientY - startY;
@@ -2985,7 +3039,7 @@ with st.sidebar:
             const deltaY = e.clientY - startY;
             
             // If they clicked the empty space without dragging, expand the collapsed sidebar
-            if (!dragTriggered && Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5 && draggedState === 'collapsed') {
+            if (!window.parent.__sidebarDragTriggered && Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5 && draggedState === 'collapsed') {
                 triggerExpand();
             }
         };
@@ -2996,20 +3050,20 @@ with st.sidebar:
             const isCollapsed = sidebar.getAttribute('aria-expanded') === 'false';
             
             if (sidebar.contains(e.target) || e.target === sidebar) {
-                if (e.target.closest('a, button, label, input, select, textarea, [role="radiogroup"]')) {
+                if (e.target.closest('a, button, input, select, textarea')) {
                     return;
                 }
                 isDragging = true;
                 draggedState = isCollapsed ? 'collapsed' : 'expanded';
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
-                dragTriggered = false;
+                window.parent.__sidebarDragTriggered = false;
             }
         };
         
         window.parent.__sidebarTouchMoveHandler = function(e) {
             if (!isDragging) return;
-            if (dragTriggered) return;
+            if (window.parent.__sidebarDragTriggered) return;
             
             const deltaX = e.touches[0].clientX - startX;
             const deltaY = e.touches[0].clientY - startY;
@@ -3037,8 +3091,16 @@ with st.sidebar:
             const deltaX = touchEndX - startX;
             const deltaY = touchEndY - startY;
             
-            if (!dragTriggered && Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5 && draggedState === 'collapsed') {
+            if (!window.parent.__sidebarDragTriggered && Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5 && draggedState === 'collapsed') {
                 triggerExpand();
+            }
+        };
+        
+        window.parent.__sidebarClickHandler = function(e) {
+            if (window.parent.__sidebarDragTriggered) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.parent.__sidebarDragTriggered = false;
             }
         };
         
@@ -3049,6 +3111,7 @@ with st.sidebar:
         parentDoc.addEventListener('touchstart', window.parent.__sidebarTouchStartHandler);
         parentDoc.addEventListener('touchmove', window.parent.__sidebarTouchMoveHandler);
         parentDoc.addEventListener('touchend', window.parent.__sidebarTouchEndHandler);
+        parentDoc.addEventListener('click', window.parent.__sidebarClickHandler, true);
     </script>
     """, height=0, width=0)
 

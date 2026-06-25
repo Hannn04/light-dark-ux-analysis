@@ -392,7 +392,7 @@ def render_auth_page():
         background-color: {'#1f2937' if is_dark else '#f3f4f6'} !important;
         border: 1px solid {'rgba(255,255,255,0.05)' if is_dark else 'rgba(0,0,0,0.04)'} !important;
         padding: 0px 12px !important;
-        height: 34px !important;
+        height: 38px !important;
         border-radius: 12px !important;
         width: 100% !important;
         margin: 0px 0 !important;
@@ -423,7 +423,7 @@ def render_auth_page():
         white-space: nowrap !important;
     }}
 
-    /* Add Moon icon to Dark Mode toggle label */
+    /* Default/Dark Mode: Moon Icon on the left */
     label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
@@ -435,9 +435,54 @@ def render_auth_page():
         mask-repeat: no-repeat !important;
         -webkit-mask-size: contain !important;
         mask-size: contain !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
         flex-shrink: 0 !important;
+    }}
+
+    /* Light Mode: Sun Icon on the left (when switch is NOT checked) */
+    label:has(input[id*="theme_toggle_switch"]):not(:has(input[id*="theme_toggle_switch"]:checked)) div[data-testid="stMarkdownContainer"]::before {{
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+    }}
+
+    /* Style the Track background of the toggle */
+    label:has(input[id*="theme_toggle_switch"]) input + div {{
+        background-color: #e2e8f0 !important;
+        transition: background-color 0.2s ease !important;
+    }}
+    /* When active (Dark Mode is checked), track is light purple */
+    label:has(input[id*="theme_toggle_switch"]) input:checked + div {{
+        background-color: #c7d2fe !important;
+    }}
+    
+    /* Style the Knob (Handle) of the toggle */
+    label:has(input[id*="theme_toggle_switch"]) input + div > div {{
+        background-color: #1e293b !important;
+        position: relative !important;
+        transition: transform 0.2s ease, background-color 0.2s ease !important;
+    }}
+    /* When checked, knob is dark slate */
+    label:has(input[id*="theme_toggle_switch"]) input:checked + div > div {{
+        background-color: #0f172a !important;
+    }}
+    
+    /* Draw white moon icon outline inside the toggle knob in both states */
+    label:has(input[id*="theme_toggle_switch"]) input + div > div::after {{
+        content: "" !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 10px !important;
+        height: 10px !important;
+        background-color: #ffffff !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
     }}
     </style>
     """
@@ -526,7 +571,8 @@ def render_auth_page():
                     st.session_state["auth_mode"] = "login"
                     st.rerun()
         with col_btn2:
-            is_dark_toggle = st.toggle("Dark Mode", value=is_dark, key="login_theme_toggle_switch")
+            toggle_label = "Dark mode" if is_dark else "Light mode"
+            is_dark_toggle = st.toggle(toggle_label, value=is_dark, key="login_theme_toggle_switch")
             if is_dark_toggle != is_dark:
                 st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
                 st.query_params["theme"] = "dark" if is_dark_toggle else "light"
