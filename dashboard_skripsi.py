@@ -1101,15 +1101,19 @@ if theme == "dark":
     }
     
     /* HTML tables (st.table) styling in Dark Mode */
-    .stTable, [data-testid="stTable"],
-    .stTable tr, [data-testid="stTable"] tr {
+    [data-testid="stTable"] table,
+    [data-testid="stTable"] table *,
+    .stTable,
+    .stTable * {
         background-color: #0f172a !important;
         color: #f1f5f9 !important;
-    }
-    .stTable td, .stTable th, [data-testid="stTable"] td, [data-testid="stTable"] th {
         border-color: #1e293b !important;
+    }
+    [data-testid="stTable"] th,
+    .stTable th {
+        background-color: #1e293b !important;
         color: #f1f5f9 !important;
-        background-color: #0f172a !important;
+        font-weight: 600 !important;
     }
 
     /* 11. Main area expanders */
@@ -2499,7 +2503,7 @@ with st.sidebar:
        ======================================================== */
     
     /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
-    [data-testid="stSidebar"][data-collapsed="true"] {{
+    [data-testid="stSidebar"][aria-expanded="false"] {{
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -2514,7 +2518,7 @@ with st.sidebar:
         background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
         z-index: 100000 !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stSidebarUserContent"] {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
         display: flex !important;
         flex-direction: column !important;
         visibility: visible !important;
@@ -2524,17 +2528,17 @@ with st.sidebar:
     }}
     
     /* Adjust main content layout spacing and width when sidebar is collapsed to prevent overlapping */
-    [data-testid="stAppViewContainer"][data-sidebar-state="collapsed"] {{
+    [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) {{
         padding-left: 0px !important;
     }}
-    [data-testid="stAppViewContainer"][data-sidebar-state="collapsed"] [data-testid="stMainViewContainer"] {{
+    [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) [data-testid="stMainViewContainer"] {{
         margin-left: 70px !important;
         padding-left: 0px !important;
         width: calc(100% - 70px) !important;
     }}
     
     /* Style the floating expand button control when collapsed */
-    [data-sidebar-state="collapsed"] [data-testid="stSidebarCollapsedControl"] {{
+    [data-testid="stSidebarCollapsedControl"] {{
         left: 0px !important;
         top: 0px !important;
         width: 70px !important;
@@ -2547,7 +2551,7 @@ with st.sidebar:
         border: none !important;
         z-index: 100001 !important;
     }}
-    [data-sidebar-state="collapsed"] [data-testid="stSidebarCollapsedControl"] button {{
+    [data-testid="stSidebarCollapsedControl"] button {{
         background: transparent !important;
         border: none !important;
         color: {text_soft} !important;
@@ -2559,7 +2563,7 @@ with st.sidebar:
         align-items: center !important;
         justify-content: center !important;
     }}
-    [data-sidebar-state="collapsed"] [data-testid="stSidebarCollapsedControl"]:hover button {{
+    [data-testid="stSidebarCollapsedControl"]:hover button {{
         color: #6366f1 !important;
     }}
     
@@ -2580,31 +2584,31 @@ with st.sidebar:
     }}
     
     /* Styling for the branding layout when collapsed */
-    [data-testid="stSidebar"][data-collapsed="true"] .window-controls-container {{
+    [data-testid="stSidebar"][aria-expanded="false"] .window-controls-container {{
         justify-content: center !important;
         padding-left: 0 !important;
         margin-top: 50px !important; /* Push down to clear expand button */
         margin-bottom: 24px !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] .brand-logo-container {{
+    [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container {{
         justify-content: center !important;
         padding-left: 0 !important;
         margin-bottom: 24px !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] .brand-title-text {{
+    [data-testid="stSidebar"][aria-expanded="false"] .brand-title-text {{
         display: none !important;
     }}
     
     /* Hide section headers when collapsed */
-    [data-testid="stSidebar"][data-collapsed="true"] .section-header {{
+    [data-testid="stSidebar"][aria-expanded="false"] .section-header {{
         display: none !important;
     }}
     
     /* Hide the selectbox widget (Research Object) and its container when collapsed */
-    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(div.stSelectbox),
-    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(div.stSelectbox),
-    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(.manage-btn-wrapper),
-    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(.manage-btn-wrapper) {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stSelectbox),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stSelectbox),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.manage-btn-wrapper),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.manage-btn-wrapper) {{
         display: none !important;
         height: 0px !important;
         margin: 0 !important;
@@ -2612,8 +2616,8 @@ with st.sidebar:
     }}
     
     /* Hide the parameters widget (Sample Size) when collapsed */
-    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(div.stNumberInput),
-    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(div.stNumberInput) {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stNumberInput),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stNumberInput) {{
         display: none !important;
         height: 0px !important;
         margin: 0 !important;
@@ -2621,10 +2625,10 @@ with st.sidebar:
     }}
     
     /* Hide the Reset Data button and container when collapsed */
-    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(.reset-btn-wrapper),
-    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(.reset-btn-wrapper),
-    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(.reset-btn-wrapper) + div.element-container,
-    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.reset-btn-wrapper),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.reset-btn-wrapper),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(.reset-btn-wrapper) + div.element-container,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.reset-btn-wrapper) + div.stElementContainer {{
         display: none !important;
         height: 0px !important;
         margin: 0 !important;
@@ -2632,7 +2636,7 @@ with st.sidebar:
     }}
     
     /* Style radio navigation items as centered squares when collapsed */
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label {{
         justify-content: center !important;
         padding: 0 !important;
         width: 44px !important;
@@ -2641,7 +2645,7 @@ with st.sidebar:
         margin: 0 auto !important;
         position: relative !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
         display: block !important;
         position: absolute !important;
         left: 60px !important;
@@ -2660,26 +2664,26 @@ with st.sidebar:
         transition: all 0.15s ease-in-out !important;
         z-index: 99999 !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label:hover p {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label:hover p {{
         opacity: 1 !important;
         transform: translateY(-50%) scale(1) !important;
         pointer-events: auto !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] label::before {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label::before {{
         margin-right: 0 !important;
         width: 20px !important;
         height: 20px !important;
     }}
     
     /* Style collapsed toggle switch to look like a centered moon icon button */
-    [data-testid="stSidebar"][data-collapsed="true"] div.element-container:has(div.stToggle),
-    [data-testid="stSidebar"][data-collapsed="true"] div.stElementContainer:has(div.stToggle) {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stToggle),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stToggle) {{
         display: flex !important;
         justify-content: center !important;
         margin: 0 !important;
         padding: 0 !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label {{
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -2693,13 +2697,13 @@ with st.sidebar:
         transition: all 0.2s ease !important;
         position: relative !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label:hover {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label:hover {{
         background: rgba(148, 163, 184, 0.08) !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label > div {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label > div {{
         display: none !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label p {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label p {{
         display: block !important;
         position: absolute !important;
         left: 60px !important;
@@ -2718,23 +2722,23 @@ with st.sidebar:
         transition: all 0.15s ease-in-out !important;
         z-index: 99999 !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label:hover p {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label:hover p {{
         opacity: 1 !important;
         transform: translateY(-50%) scale(1) !important;
         pointer-events: auto !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label::before {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label::before {{
         margin-right: 0 !important;
         width: 20px !important;
         height: 20px !important;
         background-color: {text_soft} !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] div.stToggle label:hover::before {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label:hover::before {{
         background-color: {text_main} !important;
     }}
     
     /* Style collapsed user card */
-    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card {{
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card {{
         background: transparent !important;
         border: none !important;
         padding: 0 !important;
@@ -2743,11 +2747,11 @@ with st.sidebar:
         width: 100% !important;
         position: relative !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card .user-name-wrapper,
-    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card .logout-link-btn {{
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card .user-name-wrapper,
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card .logout-link-btn {{
         display: none !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card::after {{
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card::after {{
         content: "Keluar Akun ({current_user})" !important;
         display: block !important;
         position: absolute !important;
@@ -2767,7 +2771,7 @@ with st.sidebar:
         transition: all 0.15s ease-in-out !important;
         z-index: 99999 !important;
     }}
-    [data-testid="stSidebar"][data-collapsed="true"] .sidebar-user-card:hover::after {{
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card:hover::after {{
         opacity: 1 !important;
         transform: translateY(-50%) scale(1) !important;
         pointer-events: auto !important;
@@ -2783,12 +2787,12 @@ with st.sidebar:
     }}
     
     /* Force overflow: visible on all sidebar containers to allow tooltips to show outside the dock */
-    [data-testid="stSidebar"][data-collapsed="true"],
-    [data-testid="stSidebar"][data-collapsed="true"] > div,
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stSidebarUserContent"],
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stVerticalBlock"],
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"],
-    [data-testid="stSidebar"][data-collapsed="true"] [data-testid="stRadio"] div[role="radiogroup"] {{
+    [data-testid="stSidebar"][aria-expanded="false"],
+    [data-testid="stSidebar"][aria-expanded="false"] > div,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
         overflow: visible !important;
     }}
     </style>
