@@ -1033,9 +1033,27 @@ if theme == "dark":
     [data-testid="stSidebar"] input {
         background-color: #1e293b !important;
         color: #f1f5f9 !important;
+        caret-color: transparent !important;
     }
     [data-testid="stSidebar"] input::placeholder {
         color: #64748b !important;
+    }
+    
+    /* Selectbox - hilangkan caret */
+    [data-baseweb="select"] input{
+        caret-color: transparent !important;
+        color: transparent !important;
+        text-shadow: 0 0 0 #f1f5f9 !important;
+    }
+
+    [data-baseweb="select"] input:focus{
+        caret-color: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    [data-baseweb="select"] input::selection{
+        background: transparent !important;
     }
 
     /* 6. Sidebar — expander & its inner content */
@@ -1478,10 +1496,6 @@ header[data-testid="stHeader"] {
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
-
-[data-baseweb="select"] input{
-    caret-color: transparent !important;
-}
             
 .stApp {
     background-color: var(--background-color);
@@ -1795,6 +1809,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"],
 section[data-testid="stSidebar"] [data-baseweb="select"] *,
 section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
+    pointer-events: none !important;
 }
             
 /* Manage Applications expander — styling keren */
