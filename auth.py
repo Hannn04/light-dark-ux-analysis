@@ -170,8 +170,14 @@ def render_settings_page():
 def render_auth_page():
     controller = get_cookie_controller()
     if "app_theme" not in st.session_state:
-        st.session_state["app_theme"] = "light"
-    is_dark = (st.session_state["app_theme"] == "dark")
+        q_theme = st.query_params.get("theme", "light")
+        st.session_state["app_theme"] = q_theme
+    
+    theme = st.session_state["app_theme"]
+    if st.query_params.get("theme") != theme:
+        st.query_params["theme"] = theme
+        
+    is_dark = (theme == "dark")
 
     if not st.session_state.get("logged_in"):
         saved_user = controller.get("session_user")
@@ -523,6 +529,7 @@ def render_auth_page():
             is_dark_toggle = st.toggle("Dark Mode", value=is_dark, key="login_theme_toggle_switch")
             if is_dark_toggle != is_dark:
                 st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
+                st.query_params["theme"] = "dark" if is_dark_toggle else "light"
                 st.rerun()
 
     st.markdown(f"""

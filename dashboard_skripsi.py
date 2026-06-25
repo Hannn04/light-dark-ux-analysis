@@ -918,9 +918,12 @@ def render_delete_button(file_path, label, columns, default_value=0, key_suffix=
                     st.error(f"Gagal menghapus: {e}")
 # ── Theme toggle (session_state) — default: light ─────────────────────────
 if "app_theme" not in st.session_state:
-    st.session_state["app_theme"] = "light"   # ← default LIGHT
+    q_theme = st.query_params.get("theme", "light")
+    st.session_state["app_theme"] = q_theme
 
 theme = st.session_state["app_theme"]
+if st.query_params.get("theme") != theme:
+    st.query_params["theme"] = theme
 
 if theme == "dark":
     plt.style.use("dark_background")
@@ -2807,6 +2810,7 @@ with st.sidebar:
     is_dark_toggle = st.toggle("Dark Mode", value=is_dark, key="theme_toggle_switch")
     if is_dark_toggle != is_dark:
         st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
+        st.query_params["theme"] = "dark" if is_dark_toggle else "light"
         st.rerun()
 
     st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
