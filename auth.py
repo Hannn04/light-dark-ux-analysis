@@ -108,10 +108,18 @@ def delete_account(username: str, password: str):
 
 
 def logout():
+
     controller = get_cookie_controller()
+
     controller.remove("session_user")
-    for key in ["logged_in", "current_user", "last_user", "app_list", "confirm_reset"]:
-        st.session_state.pop(key, None)
+
+    keys = list(st.session_state.keys())
+
+    for k in keys:
+        del st.session_state[k]
+
+    st.query_params.clear()
+
     st.rerun()
 
 
@@ -247,6 +255,8 @@ def render_auth_page():
     [data-testid="stElementContainer"] {{
         margin-bottom: 0px !important;
     }}
+
+    
     
     .main .block-container {{
         max-width: 1100px !important;

@@ -55,6 +55,7 @@ if "confirm_reset" not in st.session_state:
 if "show_logout_confirm" not in st.session_state:
     st.session_state.show_logout_confirm = False
 
+
 if "show_reset_confirm" not in st.session_state:
     st.session_state.show_reset_confirm = False
 
@@ -1393,6 +1394,30 @@ if theme == "dark":
 
 st.markdown("""
 <style>
+
+/* Sidebar */
+[data-testid="stSidebar"]{
+    width:320px !important;
+    min-width:320px !important;
+    max-width:320px !important;
+    height:100dvh !important;
+    overflow:hidden !important;
+}
+
+[data-testid="stSidebarContent"]{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    height:100%;
+}
+
+@media (max-width:1024px){
+
+[data-testid="stSidebar"]{
+    width:270px !important;
+    min-width:270px !important;
+}
+
+}
 
 /* Sembunyikan header Streamlit (Deploy & Menu) */
 header[data-testid="stHeader"] {
