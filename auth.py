@@ -376,6 +376,63 @@ def render_auth_page():
             gap: 2rem !important;
         }}
     }}
+
+    /* Style the theme toggle switch wrapper to look like a premium card */
+    label:has(input[id*="theme_toggle_switch"]) {{
+        display: flex !important;
+        flex-direction: row-reverse !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background-color: {'#1f2937' if is_dark else '#f3f4f6'} !important;
+        border: 1px solid {'rgba(255,255,255,0.05)' if is_dark else 'rgba(0,0,0,0.04)'} !important;
+        padding: 0px 12px !important;
+        height: 34px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        margin: 0px 0 !important;
+        box-sizing: border-box !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }}
+    
+    label:has(input[id*="theme_toggle_switch"]):hover {{
+        background-color: {'#374151' if is_dark else '#e5e7eb'} !important;
+    }}
+
+    /* Align and style the text label inside the toggle */
+    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] {{
+        display: flex !important;
+        align-items: center !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: {text_primary} !important;
+    }}
+
+    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] p {{
+        margin: 0 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: {text_primary} !important;
+        white-space: nowrap !important;
+    }}
+
+    /* Add Moon icon to Dark Mode toggle label */
+    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"]::before {{
+        content: "" !important;
+        display: inline-block !important;
+        width: 16px !important;
+        height: 16px !important;
+        margin-right: 8px !important;
+        background-color: currentColor !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        flex-shrink: 0 !important;
+    }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -463,8 +520,9 @@ def render_auth_page():
                     st.session_state["auth_mode"] = "login"
                     st.rerun()
         with col_btn2:
-            if st.button("Ubah Tampilan", use_container_width=True, key="login_theme_toggle"):
-                st.session_state["app_theme"] = "light" if is_dark else "dark"
+            is_dark_toggle = st.toggle("Dark Mode", value=is_dark, key="login_theme_toggle_switch")
+            if is_dark_toggle != is_dark:
+                st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
                 st.rerun()
 
     st.markdown(f"""

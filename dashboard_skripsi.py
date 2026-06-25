@@ -2069,6 +2069,71 @@ with st.sidebar:
         gap: 10px !important;
     }}
 
+    /* Polished Number Input styling for both Light & Dark modes */
+    [data-testid="stNumberInput"] > div {{
+        background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
+        border: 1px solid {'#334155' if is_dark else '#cbd5e1'} !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+        transition: all 0.2s ease-in-out !important;
+    }}
+    
+    [data-testid="stNumberInput"] > div:hover {{
+        border-color: {'#475569' if is_dark else '#94a3b8'} !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }}
+    
+    [data-testid="stNumberInput"] > div:focus-within {{
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+    }}
+    
+    [data-testid="stNumberInput"] input {{
+        background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
+        color: {text_main} !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 6px 10px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }}
+    
+    [data-testid="stNumberInput"] > div > div:last-child {{
+        background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
+        border-left: 1px solid {'#334155' if is_dark else '#e2e8f0'} !important;
+        gap: 2px !important;
+        padding: 3px !important;
+    }}
+    
+    [data-testid="stNumberInput"] button {{
+        background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
+        color: {'#94a3b8' if is_dark else '#64748b'} !important;
+        border: 1px solid {'#334155' if is_dark else '#cbd5e1'} !important;
+        border-radius: 6px !important;
+        width: 26px !important;
+        height: 26px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        transition: all 0.15s ease-in-out !important;
+        cursor: pointer !important;
+    }}
+    
+    [data-testid="stNumberInput"] button:hover {{
+        background-color: #6366f1 !important;
+        color: #ffffff !important;
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 8px rgba(99, 102, 241, 0.35) !important;
+        transform: scale(1.05) !important;
+    }}
+    
+    [data-testid="stNumberInput"] button:active {{
+        background-color: #4338ca !important;
+        transform: scale(0.95) !important;
+    }}
+
     /* Styling untuk semua tombol di sidebar */
     div[data-testid="stSidebar"] button {{
         height: 32px !important;
@@ -2248,8 +2313,48 @@ with st.sidebar:
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E") !important;
     }}
 
+    /* Style the theme toggle switch wrapper to look like a premium card */
+    label:has(input[id*="theme_toggle_switch"]) {{
+        display: flex !important;
+        flex-direction: row-reverse !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background-color: {'#1f2937' if is_dark else '#f3f4f6'} !important;
+        border: 1px solid {'rgba(255,255,255,0.05)' if is_dark else 'rgba(0,0,0,0.04)'} !important;
+        padding: 0px 12px !important;
+        height: 38px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        margin: 6px 0 !important;
+        box-sizing: border-box !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }}
+    
+    label:has(input[id*="theme_toggle_switch"]):hover {{
+        background-color: {'#374151' if is_dark else '#e5e7eb'} !important;
+    }}
+
+    /* Align and style the text label inside the toggle */
+    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] {{
+        display: flex !important;
+        align-items: center !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: {text_main} !important;
+    }}
+
+    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] p {{
+        margin: 0 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: {text_main} !important;
+        white-space: nowrap !important;
+    }}
+
     /* Add Moon icon to Dark Mode toggle label */
-    [data-testid="stSidebar"] label:has(input[id*="theme_toggle_switch"])::before {{
+    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
         width: 16px !important;
@@ -2262,6 +2367,7 @@ with st.sidebar:
         mask-size: contain !important;
         -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        flex-shrink: 0 !important;
     }}
 
     /* User card styling */
