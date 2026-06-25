@@ -527,6 +527,61 @@ def render_auth_page():
         background-color: #1d4ed8 !important;
     }}
 
+    /* Media query for mobile & tablet responsiveness */
+    @media (max-width: 991px) {{
+        html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main, section.main > div {{
+            overflow-y: auto !important;
+            height: auto !important;
+            max-height: none !important;
+        }}
+
+        .main .block-container {{
+            height: auto !important;
+            min-height: 100vh !important;
+            max-height: none !important;
+            padding: 2rem 1.5rem !important;
+            justify-content: flex-start !important;
+        }}
+
+        /* Stack main columns vertically */
+        div[data-testid="stHorizontalBlock"] {{
+            flex-direction: column !important;
+            gap: 2rem !important;
+            align-items: stretch !important;
+        }}
+
+        div[data-testid="stHorizontalBlock"] > div {{
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }}
+
+        /* Center content of the title column */
+        div[data-testid="stHorizontalBlock"] > div:first-child {{
+            text-align: center !important;
+        }}
+        
+        div[data-testid="stHorizontalBlock"] > div:first-child div[style*="display: flex"] {{
+            justify-content: center !important;
+        }}
+
+        div[data-testid="stHorizontalBlock"] > div:first-child p {{
+            margin: auto !important;
+        }}
+
+        /* Responsive typography */
+        h1 {{
+            font-size: 32px !important;
+            text-align: center !important;
+        }}
+
+        /* Compact card padding on mobile */
+        div[data-testid="stForm"] {{
+            padding: 24px 20px !important;
+            border-radius: 24px !important;
+        }}
+    }}
+
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
