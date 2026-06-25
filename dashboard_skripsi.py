@@ -1478,6 +1478,10 @@ header[data-testid="stHeader"] {
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
+
+[data-baseweb="select"] input{
+    caret-color: transparent !important;
+}
             
 .stApp {
     background-color: var(--background-color);
