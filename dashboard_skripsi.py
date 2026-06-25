@@ -977,6 +977,8 @@ if theme == "dark":
         --secondary-background-color: #0f172a !important;
         --text-color: #f1f5f9 !important;
         --primary-color: #6366f1 !important;
+        --secondary-color: #818cf8 !important;
+        --secondary-text-hover-color: #0f172a !important;
     }
 
     /* 2. App & main background */
@@ -1395,6 +1397,11 @@ if theme == "dark":
 st.markdown("""
 <style>
 
+:root {
+    --secondary-color: #6366F1;
+    --secondary-text-hover-color: #FFFFFF;
+}
+
 .stButton > button[kind="secondary"] {
     border-radius: 30px !important;
     border: 1px solid var(--secondary-color) !important;
@@ -1406,8 +1413,17 @@ st.markdown("""
 
 .stButton > button[kind="secondary"]:hover {
     background-color: var(--secondary-color) !important;
-    color: #FFFFFF !important;
+    color: var(--secondary-text-hover-color) !important;
     box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* Disable typing in selectbox search inside dialogs */
+div[data-testid="stDialog"] div[data-baseweb="select"] input,
+div[role="dialog"] div[data-baseweb="select"] input,
+[data-testid="stModal"] div[data-baseweb="select"] input {
+    pointer-events: none !important;
+    caret-color: transparent !important;
+    user-select: none !important;
 }
 /* Sembunyikan header Streamlit (Deploy & Menu) */
 header[data-testid="stHeader"] {
@@ -1887,8 +1903,85 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     border-radius: 20px;
 }
 
+/* ========================================================
+   RESPONSIVE GRID COLUMN RULES & MOBILE OPTIMIZATIONS
+   ======================================================== */
+@media (max-width: 1024px) {
+    /* For tablets and smaller: allow columns to wrap */
+    [data-testid="stHorizontalBlock"] {
+        flex-wrap: wrap !important;
+        gap: 16px !important;
+    }
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        min-width: 220px !important;
+        flex: 1 1 calc(50% - 16px) !important;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 767px) {
+    /* For mobile screens: force full width vertical stack */
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        min-width: 100% !important;
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+    
+    /* Clean up container paddings for tight mobile screens */
+    .block-container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        padding-top: 16px !important;
+    }
+    
+    /* Ensure tables can scroll horizontally without overflowing the page */
+    .stDataFrame, .stTable {
+        width: 100% !important;
+        overflow-x: auto !important;
+    }
+    
+    /* Optimize fonts and padding inside KPI cards on mobile */
+    .kpi-card {
+        padding: 16px 14px !important;
+    }
+    
+    /* Scaled down heading fonts on mobile */
+    h1 {
+        font-size: 1.8rem !important;
+    }
+    h2 {
+        font-size: 1.4rem !important;
+    }
+    h3 {
+        font-size: 1.1rem !important;
+    }
+}
+
 </style>
 """, unsafe_allow_html=True)
+
+# Bridge to disable search typing inside the selectbox in the dialog
+import streamlit.components.v1 as components
+components.html("""
+<script>
+    const parentDoc = window.parent.document;
+    const makeReadonly = () => {
+        const selector = 'div[data-testid="stDialog"] div[data-baseweb="select"] input, div[role="dialog"] div[data-baseweb="select"] input, [data-testid="stModal"] div[data-baseweb="select"] input';
+        const inputs = parentDoc.querySelectorAll(selector);
+        inputs.forEach(input => {
+            if (!input.readOnly) {
+                input.readOnly = true;
+                input.style.caretColor = 'transparent';
+                input.style.pointerEvents = 'none';
+            }
+        });
+    };
+    makeReadonly();
+    if (!window.parent.readonlySelectboxInterval) {
+        window.parent.readonlySelectboxInterval = setInterval(makeReadonly, 100);
+    }
+</script>
+""", height=0, width=0)
 
 # CSS override tema — blok f-string terpisah, hanya berisi aturan tema
 st.markdown(f"""
@@ -1988,11 +2081,12 @@ with st.sidebar:
     # BRANDING HEADER (Orbicular style)
     # ======================
     st.markdown(f"""
-        <!-- macOS-like window controls -->
-        <div class="window-controls-container" style="display: flex; gap: 6px; margin-bottom: 12px; padding-left: 2px;">
-            <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff5f56; display: inline-block;"></span>
-            <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ffbd2e; display: inline-block;"></span>
-            <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #27c93f; display: inline-block;"></span>
+        <!-- University Branding -->
+        <div class="sidebar-univ-full" style="font-size: 10px; font-weight: 700; color: {text_soft}; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; padding-left: 2px;">
+            Universitas Islam Indonesia
+        </div>
+        <div class="sidebar-univ-short" style="display: none; font-size: 10px; font-weight: 700; color: {text_soft}; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; padding-left: 2px;">
+            UII
         </div>
         
         <!-- Logo and Title -->
@@ -2631,9 +2725,9 @@ with st.sidebar:
     /* ========================================================
        COLLAPSED SIDEBAR DOCK STYLES (Ultra-Sleek Vertical Dock)
        ======================================================== */
-    
-    /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
-    [data-testid="stSidebar"][aria-expanded="false"] {{
+    @media (min-width: 768px) {{
+        /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
+        [data-testid="stSidebar"][aria-expanded="false"] {{
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -2741,9 +2835,17 @@ with st.sidebar:
         color: #6366f1 !important;
     }}
     
-    /* Hide window controls and title but center the brand logo when collapsed */
-    [data-testid="stSidebar"][aria-expanded="false"] .window-controls-container {{
+    /* Hide full university name and show UII when collapsed */
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-univ-full {{
         display: none !important;
+    }}
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-univ-short {{
+        display: block !important;
+        text-align: center !important;
+        padding-left: 0 !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.5px !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container {{
         display: flex !important;
@@ -2969,9 +3071,10 @@ with st.sidebar:
     [data-testid="stSidebar"][aria-expanded="false"] > div,
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"],
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"],
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"],
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
-        overflow: visible !important;
+        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"],
+        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
+            overflow: visible !important;
+        }}
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -3339,21 +3442,56 @@ def manage_objects_dialog():
                 HAPUS OBJEK
             </div>
         """, unsafe_allow_html=True)
+        app_to_delete = st.session_state.get("app_to_delete")
+
+        # Clean up the selectbox key in session state to prevent Streamlit option mismatch crash
+        if "del_select" in st.session_state and st.session_state["del_select"] not in st.session_state.app_list:
+            if st.session_state.app_list:
+                st.session_state["del_select"] = st.session_state.app_list[0]
+            else:
+                del st.session_state["del_select"]
+
+        # Maintain stable selectbox index when disabled
+        default_index = 0
+        if app_to_delete and app_to_delete in st.session_state.app_list:
+            default_index = st.session_state.app_list.index(app_to_delete)
+
         app_delete = st.selectbox(
             "Pilih Aplikasi yang Ingin Dihapus",
             st.session_state.app_list,
-            key="del_select"
+            key="del_select",
+            index=default_index,
+            disabled=(app_to_delete is not None)
         )
 
-        if st.button("Hapus Objek", use_container_width=True, key="btn_del_app", type="secondary"):
-            nama_del = app_delete
-            st.session_state.app_list.remove(app_delete)
-            save_app_list(st.session_state.get("current_user", "default"), st.session_state.app_list)
-            st.session_state["app_deleted"] = nama_del
-            st.rerun()
+        if not app_to_delete:
+            if st.button("Hapus Objek", use_container_width=True, key="btn_del_app", type="secondary"):
+                st.session_state["app_to_delete"] = app_delete
+        else:
+            st.warning(f"Apakah Anda yakin ingin menghapus objek **'{app_to_delete}'**?")
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("Batal", use_container_width=True, key="btn_cancel_del_app", type="secondary"):
+                    st.session_state["app_to_delete"] = None
+            with col2:
+                if st.button("Ya, Hapus", use_container_width=True, key="btn_confirm_del_app", type="primary"):
+                    if app_to_delete in st.session_state.app_list:
+                        st.session_state.app_list.remove(app_to_delete)
+                        save_app_list(st.session_state.get("current_user", "default"), st.session_state.app_list)
+                        st.session_state["app_deleted"] = app_to_delete
+                        
+                        # Clean up keys immediately to prevent crash
+                        if "selected_app_to_delete" in st.session_state:
+                            del st.session_state["selected_app_to_delete"]
+                        if "del_select" in st.session_state:
+                            del st.session_state["del_select"]
+                            
+                    st.session_state["app_to_delete"] = None
+                    st.rerun()
 
 if st.session_state.get("show_manage_objects") == True:
     st.session_state["show_manage_objects"] = False
+    st.session_state["app_to_delete"] = None
     manage_objects_dialog()
 
 # ======================
