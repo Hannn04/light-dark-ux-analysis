@@ -1346,6 +1346,11 @@ if theme == "dark":
 st.markdown("""
 <style>
 
+/* Sembunyikan header Streamlit (Deploy & Menu) */
+header[data-testid="stHeader"] {
+    display: none !important;
+}
+
 /* Sidebar Styling yang lebih clean */
 [data-testid="stSidebar"]  {
     background-color: var(--secondary-background-color) !important;
@@ -1414,7 +1419,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
 
 .block-container {
     max-width: 1500px;
-    padding-top: 70px;
+    padding-top: 24px;
 }
 
 /* Tambahkan ini di dalam <style> */

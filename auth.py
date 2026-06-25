@@ -188,6 +188,7 @@ def render_auth_page():
         bg_gradient = "linear-gradient(135deg, #090d16 0%, #0f172a 40%, #1e1b4b 100%)"
         card_bg = "rgba(31, 41, 55, 0.45)"
         card_border = "rgba(255, 255, 255, 0.08)"
+        btn_border = "rgba(255, 255, 255, 0.15)"
         input_bg = "rgba(17, 24, 39, 0.6)"
         input_border = "rgba(255, 255, 255, 0.1)"
         input_text = "#f9fafb"
@@ -198,6 +199,7 @@ def render_auth_page():
         bg_gradient = "linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #fdf2f8 100%)"
         card_bg = "rgba(255, 255, 255, 0.45)"
         card_border = "rgba(255, 255, 255, 0.4)"
+        btn_border = "rgba(0, 0, 0, 0.12)"
         input_bg = "rgba(255, 255, 255, 0.6)"
         input_border = "rgba(0, 0, 0, 0.08)"
         input_text = "#111827"
@@ -349,10 +351,11 @@ def render_auth_page():
     }}
     
     /* Toggle & Theme buttons outside form */
-    div.stButton > button {{
+    div[data-testid="stButton"] button,
+    [data-testid="stButton"] button[data-testid="stBaseButton-secondary"] {{
         background-color: transparent !important;
         color: {text_secondary} !important;
-        border: 1px solid {card_border} !important;
+        border: 1px solid {btn_border} !important;
         border-radius: 8px !important;
         font-weight: 500 !important;
         font-size: 12px !important;
@@ -361,7 +364,8 @@ def render_auth_page():
         margin-top: 0px !important;
         padding: 0.4rem 0.75rem !important;
     }}
-    div.stButton > button:hover {{
+    div[data-testid="stButton"] button:hover,
+    [data-testid="stButton"] button[data-testid="stBaseButton-secondary"]:hover {{
         color: #3b82f6 !important;
         border-color: #3b82f6 !important;
         background-color: rgba(59, 130, 246, 0.05) !important;
