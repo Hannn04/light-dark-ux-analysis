@@ -231,9 +231,8 @@ def render_auth_page():
 
     html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main, section.main > div {{
         background: {bg_gradient} !important;
-        overflow: hidden !important;
-        height: 100vh !important;
-        max-height: 100vh !important;
+        overflow-y: auto !important;
+        min-height: 100vh !important;
         padding: 0 !important;
         margin: 0 !important;
     }}
@@ -251,14 +250,12 @@ def render_auth_page():
     
     .main .block-container {{
         max-width: 1100px !important;
-        padding: 0.5rem 2rem !important;
+        padding: 1.5rem 2rem !important;
         margin: auto !important;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 100vh !important;
         min-height: 100vh !important;
-        max-height: 100vh !important;
         background: transparent !important;
         box-sizing: border-box !important;
     }}
@@ -528,7 +525,7 @@ def render_auth_page():
     }}
 
     /* Media query for mobile & tablet responsiveness */
-    @media (max-width: 991px) {{
+    @media (max-width: 1199px) {{
         html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main, section.main > div {{
             overflow-y: auto !important;
             height: auto !important;
