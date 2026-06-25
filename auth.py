@@ -180,10 +180,10 @@ def render_auth_page():
     is_dark = (theme == "dark")
 
     if not st.session_state.get("logged_in"):
-        saved_user = controller.get("session_user")
+        saved_user = controller.get("session_user") if st.query_params.get("force_auth") != "true" else None
         if saved_user and saved_user in load_users():
             st.session_state.update({"logged_in": True, "current_user": saved_user})
-    if st.session_state.get("logged_in"):
+    if st.session_state.get("logged_in") and st.query_params.get("force_auth") != "true":
         return True
 
     if "auth_mode" not in st.session_state:
@@ -210,7 +210,7 @@ def render_auth_page():
         card_border = "rgba(0, 0, 0, 0.03)"
         btn_border = "rgba(0, 0, 0, 0.08)"
         input_bg = "#ffffff"
-        input_border = "#e2e8f0"
+        input_border = "#cbd5e1"
         input_text = "#0f172a"
         text_primary = "#0f172a"
         text_secondary = "#64748b"
@@ -224,9 +224,18 @@ def render_auth_page():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main {{
+    /* Force Inter font globally on absolutely all elements */
+    * {{
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }}
+
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main, section.main > div {{
         background: {bg_gradient} !important;
+        overflow: hidden !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }}
     
     header[data-testid="stHeader"] {{
@@ -241,19 +250,22 @@ def render_auth_page():
     }}
     
     .main .block-container {{
-        max-width: 1200px !important;
-        padding: 2rem 4rem !important;
+        max-width: 1100px !important;
+        padding: 0.5rem 2rem !important;
         margin: auto !important;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        min-height: 100vh;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
         background: transparent !important;
+        box-sizing: border-box !important;
     }}
     
     div[data-testid="stHorizontalBlock"] {{
         align-items: center !important;
-        gap: 5rem !important;
+        gap: 3rem !important;
     }}
 
     /* Force the nested sub-columns row under the card to never stack vertically */
@@ -263,7 +275,7 @@ def render_auth_page():
         justify-content: space-between !important;
         align-items: center !important;
         gap: 12px !important;
-        margin-top: 16px !important;
+        margin-top: 12px !important;
         width: 100% !important;
     }}
 
@@ -273,71 +285,134 @@ def render_auth_page():
         flex: 1 1 auto !important;
     }}
     
-    /* White Card styling */
+    /* Compact White Card styling */
     div[data-testid="stForm"] {{
         background-color: {card_bg} !important;
         border: 1px solid {card_border} !important;
-        border-radius: 48px !important;
-        padding: 56px 48px !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, {0.25 if is_dark else 0.03}) !important;
+        border-radius: 32px !important;
+        padding: 32px 40px !important;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, {0.2 if is_dark else 0.03}) !important;
         margin-bottom: 0px !important;
+        overflow: visible !important;
     }}
     
-    div[data-testid="stForm"] div.element-container {{
+    div[data-testid="stForm"] div.element-container,
+    div[data-testid="stForm"] div[data-testid="element-container"],
+    div[data-testid="stForm"] div[data-testid="stVerticalBlock"],
+    div[data-testid="stForm"] div[data-testid="stVerticalBlock"] > div {{
         margin-bottom: 0px !important;
+        overflow: visible !important;
+        height: auto !important;
     }}
     
-    /* Style input containers to avoid dark mode white patches */
-    div[data-testid="stForm"] div[data-testid="stTextInput"] > div > div {{
+    div[data-testid="stForm"] div.stTextInput,
+    div[data-testid="stForm"] div.stTextInput > div,
+    div[data-testid="stForm"] div[data-testid*="Input"],
+    div[data-testid="stForm"] div[data-testid*="Input"] > div {{
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        height: auto !important;
+    }}
+
+    /* Force height on immediate widget containers to match the 50px input container */
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"],
+    div[data-testid="stForm"] [data-baseweb="input"] {{
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+    }}
+
+    /* Style actual input containers to avoid dark mode white patches - supporting all Streamlit input types and widget links */
+    div[data-testid="stForm"] [data-baseweb="input"] > div,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div,
+    div[data-testid="stForm"] div.stTextInput > div > div,
+    div[data-testid="stForm"] div[data-testid*="Input"] > div > div {{
         background-color: {input_bg} !important;
-        border-radius: 16px !important;
+        border-radius: 14px !important;
         border: 1px solid {input_border} !important;
-        height: 54px !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
         transition: all 0.2s ease !important;
         box-shadow: none !important;
         display: flex !important;
         align-items: center !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
     }}
 
-    div[data-testid="stForm"] div[data-testid="stTextInput"] > div > div:focus-within {{
+    div[data-testid="stForm"] [data-baseweb="input"] > div:focus-within,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div:focus-within,
+    div[data-testid="stForm"] div.stTextInput > div > div:focus-within,
+    div[data-testid="stForm"] div[data-testid*="Input"] > div > div:focus-within {{
         border-color: #1d4ed8 !important;
         box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.1) !important;
+    }}
+
+    /* Make all nested child elements inside the input wrapper completely transparent to avoid white patches, except the input itself */
+    div[data-testid="stForm"] [data-baseweb="input"] > div :not(input),
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div :not(input),
+    div[data-testid="stForm"] div.stTextInput > div > div :not(input),
+    div[data-testid="stForm"] div[data-testid*="Input"] > div > div :not(input) {{
+        background-color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }}
 
     /* Style actual input elements inside wrappers */
     div[data-testid="stForm"] input[type="text"] {{
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
         background-repeat: no-repeat !important;
-        background-position: 18px center !important;
+        background-position: 16px center !important;
         background-size: 18px !important;
-        padding-left: 50px !important;
+        padding-left: 46px !important;
         border: none !important;
         height: 100% !important;
         font-size: 14px !important;
-        background-color: transparent !important;
         color: {input_text} !important;
+        background-color: transparent !important;
+        outline: none !important;
         box-shadow: none !important;
     }}
 
     div[data-testid="stForm"] input[type="password"] {{
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>") !important;
         background-repeat: no-repeat !important;
-        background-position: 18px center !important;
+        background-position: 16px center !important;
         background-size: 18px !important;
-        padding-left: 50px !important;
+        padding-left: 46px !important;
         border: none !important;
         height: 100% !important;
         font-size: 14px !important;
-        background-color: transparent !important;
         color: {input_text} !important;
+        background-color: transparent !important;
+        outline: none !important;
         box-shadow: none !important;
     }}
 
-    /* Make password eye visibility button transparent */
-    div[data-testid="stForm"] button[data-testid="stInputVisibilityToggle"] {{
+    /* Set text secondary color specifically for input visibility button and force transparency */
+    div[data-testid="stForm"] div.stTextInput button,
+    div[data-testid="stForm"] div[data-testid*="Input"] button,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] button,
+    div[data-testid="stForm"] [data-baseweb="input"] button,
+    div[data-testid="stForm"] div.stTextInput button svg,
+    div[data-testid="stForm"] div[data-testid*="Input"] button svg,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] button svg,
+    div[data-testid="stForm"] [data-baseweb="input"] button svg {{
         background-color: transparent !important;
+        background: transparent !important;
         border: none !important;
+        box-shadow: none !important;
         color: {text_secondary} !important;
+        fill: currentColor !important;
     }}
     
     div[data-testid="stForm"] input::placeholder {{
@@ -349,18 +424,18 @@ def render_auth_page():
         background-color: #1d4ed8 !important;
         color: #ffffff !important;
         border: none !important;
-        border-radius: 16px !important;
+        border-radius: 14px !important;
         font-weight: 700 !important;
         padding: 0px 24px !important;
-        height: 54px !important;
-        font-size: 16px !important;
+        height: 50px !important;
+        font-size: 15px !important;
         transition: all 0.2s ease !important;
         width: 100% !important;
-        box-shadow: 0 10px 20px -5px rgba(29, 78, 216, 0.4) !important;
+        box-shadow: 0 8px 16px -4px rgba(29, 78, 216, 0.3) !important;
     }}
     div[data-testid="stFormSubmitButton"] button:hover {{
         background-color: #1e40af !important;
-        box-shadow: 0 12px 24px -5px rgba(29, 78, 216, 0.5) !important;
+        box-shadow: 0 10px 20px -4px rgba(29, 78, 216, 0.4) !important;
     }}
 
     /* Under-card text link toggle container and button styling using Streamlit testid */
@@ -379,6 +454,7 @@ def render_auth_page():
         height: auto !important;
         display: inline-block !important;
         margin-top: 16px !important;
+        white-space: nowrap !important;
     }}
     
     div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {{
@@ -395,11 +471,11 @@ def render_auth_page():
         align-items: center !important;
         background-color: {toggle_bg} !important;
         border: 1px solid {toggle_border} !important;
-        padding: 0px 16px !important;
-        height: 42px !important;
+        padding: 0px 14px !important;
+        height: 38px !important;
         border-radius: 30px !important;
         width: 100% !important;
-        max-width: 160px !important;
+        max-width: 135px !important;
         margin-top: 16px !important;
         float: right !important;
         box-sizing: border-box !important;
@@ -460,7 +536,7 @@ def render_auth_page():
     with col1:
         st.markdown(
             f'<div style="padding-top: 0.5rem;">'
-            f'<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px;">'
+            f'<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">'
             f'<div style="background-color: #1d4ed8; color: white; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">'
             f'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>'
             f'</div>'
@@ -468,12 +544,12 @@ def render_auth_page():
             f'UX Analytics <span style="display: inline-block; width: 24px; height: 1px; background-color: rgba(29, 78, 216, 0.3);"></span>'
             f'</div>'
             f'</div>'
-            f'<h1 style="font-size: 56px; font-weight: 800; line-height: 1.1; color: {text_title_color}; margin-bottom: 24px; letter-spacing: -2px;">'
+            f'<h1 style="font-size: 48px; font-weight: 800; line-height: 1.1; color: {text_title_color}; margin-bottom: 16px; letter-spacing: -2px;">'
             f'Dashboard Hasil<br>'
             f'<span style="color: #1d4ed8;">Penelitian</span> UX<br>'
             f'Analytics'
             f'</h1>'
-            f'<p style="font-size: 15px; color: {text_secondary}; line-height: 1.6; font-weight: 400; max-width: 480px; margin-bottom: 0;">'
+            f'<p style="font-size: 14px; color: {text_secondary}; line-height: 1.5; font-weight: 400; max-width: 480px; margin-bottom: 0;">'
             f'Platform analitik canggih untuk mengolah dan memvisualisasikan data pengalaman pengguna antara Light Mode dan Dark Mode dengan presisi tinggi.'
             f'</p>'
             f'</div>',
@@ -484,11 +560,11 @@ def render_auth_page():
         if st.session_state["auth_mode"] == "login":
             with st.form("login_form"):
                 st.markdown(
-                    f'<div style="margin-bottom: 28px;">'
-                    f'<div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">'
+                    f'<div style="margin-bottom: 24px;">'
+                    f'<div style="font-size: 34px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 6px;">'
                     f'Selamat Datang'
                     f'</div>'
-                    f'<div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
+                    f'<div style="font-size: 13px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
                     f'Silakan masuk untuk mengakses dashboard eksklusif Anda'
                     f'</div>'
                     f'</div>',
@@ -498,10 +574,10 @@ def render_auth_page():
                 st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
                 user = st.text_input("Username", placeholder="Masukkan username", label_visibility="collapsed").strip().lower()
                 
-                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 16px; margin-bottom: 8px;">PASSWORD</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 14px; margin-bottom: 8px;">PASSWORD</div>', unsafe_allow_html=True)
                 pw = st.text_input("Password", type="password", placeholder="Masukkan password", label_visibility="collapsed")
                 
-                st.markdown('<div style="margin-top: 24px;"></div>', unsafe_allow_html=True)
+                st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
                 if st.form_submit_button("Masuk ➔", use_container_width=True):
                     ok, msg = login_user(user, pw)
                     if ok:
@@ -513,11 +589,11 @@ def render_auth_page():
         else:
             with st.form("reg_form"):
                 st.markdown(
-                    f'<div style="margin-bottom: 28px;">'
-                    f'<div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">'
+                    f'<div style="margin-bottom: 24px;">'
+                    f'<div style="font-size: 34px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 6px;">'
                     f'Daftar Akun Baru'
                     f'</div>'
-                    f'<div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
+                    f'<div style="font-size: 13px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">'
                     f'Silakan isi data di bawah untuk mendaftar'
                     f'</div>'
                     f'</div>',
@@ -568,7 +644,7 @@ def render_auth_page():
                 st.rerun()
 
     st.markdown(
-        f'<div style="text-align: center; margin-top: 64px; font-size: 11px; color: {text_secondary}; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">'
+        f'<div style="text-align: center; margin-top: 32px; font-size: 11px; color: {text_secondary}; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">'
         f'Universitas Islam Indonesia'
         f'</div>',
         unsafe_allow_html=True
