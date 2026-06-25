@@ -255,6 +255,23 @@ def render_auth_page():
         align-items: center !important;
         gap: 5rem !important;
     }}
+
+    /* Force the nested sub-columns row under the card to never stack vertically */
+    div[data-testid="stHorizontalBlock"] div[data-testid="stHorizontalBlock"] {{
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin-top: 16px !important;
+        width: 100% !important;
+    }}
+
+    div[data-testid="stHorizontalBlock"] div[data-testid="stHorizontalBlock"] > div {{
+        width: auto !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }}
     
     /* White Card styling */
     div[data-testid="stForm"] {{
@@ -270,21 +287,36 @@ def render_auth_page():
         margin-bottom: 0px !important;
     }}
     
-    /* Custom style for input fields */
+    /* Style input containers to avoid dark mode white patches */
+    div[data-testid="stForm"] div[data-testid="stTextInput"] > div > div {{
+        background-color: {input_bg} !important;
+        border-radius: 16px !important;
+        border: 1px solid {input_border} !important;
+        height: 54px !important;
+        transition: all 0.2s ease !important;
+        box-shadow: none !important;
+        display: flex !important;
+        align-items: center !important;
+    }}
+
+    div[data-testid="stForm"] div[data-testid="stTextInput"] > div > div:focus-within {{
+        border-color: #1d4ed8 !important;
+        box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.1) !important;
+    }}
+
+    /* Style actual input elements inside wrappers */
     div[data-testid="stForm"] input[type="text"] {{
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
         background-repeat: no-repeat !important;
         background-position: 18px center !important;
         background-size: 18px !important;
         padding-left: 50px !important;
-        border-radius: 16px !important;
-        border: 1px solid {input_border} !important;
-        height: 54px !important;
+        border: none !important;
+        height: 100% !important;
         font-size: 14px !important;
-        background-color: {input_bg} !important;
+        background-color: transparent !important;
         color: {input_text} !important;
         box-shadow: none !important;
-        transition: all 0.2s ease !important;
     }}
 
     div[data-testid="stForm"] input[type="password"] {{
@@ -293,23 +325,23 @@ def render_auth_page():
         background-position: 18px center !important;
         background-size: 18px !important;
         padding-left: 50px !important;
-        border-radius: 16px !important;
-        border: 1px solid {input_border} !important;
-        height: 54px !important;
+        border: none !important;
+        height: 100% !important;
         font-size: 14px !important;
-        background-color: {input_bg} !important;
+        background-color: transparent !important;
         color: {input_text} !important;
         box-shadow: none !important;
-        transition: all 0.2s ease !important;
+    }}
+
+    /* Make password eye visibility button transparent */
+    div[data-testid="stForm"] button[data-testid="stInputVisibilityToggle"] {{
+        background-color: transparent !important;
+        border: none !important;
+        color: {text_secondary} !important;
     }}
     
     div[data-testid="stForm"] input::placeholder {{
         color: #cbd5e1 !important;
-    }}
-    
-    div[data-testid="stForm"] input:focus {{
-        border-color: #1d4ed8 !important;
-        box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.1) !important;
     }}
     
     /* Submit button */
