@@ -191,77 +191,40 @@ def render_auth_page():
 
     # Define CSS variables based on theme
     if is_dark:
-        bg_gradient = "linear-gradient(135deg, #090d16 0%, #0f172a 40%, #1e1b4b 100%)"
-        card_bg = "rgba(31, 41, 55, 0.45)"
+        bg_gradient = "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)"
+        card_bg = "#1e293b"
         card_border = "rgba(255, 255, 255, 0.08)"
         btn_border = "rgba(255, 255, 255, 0.15)"
-        input_bg = "rgba(17, 24, 39, 0.6)"
+        input_bg = "#111827"
         input_border = "rgba(255, 255, 255, 0.1)"
         input_text = "#f9fafb"
         text_primary = "#f9fafb"
-        text_secondary = "#9ca3af"
-        logo_gradient = "linear-gradient(135deg, #60a5fa 0%, #a5b4fc 100%)"
+        text_secondary = "#94a3b8"
+        logo_gradient = "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
+        text_title_color = "#f9fafb"
     else:
-        bg_gradient = "linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #fdf2f8 100%)"
-        card_bg = "rgba(255, 255, 255, 0.45)"
-        card_border = "rgba(255, 255, 255, 0.4)"
-        btn_border = "rgba(0, 0, 0, 0.12)"
-        input_bg = "rgba(255, 255, 255, 0.6)"
-        input_border = "rgba(0, 0, 0, 0.08)"
-        input_text = "#111827"
-        text_primary = "#111827"
-        text_secondary = "#4b5563"
-        logo_gradient = "linear-gradient(135deg, #1d4ed8 0%, #6366f1 100%)"
+        bg_gradient = "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)"
+        card_bg = "#ffffff"
+        card_border = "rgba(0, 0, 0, 0.03)"
+        btn_border = "rgba(0, 0, 0, 0.08)"
+        input_bg = "#ffffff"
+        input_border = "#e2e8f0"
+        input_text = "#0f172a"
+        text_primary = "#0f172a"
+        text_secondary = "#64748b"
+        logo_gradient = "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%)"
+        text_title_color = "#0f172a"
 
-    # Fullscreen CSS injection & Scroll Lock (Compact Spacing Version)
+    # Fullscreen CSS injection & Scroll Lock (Premium Design Match)
     css = f"""
     <style>
-    /* Lock scrolling only on screens with height >= 650px, allow scrolling on short viewports */
-    @media (min-height: 650px) {{
-        html {{
-            overflow: hidden !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-        }}
-        body {{
-            overflow: hidden !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-        }}
-        .stApp {{
-            overflow: hidden !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-        }}
-        [data-testid="stAppViewContainer"] {{
-            overflow: hidden !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-        }}
-        [data-testid="stMain"] {{
-            overflow: hidden !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-        }}
-        section.main {{
-            overflow: hidden !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-        }}
-    }}
-    
-    .stApp {{
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main {{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
         background: {bg_gradient} !important;
     }}
-    [data-testid="stAppViewContainer"] {{
-        background: transparent !important;
-    }}
-    section.main {{
-        background: transparent !important;
-    }}
-    section.main > div {{
-        background: transparent !important;
-    }}
+    
     header[data-testid="stHeader"] {{
         display: none !important;
     }}
@@ -269,14 +232,13 @@ def render_auth_page():
         display: none !important;
     }}
     
-    /* Collapse Streamlit default vertical spacing on login page */
     [data-testid="stElementContainer"] {{
-        margin-bottom: 0.5rem !important;
+        margin-bottom: 0px !important;
     }}
     
     .main .block-container {{
-        max-width: 1100px !important;
-        padding: 0.75rem 2rem !important;
+        max-width: 1200px !important;
+        padding: 2rem 4rem !important;
         margin: auto !important;
         display: flex;
         flex-direction: column;
@@ -284,205 +246,121 @@ def render_auth_page():
         min-height: 100vh;
         background: transparent !important;
     }}
+    
     div[data-testid="stHorizontalBlock"] {{
         align-items: center !important;
-        gap: 2.5rem !important;
+        gap: 4rem !important;
     }}
     
-    /* Force inner buttons row layout and prevent vertical stacking */
-    div[data-testid="stHorizontalBlock"] div[data-testid="stHorizontalBlock"] {{
-        flex-direction: row !important;
-        gap: 1rem !important;
-        margin-top: 0.5rem !important;
-    }}
-    div[data-testid="stHorizontalBlock"] div[data-testid="stHorizontalBlock"] > div {{
-        width: 50% !important;
-        flex: 1 1 0% !important;
-        min-width: 0 !important;
-    }}
-    
-    /* Compact Glassmorphism Card */
+    /* White Card styling */
     div[data-testid="stForm"] {{
         background-color: {card_bg} !important;
-        backdrop-filter: blur(16px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
         border: 1px solid {card_border} !important;
-        border-radius: 20px !important;
-        padding: 1.25rem 1.25rem !important;
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, {0.3 if is_dark else 0.06}) !important;
+        border-radius: 40px !important;
+        padding: 48px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, {0.25 if is_dark else 0.04}) !important;
         margin-bottom: 0px !important;
     }}
     
-    /* Reduce form widget margins */
     div[data-testid="stForm"] div.element-container {{
-        margin-bottom: 0.25rem !important;
+        margin-bottom: 0px !important;
     }}
     
-    div[data-testid="stForm"] .stTextInput input {{
+    /* Custom style for input fields */
+    div[data-testid="stForm"] input[placeholder="Masukkan username"] {{
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
+        background-repeat: no-repeat !important;
+        background-position: 16px center !important;
+        background-size: 18px !important;
+        padding-left: 48px !important;
+        border-radius: 16px !important;
+        border: 1px solid {input_border} !important;
+        height: 52px !important;
+        font-size: 14px !important;
         background-color: {input_bg} !important;
         color: {input_text} !important;
-        border: 1px solid {input_border} !important;
-        border-radius: 8px !important;
-        padding: 0.4rem 0.6rem !important;
-        font-size: 13px !important;
+        box-shadow: none !important;
+        transition: all 0.2s ease !important;
     }}
-    div[data-testid="stForm"] .stTextInput input:focus {{
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+
+    div[data-testid="stForm"] input[type="password"] {{
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>") !important;
+        background-repeat: no-repeat !important;
+        background-position: 16px center !important;
+        background-size: 18px !important;
+        padding-left: 48px !important;
+        border-radius: 16px !important;
+        border: 1px solid {input_border} !important;
+        height: 52px !important;
+        font-size: 14px !important;
+        background-color: {input_bg} !important;
+        color: {input_text} !important;
+        box-shadow: none !important;
+        transition: all 0.2s ease !important;
     }}
     
-    /* Form Label Styling */
-    div[data-testid="stForm"] label {{
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        margin-bottom: 4px !important;
-        color: {text_primary} !important;
+    div[data-testid="stForm"] input:focus {{
+        border-color: #1d4ed8 !important;
+        box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.1) !important;
     }}
     
     /* Submit button */
     div[data-testid="stFormSubmitButton"] button {{
-        background-color: #3b82f6 !important;
+        background-color: #1d4ed8 !important;
         color: #ffffff !important;
         border: none !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        padding: 0.5rem 1rem !important;
-        font-size: 13px !important;
+        border-radius: 16px !important;
+        font-weight: 700 !important;
+        padding: 0px 24px !important;
+        height: 52px !important;
+        font-size: 15px !important;
         transition: all 0.2s ease !important;
         width: 100% !important;
+        box-shadow: 0 10px 20px -5px rgba(29, 78, 216, 0.3) !important;
     }}
     div[data-testid="stFormSubmitButton"] button:hover {{
-        background-color: #2563eb !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+        background-color: #1e40af !important;
+        box-shadow: 0 12px 24px -5px rgba(29, 78, 216, 0.4) !important;
+    }}
+
+    /* Under-card text link toggle */
+    div.element-container:has(button[key="btn_toggle_reg"]),
+    div.element-container:has(button[key="btn_toggle_login"]) {{
+        width: auto !important;
     }}
     
-    /* Toggle & Theme buttons outside form */
-    div[data-testid="stButton"] button,
-    [data-testid="stButton"] button[data-testid="stBaseButton-secondary"] {{
+    button[key="btn_toggle_reg"],
+    button[key="btn_toggle_login"] {{
         background-color: transparent !important;
-        color: {text_secondary} !important;
-        border: 1px solid {btn_border} !important;
-        border-radius: 8px !important;
-        font-weight: 500 !important;
-        font-size: 12px !important;
-        transition: all 0.2s ease !important;
-        width: 100% !important;
-        margin-top: 0px !important;
-        padding: 0.4rem 0.75rem !important;
-    }}
-    div[data-testid="stButton"] button:hover,
-    [data-testid="stButton"] button[data-testid="stBaseButton-secondary"]:hover {{
-        color: #3b82f6 !important;
-        border-color: #3b82f6 !important;
-        background-color: rgba(59, 130, 246, 0.05) !important;
-    }}
-    
-    @media (max-width: 768px) {{
-        div[data-testid="stHorizontalBlock"] {{
-            gap: 2rem !important;
-        }}
-    }}
-
-    /* Style the theme toggle switch wrapper to look like a premium card */
-    div[class*="theme_toggle_switch"] label {{
-        display: flex !important;
-        flex-direction: row-reverse !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        background-color: {'#1f2937' if is_dark else '#f3f4f6'} !important;
-        border: 1px solid {'rgba(255,255,255,0.05)' if is_dark else 'rgba(0,0,0,0.04)'} !important;
-        padding: 0px 12px !important;
-        height: 38px !important;
-        border-radius: 12px !important;
-        width: 100% !important;
-        margin: 0px 0 !important;
-        box-sizing: border-box !important;
+        border: none !important;
+        color: #1d4ed8 !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.8px !important;
+        text-transform: uppercase !important;
+        padding: 0 !important;
+        width: auto !important;
         cursor: pointer !important;
-        transition: all 0.2s ease !important;
-    }}
-    
-    div[class*="theme_toggle_switch"] label:hover {{
-        background-color: {'#374151' if is_dark else '#e5e7eb'} !important;
-    }}
-
-    /* Align and style the text label inside the toggle */
-    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] {{
-        display: flex !important;
-        align-items: center !important;
-        font-family: 'Inter', sans-serif !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        color: {text_primary} !important;
-    }}
-
-    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
-        margin: 0 !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        color: {text_primary} !important;
-        white-space: nowrap !important;
-    }}
-
-    /* Default/Dark Mode: Moon Icon on the left */
-    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
-        content: "" !important;
+        box-shadow: none !important;
+        height: auto !important;
         display: inline-block !important;
-        width: 16px !important;
-        height: 16px !important;
-        margin-right: 8px !important;
-        background-color: currentColor !important;
-        -webkit-mask-repeat: no-repeat !important;
-        mask-repeat: no-repeat !important;
-        -webkit-mask-size: contain !important;
-        mask-size: contain !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        flex-shrink: 0 !important;
+    }}
+    button[key="btn_toggle_reg"]:hover,
+    button[key="btn_toggle_login"]:hover {{
+        color: #1e40af !important;
+        background-color: transparent !important;
+        text-decoration: underline !important;
     }}
 
-    /* Light Mode: Sun Icon on the left (when switch is NOT checked) */
-    div[class*="theme_toggle_switch"] label:not(:has(input:checked)) div[data-testid="stMarkdownContainer"]::before {{
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+    /* Style the toggle switch on the right side */
+    div[data-testid="stWidgetLabel"] p {{
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.8px !important;
+        text-transform: uppercase !important;
+        color: {text_secondary} !important;
     }}
 
-    /* Style the Track background of the toggle */
-    div[class*="theme_toggle_switch"] label > div:first-child {{
-        background-color: #e2e8f0 !important;
-        transition: background-color 0.2s ease !important;
-    }}
-    /* When active (Dark Mode is checked), track is light purple */
-    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child {{
-        background-color: #c7d2fe !important;
-    }}
-    
-    /* Style the Knob (Handle) of the toggle */
-    div[class*="theme_toggle_switch"] label > div:first-child > div {{
-        background-color: #1e293b !important;
-        transition: transform 0.2s ease, background-color 0.2s ease !important;
-    }}
-    /* When checked, knob is dark slate */
-    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div {{
-        background-color: #0f172a !important;
-    }}
-    
-    /* Draw white moon icon outline inside the toggle knob in both states */
-    div[class*="theme_toggle_switch"] label > div:first-child > div::after {{
-        content: "" !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        width: 10px !important;
-        height: 10px !important;
-        background-color: #ffffff !important;
-        -webkit-mask-repeat: no-repeat !important;
-        mask-repeat: no-repeat !important;
-        -webkit-mask-size: contain !important;
-        mask-size: contain !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-    }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -492,14 +370,26 @@ def render_auth_page():
     with col1:
         st.markdown(f"""
         <div style="padding-top: 0.5rem;">
-            <div style="font-size: 32px; font-weight: 800; font-family: system-ui, -apple-system, sans-serif; margin-bottom: 12px; letter-spacing: -0.5px; background: {logo_gradient}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; width: fit-content;">
-                UX Analytics
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px;">
+                <div style="background-color: #1d4ed8; color: white; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </div>
+                <div style="font-size: 11px; font-weight: 800; color: #1d4ed8; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">
+                    UX Analytics <span style="display: inline-block; width: 24px; height: 1px; background-color: rgba(29, 78, 216, 0.3);"></span>
+                </div>
             </div>
-            <h1 style="font-size: 32px; font-weight: 700; line-height: 1.25; color: {text_primary}; margin-bottom: 12px; font-family: system-ui, -apple-system, sans-serif; letter-spacing: -0.5px;">
-                Dashboard Hasil Penelitian UX Analytics
+
+            <!-- Title Section -->
+            <h1 style="font-size: 56px; font-weight: 800; line-height: 1.1; color: {text_title_color}; margin-bottom: 24px; letter-spacing: -2px;">
+                Dashboard Hasil<br>
+                <span style="color: #1d4ed8;">Penelitian</span> UX<br>
+                Analytics
             </h1>
-            <p style="font-size: 14px; color: {text_secondary}; line-height: 1.5; font-family: system-ui, -apple-system, sans-serif; font-weight: 400; max-width: 480px;">
-                Platform analitik untuk mengolah, menganalisis, dan memvisualisasikan data penelitian pengalaman pengguna antara Light Mode dan Dark Mode berdasarkan metrik Time on Task, Error Rate, User Experience Questionnaire (UEQ), dan preferensi pengguna.
+
+            <!-- Description -->
+            <p style="font-size: 15px; color: {text_secondary}; line-height: 1.6; font-weight: 400; max-width: 480px; margin-bottom: 0;">
+                Platform analitik canggih untuk mengolah dan memvisualisasikan data pengalaman pengguna antara Light Mode dan Dark Mode dengan presisi tinggi.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -508,20 +398,24 @@ def render_auth_page():
         if st.session_state["auth_mode"] == "login":
             with st.form("login_form"):
                 st.markdown(f"""
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: {text_primary}; margin-bottom: 4px; font-family: system-ui, -apple-system, sans-serif;">
+                <div style="margin-bottom: 28px;">
+                    <div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">
                         Selamat Datang
                     </div>
-                    <div style="font-size: 13px; color: {text_secondary}; font-weight: 400; font-family: system-ui, -apple-system, sans-serif;">
-                        Silakan masuk untuk mengakses dashboard
+                    <div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">
+                        Silakan masuk untuk mengakses dashboard eksklusif Anda
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
                 
-                user = st.text_input("Username", placeholder="Masukkan username").strip().lower()
-                pw = st.text_input("Password", type="password", placeholder="Masukkan password")
+                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
+                user = st.text_input("Username", placeholder="Masukkan username", label_visibility="collapsed").strip().lower()
                 
-                if st.form_submit_button("Masuk", use_container_width=True):
+                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 16px; margin-bottom: 8px;">PASSWORD</div>', unsafe_allow_html=True)
+                pw = st.text_input("Password", type="password", placeholder="Masukkan password", label_visibility="collapsed")
+                
+                st.markdown('<div style="margin-top: 24px;"></div>', unsafe_allow_html=True)
+                if st.form_submit_button("Masuk ➔", use_container_width=True):
                     ok, msg = login_user(user, pw)
                     if ok:
                         st.session_state.update({"logged_in": True, "current_user": user})
@@ -532,21 +426,27 @@ def render_auth_page():
         else:
             with st.form("reg_form"):
                 st.markdown(f"""
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: {text_primary}; margin-bottom: 4px; font-family: system-ui, -apple-system, sans-serif;">
+                <div style="margin-bottom: 28px;">
+                    <div style="font-size: 38px; font-weight: 800; letter-spacing: -1px; color: {text_primary}; margin-bottom: 8px;">
                         Daftar Akun Baru
                     </div>
-                    <div style="font-size: 13px; color: {text_secondary}; font-weight: 400; font-family: system-ui, -apple-system, sans-serif;">
+                    <div style="font-size: 14px; color: {text_secondary}; font-weight: 400; line-height: 1.4;">
                         Silakan isi data di bawah untuk mendaftar
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
                 
-                u = st.text_input("Username", placeholder="Pilih username minimal 3 karakter").strip().lower()
-                p = st.text_input("Password", type="password", placeholder="Minimal 6 karakter")
-                cp = st.text_input("Konfirmasi Password", type="password", placeholder="Ulangi password")
+                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px;">USERNAME</div>', unsafe_allow_html=True)
+                u = st.text_input("Username", placeholder="Pilih username minimal 3 karakter", label_visibility="collapsed").strip().lower()
                 
-                if st.form_submit_button("Daftar", use_container_width=True):
+                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 16px; margin-bottom: 8px;">PASSWORD</div>', unsafe_allow_html=True)
+                p = st.text_input("Password", type="password", placeholder="Minimal 6 karakter", label_visibility="collapsed")
+                
+                st.markdown(f'<div style="font-size: 11px; font-weight: 800; color: {text_secondary}; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 16px; margin-bottom: 8px;">KONFIRMASI PASSWORD</div>', unsafe_allow_html=True)
+                cp = st.text_input("Konfirmasi Password", type="password", placeholder="Ulangi password", label_visibility="collapsed")
+                
+                st.markdown('<div style="margin-top: 24px;"></div>', unsafe_allow_html=True)
+                if st.form_submit_button("Daftar ➔", use_container_width=True):
                     if p != cp:
                         st.error("Password tidak cocok")
                     else:
@@ -559,14 +459,14 @@ def render_auth_page():
                             st.error(msg)
 
         # Place secondary buttons side-by-side to save height
-        col_btn1, col_btn2 = st.columns(2)
+        col_btn1, col_btn2 = st.columns([1.2, 0.8])
         with col_btn1:
             if st.session_state["auth_mode"] == "login":
-                if st.button("Belum punya akun? Daftar", use_container_width=True, key="btn_toggle_reg"):
+                if st.button("Belum punya akun? Daftar Sekarang", use_container_width=False, key="btn_toggle_reg"):
                     st.session_state["auth_mode"] = "register"
                     st.rerun()
             else:
-                if st.button("Sudah punya akun? Masuk", use_container_width=True, key="btn_toggle_login"):
+                if st.button("Sudah punya akun? Masuk", use_container_width=False, key="btn_toggle_login"):
                     st.session_state["auth_mode"] = "login"
                     st.rerun()
         with col_btn2:
@@ -578,9 +478,10 @@ def render_auth_page():
                 st.rerun()
 
     st.markdown(f"""
-    <div style="text-align: center; margin-top: 24px; font-size: 11px; color: {text_secondary}; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
+    <div style="text-align: center; margin-top: 64px; font-size: 11px; color: {text_secondary}; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">
         Universitas Islam Indonesia
     </div>
     """, unsafe_allow_html=True)
 
     return False
+
