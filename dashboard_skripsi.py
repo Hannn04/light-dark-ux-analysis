@@ -1,10 +1,14 @@
 import streamlit as st
+from PIL import Image
+icon = Image.open("assets/icon.png")
+
 st.set_page_config(
-    page_title="Dashboard Analitik UX",
-    page_icon="📊",
+    page_title="Dashboard Analitik UX | Penelitian Light Mode vs Dark Mode",
+    page_icon=icon,
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -3496,7 +3500,7 @@ if menu == "Home":
     
     modules = [
         ("Time on Task", "Mengukur efisiensi waktu penyelesaian tugas pada light mode vs dark mode (detik)."),
-        ("Error Rate", "Mengukur tingkat kesalahan pengguna saat menyelesaikan tugas (%)."),
+        ("Error Rate", "Mengukur jumlah kesalahan yang dilakukan responden selama menyelesaikan tugas pengujian."),
         ("UEQ Standard", "Evaluasi 6 dimensi UX: Daya Tarik, Kejelasan, Efisiensi, Ketepatan, Stimulasi, Kebaruan."),
         ("Preference", "Analisis kecenderungan pilihan pengguna pada 6 aspek via Mean Preference Analysis.")
     ]
