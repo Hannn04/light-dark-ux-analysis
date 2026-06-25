@@ -1175,30 +1175,42 @@ if theme == "dark":
     [data-testid="stMetricDelta"] { color: #94a3b8 !important; }
 
     /* 17. Number input — polished dark styling */
-    /* Outer wrapper */
     [data-testid="stNumberInput"] > div {
         background-color: #1e293b !important;
         border: 1px solid #334155 !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         overflow: hidden !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.2s ease-in-out !important;
     }
-    /* Focus ring */
+    [data-testid="stNumberInput"] > div:hover {
+        border-color: #475569 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }
     [data-testid="stNumberInput"] > div:focus-within {
         border-color: #6366f1 !important;
-        box-shadow: 0 0 0 3px rgba(99,102,241,0.25) !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
     }
-    /* Input field itself */
+    [data-testid="stNumberInput"] > div > div:first-child {
+        flex: 1 !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }
     [data-testid="stNumberInput"] input {
-        background-color: #1e293b !important;
+        background-color: transparent !important;
         color: #f1f5f9 !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 8px 12px !important;
-        font-size: 15px !important;
+        padding: 0 12px !important;
+        height: 100% !important;
+        width: 100% !important;
+        font-size: 14px !important;
         font-weight: 500 !important;
     }
-    /* Hide browser's built-in clear (X) button */
+    /* Hide browser's built-in spin buttons */
     [data-testid="stNumberInput"] input::-webkit-search-cancel-button,
     [data-testid="stNumberInput"] input::-webkit-inner-spin-button,
     [data-testid="stNumberInput"] input::-webkit-outer-spin-button {
@@ -1209,36 +1221,42 @@ if theme == "dark":
     [data-testid="stNumberInput"] input[type=number] {
         -moz-appearance: textfield !important;
     }
-    /* Step buttons container */
     [data-testid="stNumberInput"] > div > div:last-child {
-        background-color: #1e293b !important;
+        background-color: transparent !important;
         border-left: 1px solid #334155 !important;
-        gap: 2px !important;
-        padding: 4px !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0px !important;
+        padding: 0px !important;
+        margin: 0px !important;
     }
-    /* +/- buttons */
     [data-testid="stNumberInput"] button {
-        background-color: #0f172a !important;
+        background-color: transparent !important;
         color: #94a3b8 !important;
-        border: 1px solid #334155 !important;
-        border-radius: 6px !important;
-        width: 30px !important;
-        height: 30px !important;
+        border: none !important;
+        border-radius: 0px !important;
+        width: 32px !important;
+        height: 100% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         font-size: 16px !important;
-        font-weight: 700 !important;
-        transition: all 0.18s ease !important;
+        font-weight: 500 !important;
+        transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
-    /* Hover +/- */
     [data-testid="stNumberInput"] button:hover {
-        background-color: #6366f1 !important;
-        color: #ffffff !important;
-        border-color: #6366f1 !important;
-        box-shadow: 0 0 10px rgba(99,102,241,0.45) !important;
-        transform: scale(1.08) !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        color: #6366f1 !important;
+    }
+    [data-testid="stNumberInput"] button:active {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    [data-testid="stNumberInput"] button:first-child {
+        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
     /* Active +/- */
     [data-testid="stNumberInput"] button:active {
@@ -2069,12 +2087,15 @@ with st.sidebar:
         gap: 10px !important;
     }}
 
-    /* Polished Number Input styling for both Light & Dark modes */
+    /* Polished, clean Number Input styling for both Light & Dark modes */
     [data-testid="stNumberInput"] > div {{
         background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
         border: 1px solid {'#334155' if is_dark else '#cbd5e1'} !important;
         border-radius: 8px !important;
         overflow: hidden !important;
+        height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
         transition: all 0.2s ease-in-out !important;
     }}
     
@@ -2088,50 +2109,65 @@ with st.sidebar:
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
     }}
     
+    [data-testid="stNumberInput"] > div > div:first-child {{
+        flex: 1 !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }}
+
     [data-testid="stNumberInput"] input {{
-        background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
+        background-color: transparent !important;
         color: {text_main} !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 6px 10px !important;
+        padding: 0 12px !important;
+        height: 100% !important;
+        width: 100% !important;
         font-size: 14px !important;
         font-weight: 500 !important;
     }}
     
     [data-testid="stNumberInput"] > div > div:last-child {{
-        background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
-        border-left: 1px solid {'#334155' if is_dark else '#e2e8f0'} !important;
-        gap: 2px !important;
-        padding: 3px !important;
+        background-color: transparent !important;
+        border-left: 1px solid {'#334155' if is_dark else '#cbd5e1'} !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0px !important;
+        padding: 0px !important;
+        margin: 0px !important;
     }}
     
     [data-testid="stNumberInput"] button {{
-        background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
+        background-color: transparent !important;
         color: {'#94a3b8' if is_dark else '#64748b'} !important;
-        border: 1px solid {'#334155' if is_dark else '#cbd5e1'} !important;
-        border-radius: 6px !important;
-        width: 26px !important;
-        height: 26px !important;
+        border: none !important;
+        border-radius: 0px !important;
+        width: 32px !important;
+        height: 100% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 14px !important;
-        font-weight: 700 !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
         transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }}
     
     [data-testid="stNumberInput"] button:hover {{
-        background-color: #6366f1 !important;
-        color: #ffffff !important;
-        border-color: #6366f1 !important;
-        box-shadow: 0 0 8px rgba(99, 102, 241, 0.35) !important;
-        transform: scale(1.05) !important;
+        background-color: {'rgba(255, 255, 255, 0.06)' if is_dark else 'rgba(0, 0, 0, 0.04)'} !important;
+        color: #6366f1 !important;
     }}
-    
     [data-testid="stNumberInput"] button:active {{
         background-color: #4338ca !important;
         transform: scale(0.95) !important;
+    }}
+    
+    [data-testid="stNumberInput"] button:first-child {{
+        border-right: 1px solid {'rgba(255, 255, 255, 0.08)' if is_dark else 'rgba(0, 0, 0, 0.08)'} !important;
     }}
 
     /* Styling untuk semua tombol di sidebar */
