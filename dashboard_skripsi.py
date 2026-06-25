@@ -1097,6 +1097,7 @@ if theme == "dark":
     .stDataFrame, [data-testid="stDataFrame"],
     [data-testid="stDataFrameResizable"] {
         border-color: #1e293b !important;
+        filter: invert(0.92) hue-rotate(180deg) !important;
     }
     
     /* HTML tables (st.table) styling in Dark Mode */
