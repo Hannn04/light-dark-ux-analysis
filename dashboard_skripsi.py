@@ -1395,26 +1395,56 @@ if theme == "dark":
 st.markdown("""
 <style>
 
-/* Sidebar */
+/* =========================
+   Responsive Sidebar
+========================= */
+
 [data-testid="stSidebar"]{
     width:320px !important;
     min-width:320px !important;
     max-width:320px !important;
-    height:100dvh !important;
-    overflow:hidden !important;
+    height:100vh !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
 }
 
 [data-testid="stSidebarContent"]{
+
+    height:100vh !important;
+
+    display:flex !important;
+    flex-direction:column !important;
+
     overflow-y:auto !important;
     overflow-x:hidden !important;
-    height:100%;
+
+    -webkit-overflow-scrolling:touch;
+
+    padding-bottom:80px !important;
 }
 
+/* Tablet */
 @media (max-width:1024px){
 
 [data-testid="stSidebar"]{
-    width:270px !important;
-    min-width:270px !important;
+
+    width:280px !important;
+    min-width:280px !important;
+    max-width:280px !important;
+
+}
+
+}
+
+/* Mobile */
+@media (max-width:768px){
+
+[data-testid="stSidebar"]{
+
+    width:100vw !important;
+    min-width:100vw !important;
+    max-width:100vw !important;
+
 }
 
 }
