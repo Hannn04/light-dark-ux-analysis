@@ -384,7 +384,7 @@ def render_auth_page():
     }}
 
     /* Style the theme toggle switch wrapper to look like a premium card */
-    label:has(input[id*="theme_toggle_switch"]) {{
+    div[class*="theme_toggle_switch"] label {{
         display: flex !important;
         flex-direction: row-reverse !important;
         justify-content: space-between !important;
@@ -401,12 +401,12 @@ def render_auth_page():
         transition: all 0.2s ease !important;
     }}
     
-    label:has(input[id*="theme_toggle_switch"]):hover {{
+    div[class*="theme_toggle_switch"] label:hover {{
         background-color: {'#374151' if is_dark else '#e5e7eb'} !important;
     }}
 
     /* Align and style the text label inside the toggle */
-    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] {{
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] {{
         display: flex !important;
         align-items: center !important;
         font-family: 'Inter', sans-serif !important;
@@ -415,7 +415,7 @@ def render_auth_page():
         color: {text_primary} !important;
     }}
 
-    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] p {{
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
         margin: 0 !important;
         font-size: 13px !important;
         font-weight: 600 !important;
@@ -424,7 +424,7 @@ def render_auth_page():
     }}
 
     /* Default/Dark Mode: Moon Icon on the left */
-    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"]::before {{
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
         width: 16px !important;
@@ -441,34 +441,33 @@ def render_auth_page():
     }}
 
     /* Light Mode: Sun Icon on the left (when switch is NOT checked) */
-    label:has(input[id*="theme_toggle_switch"]):not(:has(input[id*="theme_toggle_switch"]:checked)) div[data-testid="stMarkdownContainer"]::before {{
+    div[class*="theme_toggle_switch"] label:not(:has(input:checked)) div[data-testid="stMarkdownContainer"]::before {{
         -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
     }}
 
     /* Style the Track background of the toggle */
-    label:has(input[id*="theme_toggle_switch"]) input + div {{
+    div[class*="theme_toggle_switch"] label > div:first-child {{
         background-color: #e2e8f0 !important;
         transition: background-color 0.2s ease !important;
     }}
     /* When active (Dark Mode is checked), track is light purple */
-    label:has(input[id*="theme_toggle_switch"]) input:checked + div {{
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child {{
         background-color: #c7d2fe !important;
     }}
     
     /* Style the Knob (Handle) of the toggle */
-    label:has(input[id*="theme_toggle_switch"]) input + div > div {{
+    div[class*="theme_toggle_switch"] label > div:first-child > div {{
         background-color: #1e293b !important;
-        position: relative !important;
         transition: transform 0.2s ease, background-color 0.2s ease !important;
     }}
     /* When checked, knob is dark slate */
-    label:has(input[id*="theme_toggle_switch"]) input:checked + div > div {{
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div {{
         background-color: #0f172a !important;
     }}
     
     /* Draw white moon icon outline inside the toggle knob in both states */
-    label:has(input[id*="theme_toggle_switch"]) input + div > div::after {{
+    div[class*="theme_toggle_switch"] label > div:first-child > div::after {{
         content: "" !important;
         position: absolute !important;
         top: 50% !important;

@@ -1953,10 +1953,6 @@ def create_donut_chart(data_dict, colors):
 # SIDEBAR UI (MODERN VERSION)
 # ======================
 
-# ======================
-# MODERN SIDEBAR UI
-# ======================
-
 if not render_auth_page():
     st.stop()
 
@@ -2387,106 +2383,111 @@ with st.sidebar:
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E") !important;
     }}
 
-    /* Style the theme toggle switch wrapper to look like a premium card */
-    label:has(input[id*="theme_toggle_switch"]) {{
-        display: flex !important;
-        flex-direction: row-reverse !important;
-        justify-content: space-between !important;
+    /* === THEME TOGGLE SWITCH — Pill Style (matches reference) === */
+    div[class*="theme_toggle_switch"] label {{
+        display: inline-flex !important;
+        flex-direction: row !important;
         align-items: center !important;
-        background-color: {'#1f2937' if is_dark else '#f3f4f6'} !important;
-        border: 1px solid {'rgba(255,255,255,0.05)' if is_dark else 'rgba(0,0,0,0.04)'} !important;
-        padding: 0px 12px !important;
-        height: 38px !important;
-        border-radius: 12px !important;
-        width: 100% !important;
-        margin: 6px 0 !important;
+        gap: 10px !important;
+        background: {'rgba(109,40,217,0.12)' if is_dark else 'rgba(237,233,254,0.9)'} !important;
+        border: 1.5px solid {'rgba(139,92,246,0.25)' if is_dark else 'rgba(167,139,250,0.4)'} !important;
+        padding: 4px 14px 4px 6px !important;
+        height: 40px !important;
+        border-radius: 999px !important;
         box-sizing: border-box !important;
         cursor: pointer !important;
-        transition: all 0.2s ease !important;
+        transition: background 0.2s ease, border-color 0.2s ease !important;
+        vertical-align: middle !important;
     }}
-    
-    label:has(input[id*="theme_toggle_switch"]):hover {{
-        background-color: {'#374151' if is_dark else '#e5e7eb'} !important;
+    div[class*="theme_toggle_switch"] label:hover {{
+        background: {'rgba(109,40,217,0.18)' if is_dark else 'rgba(221,214,254,0.95)'} !important;
+        border-color: {'rgba(139,92,246,0.4)' if is_dark else 'rgba(139,92,246,0.55)'} !important;
     }}
 
-    /* Align and style the text label inside the toggle */
-    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] {{
+    /* Track: light lavender (light mode) → deep indigo (dark mode) */
+    div[class*="theme_toggle_switch"] label > div:first-child {{
+        background-color: {'rgba(167,139,250,0.35)' if is_dark else '#e9d5ff'} !important;
+        flex-shrink: 0 !important;
+        transition: background-color 0.25s ease !important;
+    }}
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child {{
+        background-color: #6d28d9 !important;
+    }}
+
+    /* Knob: vivid indigo in light mode → white in dark mode */
+    div[class*="theme_toggle_switch"] label > div:first-child > div {{
+        background-color: #6366f1 !important;
+        box-shadow: 0 2px 6px rgba(99,102,241,0.45) !important;
+        transition: transform 0.25s ease, background-color 0.2s ease !important;
+        position: relative !important;
+    }}
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div {{
+        background-color: #ffffff !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
+    }}
+
+    /* No icon inside knob — clean pill */
+    div[class*="theme_toggle_switch"] label > div:first-child > div::after {{
+        display: none !important;
+    }}
+
+    /* Label text area */
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] {{
         display: flex !important;
         align-items: center !important;
+        gap: 6px !important;
+        flex-grow: 1 !important;
+    }}
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
+        margin: 0 !important;
         font-family: 'Inter', sans-serif !important;
         font-size: 13px !important;
         font-weight: 600 !important;
-        color: {text_main} !important;
-    }}
-
-    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"] p {{
-        margin: 0 !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        color: {text_main} !important;
+        color: {'#a78bfa' if is_dark else '#5b21b6'} !important;
         white-space: nowrap !important;
+        letter-spacing: 0.1px !important;
     }}
 
-    /* Default/Dark Mode: Moon Icon on the left */
-    label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"]::before {{
+    /* Icon left of label text — moon or sun */
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
-        width: 16px !important;
-        height: 16px !important;
-        margin-right: 8px !important;
-        background-color: currentColor !important;
+        flex-shrink: 0 !important;
+        width: 15px !important;
+        height: 15px !important;
         -webkit-mask-repeat: no-repeat !important;
         mask-repeat: no-repeat !important;
         -webkit-mask-size: contain !important;
         mask-size: contain !important;
+        -webkit-mask-position: center !important;
+        mask-position: center !important;
+        background-color: #7c3aed !important;
+        /* Moon icon — default (dark mode checked) */
         -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        flex-shrink: 0 !important;
     }}
-
-    /* Light Mode: Sun Icon on the left (when switch is NOT checked) */
-    label:has(input[id*="theme_toggle_switch"]):not(:has(input[id*="theme_toggle_switch"]:checked)) div[data-testid="stMarkdownContainer"]::before {{
+    /* Light mode: sun icon (unchecked) */
+    div[class*="theme_toggle_switch"] label:not(:has(input:checked)) div[data-testid="stMarkdownContainer"]::before {{
+        background-color: #f59e0b !important;
         -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
     }}
 
-    /* Style the Track background of the toggle */
-    label:has(input[id*="theme_toggle_switch"]) input + div {{
-        background-color: #e2e8f0 !important;
-        transition: background-color 0.2s ease !important;
+    /* Center the toggle — use text-align:center so inline-flex label is centered */
+    [data-testid="stSidebar"] div.element-container:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"] div.stElementContainer:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"] div.element-container:has([data-testid="stCheckbox"]),
+    [data-testid="stSidebar"] div.stElementContainer:has([data-testid="stCheckbox"]) {{
+        text-align: center !important;
+        width: 100% !important;
     }}
-    /* When active (Dark Mode is checked), track is light purple */
-    label:has(input[id*="theme_toggle_switch"]) input:checked + div {{
-        background-color: #c7d2fe !important;
-    }}
-    
-    /* Style the Knob (Handle) of the toggle */
-    label:has(input[id*="theme_toggle_switch"]) input + div > div {{
-        background-color: #1e293b !important;
-        position: relative !important;
-        transition: transform 0.2s ease, background-color 0.2s ease !important;
-    }}
-    /* When checked, knob is dark slate */
-    label:has(input[id*="theme_toggle_switch"]) input:checked + div > div {{
-        background-color: #0f172a !important;
-    }}
-    
-    /* Draw white moon icon outline inside the toggle knob in both states */
-    label:has(input[id*="theme_toggle_switch"]) input + div > div::after {{
-        content: "" !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        width: 10px !important;
-        height: 10px !important;
-        background-color: #ffffff !important;
-        -webkit-mask-repeat: no-repeat !important;
-        mask-repeat: no-repeat !important;
-        -webkit-mask-size: contain !important;
-        mask-size: contain !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+    /* st-key wrapper and stCheckbox: block so text-align propagates */
+    [data-testid="stSidebar"] div[class*="theme_toggle_switch"],
+    [data-testid="stSidebar"] [data-testid="stCheckbox"],
+    [data-testid="stSidebar"] div.stCheckbox {{
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
     }}
 
     /* User card styling */
@@ -2592,8 +2593,22 @@ with st.sidebar:
         flex-direction: column !important;
         visibility: visible !important;
         opacity: 1 !important;
-        padding: 20px 8px 14px 8px !important;
+        padding: 16px 8px 14px 8px !important;
         height: 100% !important;
+        box-sizing: border-box !important;
+    }}
+    /* Push the element containers to distribute: top group vs bottom group */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+    }}
+    /* Spacer: push toggle + user card to bottom */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.element-container:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.stElementContainer:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.element-container:has([data-testid="stCheckbox"]),
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.stElementContainer:has([data-testid="stCheckbox"]) {{
+        margin-top: auto !important;
     }}
     
     /* Adjust main content layout spacing and width when sidebar is collapsed to prevent overlapping */
@@ -2756,8 +2771,8 @@ with st.sidebar:
     }}
     
     /* Style collapsed toggle switch to center it and hide its label text */
-    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(input[id*="theme_toggle_switch"]),
-    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(input[id*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div[class*="theme_toggle_switch"]),
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has([data-testid="stCheckbox"]),
     [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has([data-testid="stCheckbox"]),
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stCheckbox),
@@ -2765,10 +2780,13 @@ with st.sidebar:
         display: flex !important;
         justify-content: center !important;
         height: auto !important;
-        margin: 15px 0 !important;
+        margin: 6px 0 !important;
         padding: 0 !important;
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 100003 !important;
     }}
-    [data-testid="stSidebar"][aria-expanded="false"] label:has(input[id*="theme_toggle_switch"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label,
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"],
     [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox {{
         display: flex !important;
@@ -2781,8 +2799,21 @@ with st.sidebar:
         margin: 0 auto !important;
         box-shadow: none !important;
         cursor: pointer !important;
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 100003 !important;
     }}
-    [data-testid="stSidebar"][aria-expanded="false"] label:has(input[id*="theme_toggle_switch"]) div[data-testid="stMarkdownContainer"],
+    /* Ensure the checkbox label and input are always clickable */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] label,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] input,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox label,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox input {{
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        position: relative !important;
+        z-index: 100004 !important;
+    }}
+    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"],
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] [data-testid="stWidgetLabel"],
     [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox [data-testid="stWidgetLabel"],
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] div[data-testid="stMarkdownContainer"],
@@ -2801,7 +2832,7 @@ with st.sidebar:
         display: flex !important;
         justify-content: center !important;
         height: auto !important;
-        margin: 15px 0 !important;
+        margin: 4px 0 8px 0 !important;
         padding: 0 !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card {{
@@ -2998,8 +3029,8 @@ with st.sidebar:
             const isCollapsed = sidebar.getAttribute('aria-expanded') === 'false';
             
             if (sidebar.contains(e.target) || e.target === sidebar) {
-                // Ignore interactive inputs, links, buttons to allow regular clicks, but allow dragging from navigation labels/tabs
-                if (e.target.closest('a, button, input, select, textarea')) {
+                // Ignore interactive inputs, links, buttons, and toggle/checkbox labels to allow regular clicks
+                if (e.target.closest('a, button, input, select, textarea, [class*="theme_toggle_switch"], [data-testid="stCheckbox"], .stCheckbox, label')) {
                     return;
                 }
                 isDragging = true;
@@ -3050,7 +3081,7 @@ with st.sidebar:
             const isCollapsed = sidebar.getAttribute('aria-expanded') === 'false';
             
             if (sidebar.contains(e.target) || e.target === sidebar) {
-                if (e.target.closest('a, button, input, select, textarea')) {
+                if (e.target.closest('a, button, input, select, textarea, [class*="theme_toggle_switch"], [data-testid="stCheckbox"], .stCheckbox, label')) {
                     return;
                 }
                 isDragging = true;
