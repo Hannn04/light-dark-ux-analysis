@@ -1982,10 +1982,13 @@ with st.sidebar:
         
         <!-- Logo and Title -->
         <div class="brand-logo-container" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-left: 2px;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" fill="#3b82f6" />
-                <polygon points="16.2,7.8 13.8,13.8 7.8,16.2 10.2,10.2" fill="white" />
-            </svg>
+            <div style="background-color: #1d4ed8; color: white; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.25);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+            </div>
             <span class="brand-title-text" style="font-size: 18px; font-weight: 700; color: {text_main}; font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">UX Analytics</span>
         </div>
     """, unsafe_allow_html=True)
@@ -2392,16 +2395,18 @@ with st.sidebar:
         display: inline-flex !important;
         flex-direction: row !important;
         align-items: center !important;
+        justify-content: center !important;
         gap: 10px !important;
         background: {'rgba(109,40,217,0.12)' if is_dark else 'rgba(237,233,254,0.9)'} !important;
         border: 1.5px solid {'rgba(139,92,246,0.25)' if is_dark else 'rgba(167,139,250,0.4)'} !important;
-        padding: 4px 14px 4px 6px !important;
-        height: 40px !important;
+        padding: 6px 16px 6px 8px !important;
+        height: 44px !important;
         border-radius: 999px !important;
         box-sizing: border-box !important;
         cursor: pointer !important;
         transition: background 0.2s ease, border-color 0.2s ease !important;
         vertical-align: middle !important;
+        margin: 0 auto !important;
     }}
     div[class*="theme_toggle_switch"] label:hover {{
         background: {'rgba(109,40,217,0.18)' if is_dark else 'rgba(221,214,254,0.95)'} !important;
@@ -2409,30 +2414,77 @@ with st.sidebar:
     }}
 
     /* Track: light lavender (light mode) → deep indigo (dark mode) */
-    div[class*="theme_toggle_switch"] label > div:first-child {{
+    div[class*="theme_toggle_switch"] label > div:first-child,
+    div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] {{
         background-color: {'rgba(167,139,250,0.35)' if is_dark else '#e9d5ff'} !important;
         flex-shrink: 0 !important;
         transition: background-color 0.25s ease !important;
+        width: 48px !important;
+        height: 26px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+        border-radius: 999px !important;
+        margin: 0 auto !important;
+        left: auto !important;
+        right: auto !important;
+        float: none !important;
     }}
-    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child {{
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child,
+    div[class*="theme_toggle_switch"] label:has(input:checked) [data-testid="stCheckboxToToggle"] {{
         background-color: #6d28d9 !important;
     }}
 
     /* Knob: vivid indigo in light mode → white in dark mode */
-    div[class*="theme_toggle_switch"] label > div:first-child > div {{
+    div[class*="theme_toggle_switch"] label > div:first-child > div,
+    div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] > div {{
         background-color: #6366f1 !important;
         box-shadow: 0 2px 6px rgba(99,102,241,0.45) !important;
         transition: transform 0.25s ease, background-color 0.2s ease !important;
-        position: relative !important;
+        position: absolute !important;
+        top: 3px !important;
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+        transform: translate(3px, 0px) !important;
+        left: 0 !important;
     }}
-    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div {{
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div,
+    div[class*="theme_toggle_switch"] label:has(input:checked) [data-testid="stCheckboxToToggle"] > div {{
         background-color: #ffffff !important;
         box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
+        transform: translate(25px, 0px) !important;
     }}
 
-    /* No icon inside knob — clean pill */
-    div[class*="theme_toggle_switch"] label > div:first-child > div::after {{
-        display: none !important;
+    /* Icon inside knob */
+    div[class*="theme_toggle_switch"] label > div:first-child > div::after,
+    div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] > div::after {{
+        content: "" !important;
+        display: block !important;
+        width: 12px !important;
+        height: 12px !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-position: center !important;
+        mask-position: center !important;
+        /* Sun icon for light mode (unchecked) */
+        background-color: #ffffff !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+    }}
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div::after,
+    div[class*="theme_toggle_switch"] label:has(input:checked) [data-testid="stCheckboxToToggle"] > div::after {{
+        /* Moon icon for dark mode (checked) */
+        background-color: #4f46e5 !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
     }}
 
     /* Label text area */
@@ -2445,7 +2497,7 @@ with st.sidebar:
     div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
         margin: 0 !important;
         font-family: 'Inter', sans-serif !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         font-weight: 600 !important;
         color: {'#a78bfa' if is_dark else '#5b21b6'} !important;
         white-space: nowrap !important;
@@ -2457,8 +2509,8 @@ with st.sidebar:
         content: "" !important;
         display: inline-block !important;
         flex-shrink: 0 !important;
-        width: 15px !important;
-        height: 15px !important;
+        width: 18px !important;
+        height: 18px !important;
         -webkit-mask-repeat: no-repeat !important;
         mask-repeat: no-repeat !important;
         -webkit-mask-size: contain !important;
@@ -2477,21 +2529,24 @@ with st.sidebar:
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
     }}
 
-    /* Center the toggle — use text-align:center so inline-flex label is centered */
+    /* Center the toggle widget containers at all levels in the sidebar */
     [data-testid="stSidebar"] div.element-container:has(div[class*="theme_toggle_switch"]),
     [data-testid="stSidebar"] div.stElementContainer:has(div[class*="theme_toggle_switch"]),
     [data-testid="stSidebar"] div.element-container:has([data-testid="stCheckbox"]),
-    [data-testid="stSidebar"] div.stElementContainer:has([data-testid="stCheckbox"]) {{
-        text-align: center !important;
-        width: 100% !important;
-    }}
-    /* st-key wrapper and stCheckbox: block so text-align propagates */
+    [data-testid="stSidebar"] div.stElementContainer:has([data-testid="stCheckbox"]),
+    [data-testid="stSidebar"] div.element-container:has([data-testid="stToggle"]),
+    [data-testid="stSidebar"] div.stElementContainer:has([data-testid="stToggle"]),
     [data-testid="stSidebar"] div[class*="theme_toggle_switch"],
     [data-testid="stSidebar"] [data-testid="stCheckbox"],
-    [data-testid="stSidebar"] div.stCheckbox {{
-        display: block !important;
+    [data-testid="stSidebar"] div.stCheckbox,
+    [data-testid="stSidebar"] [data-testid="stToggle"],
+    [data-testid="stSidebar"] div.stToggle {{
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
         width: 100% !important;
-        text-align: center !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
     }}
 
     /* User card styling */
@@ -2682,6 +2737,18 @@ with st.sidebar:
         margin: 10px auto 20px auto !important;
         padding: 0 !important;
     }}
+    [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container div {{
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+    }}
+    [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container div svg {{
+        width: 18px !important;
+        height: 18px !important;
+    }}
     [data-testid="stSidebar"][aria-expanded="false"] .brand-title-text {{
         display: none !important;
     }}
@@ -2736,6 +2803,8 @@ with st.sidebar:
     
     /* Style radio navigation items as centered squares when collapsed */
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label {{
+        display: flex !important;
+        align-items: center !important;
         justify-content: center !important;
         padding: 0 !important;
         width: 44px !important;
@@ -2743,6 +2812,14 @@ with st.sidebar:
         border-radius: 10px !important;
         margin: 0 auto !important;
         position: relative !important;
+    }}
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        pointer-events: none !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
         display: block !important;
@@ -2774,54 +2851,55 @@ with st.sidebar:
         height: 20px !important;
     }}
     
+    /* Reset padding for all element containers inside the collapsed sidebar to prevent offsets */
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div {{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }}
+
     /* Style collapsed toggle switch to center it and hide its label text */
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div[class*="theme_toggle_switch"]),
     [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div[class*="theme_toggle_switch"]),
-    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has([data-testid="stCheckbox"]),
-    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has([data-testid="stCheckbox"]),
-    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div.stCheckbox),
-    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div.stCheckbox) {{
-        display: flex !important;
-        justify-content: center !important;
-        height: auto !important;
-        margin: 6px 0 !important;
-        padding: 0 !important;
-        pointer-events: auto !important;
-        position: relative !important;
-        z-index: 100003 !important;
-    }}
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has([data-testid="stToggle"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has([data-testid="stToggle"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"],
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle,
     [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label,
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"],
-    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox {{
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label {{
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        background: transparent !important;
-        border: none !important;
+        height: auto !important;
+        margin: 6px 0 !important;
         padding: 0 !important;
-        width: auto !important;
-        margin: 0 auto !important;
-        box-shadow: none !important;
-        cursor: pointer !important;
+        width: 100% !important;
         pointer-events: auto !important;
         position: relative !important;
         z-index: 100003 !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: transparent !important;
     }}
-    /* Ensure the checkbox label and input are always clickable */
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] label,
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] input,
-    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox label,
-    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox input {{
+    /* Ensure the toggle label and input are always clickable */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] input,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle label,
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle input {{
         pointer-events: auto !important;
         cursor: pointer !important;
         position: relative !important;
         z-index: 100004 !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"],
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] [data-testid="stWidgetLabel"],
-    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox [data-testid="stWidgetLabel"],
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stCheckbox"] div[data-testid="stMarkdownContainer"],
-    [data-testid="stSidebar"][aria-expanded="false"] div.stCheckbox div[data-testid="stMarkdownContainer"] {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] [data-testid="stWidgetLabel"],
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle [data-testid="stWidgetLabel"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] div[data-testid="stMarkdownContainer"],
+    [data-testid="stSidebar"][aria-expanded="false"] div.stToggle div[data-testid="stMarkdownContainer"] {{
         display: none !important;
         width: 0 !important;
         height: 0 !important;
