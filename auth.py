@@ -331,13 +331,8 @@ def render_auth_page():
         box-shadow: 0 12px 24px -5px rgba(29, 78, 216, 0.5) !important;
     }}
 
-    /* Under-card text link toggle container and button styling */
-    .toggle-link-container {{
-        display: inline-block !important;
-        margin-top: 16px !important;
-    }}
-    
-    .toggle-link-container button {{
+    /* Under-card text link toggle container and button styling using Streamlit testid */
+    div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button {{
         background-color: transparent !important;
         border: none !important;
         color: #1d4ed8 !important;
@@ -351,17 +346,17 @@ def render_auth_page():
         box-shadow: none !important;
         height: auto !important;
         display: inline-block !important;
+        margin-top: 16px !important;
     }}
     
-    .toggle-link-container button:hover {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {{
         color: #1e40af !important;
         background-color: transparent !important;
-        text-decoration: none !important;
+        text-decoration: underline !important;
     }}
 
-    /* Premium pill-shaped theme toggle switch matching the mockup */
-    div[data-testid="stSidebarUserContent"] ~ div,
-    div[class*="login_theme_toggle_switch"] label {{
+    /* Premium pill-shaped theme toggle switch matching the mockup using Streamlit testid */
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label {{
         display: flex !important;
         flex-direction: row-reverse !important;
         justify-content: space-between !important;
@@ -380,16 +375,16 @@ def render_auth_page():
         transition: all 0.2s ease !important;
     }}
     
-    div[class*="login_theme_toggle_switch"] label:hover {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label:hover {{
         border-color: #3b82f6 !important;
     }}
 
-    div[class*="login_theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label div[data-testid="stMarkdownContainer"] {{
         display: flex !important;
         align-items: center !important;
     }}
 
-    div[class*="login_theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label div[data-testid="stMarkdownContainer"] p {{
         font-size: 10px !important;
         font-weight: 800 !important;
         letter-spacing: 0.8px !important;
@@ -400,7 +395,7 @@ def render_auth_page():
     }}
 
     /* Sun icon before toggle label text */
-    div[class*="login_theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
         width: 14px !important;
@@ -417,10 +412,10 @@ def render_auth_page():
     }}
 
     /* Track styles */
-    div[class*="login_theme_toggle_switch"] label > div:first-child {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label > div:first-child {{
         background-color: #cbd5e1 !important;
     }}
-    div[class*="login_theme_toggle_switch"] label:has(input:checked) > div:first-child {{
+    div[data-testid="stHorizontalBlock"] div[data-testid="stCheckbox"] label:has(input:checked) > div:first-child {{
         background-color: #1d4ed8 !important;
     }}
 
