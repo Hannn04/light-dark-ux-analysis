@@ -202,6 +202,8 @@ def render_auth_page():
         text_secondary = "#94a3b8"
         logo_gradient = "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
         text_title_color = "#f9fafb"
+        toggle_bg = "#111827"
+        toggle_border = "rgba(255, 255, 255, 0.1)"
     else:
         bg_gradient = "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)"
         card_bg = "#ffffff"
@@ -214,6 +216,8 @@ def render_auth_page():
         text_secondary = "#64748b"
         logo_gradient = "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%)"
         text_title_color = "#0f172a"
+        toggle_bg = "#ffffff"
+        toggle_border = "#cbd5e1"
 
     # Fullscreen CSS injection & Scroll Lock (Premium Design Match)
     css = f"""
@@ -249,16 +253,16 @@ def render_auth_page():
     
     div[data-testid="stHorizontalBlock"] {{
         align-items: center !important;
-        gap: 4rem !important;
+        gap: 5rem !important;
     }}
     
     /* White Card styling */
     div[data-testid="stForm"] {{
         background-color: {card_bg} !important;
         border: 1px solid {card_border} !important;
-        border-radius: 40px !important;
-        padding: 48px !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, {0.25 if is_dark else 0.04}) !important;
+        border-radius: 48px !important;
+        padding: 56px 48px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, {0.25 if is_dark else 0.03}) !important;
         margin-bottom: 0px !important;
     }}
     
@@ -268,14 +272,14 @@ def render_auth_page():
     
     /* Custom style for input fields */
     div[data-testid="stForm"] input[type="text"] {{
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>") !important;
         background-repeat: no-repeat !important;
-        background-position: 16px center !important;
+        background-position: 18px center !important;
         background-size: 18px !important;
-        padding-left: 48px !important;
+        padding-left: 50px !important;
         border-radius: 16px !important;
         border: 1px solid {input_border} !important;
-        height: 52px !important;
+        height: 54px !important;
         font-size: 14px !important;
         background-color: {input_bg} !important;
         color: {input_text} !important;
@@ -284,19 +288,23 @@ def render_auth_page():
     }}
 
     div[data-testid="stForm"] input[type="password"] {{
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>") !important;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>") !important;
         background-repeat: no-repeat !important;
-        background-position: 16px center !important;
+        background-position: 18px center !important;
         background-size: 18px !important;
-        padding-left: 48px !important;
+        padding-left: 50px !important;
         border-radius: 16px !important;
         border: 1px solid {input_border} !important;
-        height: 52px !important;
+        height: 54px !important;
         font-size: 14px !important;
         background-color: {input_bg} !important;
         color: {input_text} !important;
         box-shadow: none !important;
         transition: all 0.2s ease !important;
+    }}
+    
+    div[data-testid="stForm"] input::placeholder {{
+        color: #cbd5e1 !important;
     }}
     
     div[data-testid="stForm"] input:focus {{
@@ -312,21 +320,21 @@ def render_auth_page():
         border-radius: 16px !important;
         font-weight: 700 !important;
         padding: 0px 24px !important;
-        height: 52px !important;
-        font-size: 15px !important;
+        height: 54px !important;
+        font-size: 16px !important;
         transition: all 0.2s ease !important;
         width: 100% !important;
-        box-shadow: 0 10px 20px -5px rgba(29, 78, 216, 0.3) !important;
+        box-shadow: 0 10px 20px -5px rgba(29, 78, 216, 0.4) !important;
     }}
     div[data-testid="stFormSubmitButton"] button:hover {{
         background-color: #1e40af !important;
-        box-shadow: 0 12px 24px -5px rgba(29, 78, 216, 0.4) !important;
+        box-shadow: 0 12px 24px -5px rgba(29, 78, 216, 0.5) !important;
     }}
 
     /* Under-card text link toggle container and button styling */
     .toggle-link-container {{
         display: inline-block !important;
-        margin-top: 12px !important;
+        margin-top: 16px !important;
     }}
     
     .toggle-link-container button {{
@@ -348,16 +356,72 @@ def render_auth_page():
     .toggle-link-container button:hover {{
         color: #1e40af !important;
         background-color: transparent !important;
-        text-decoration: underline !important;
+        text-decoration: none !important;
     }}
 
-    /* Style the toggle switch on the right side */
-    div[data-testid="stWidgetLabel"] p {{
-        font-size: 11px !important;
+    /* Premium pill-shaped theme toggle switch matching the mockup */
+    div[data-testid="stSidebarUserContent"] ~ div,
+    div[class*="login_theme_toggle_switch"] label {{
+        display: flex !important;
+        flex-direction: row-reverse !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background-color: {toggle_bg} !important;
+        border: 1px solid {toggle_border} !important;
+        padding: 0px 16px !important;
+        height: 42px !important;
+        border-radius: 30px !important;
+        width: 100% !important;
+        max-width: 160px !important;
+        margin-top: 16px !important;
+        float: right !important;
+        box-sizing: border-box !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }}
+    
+    div[class*="login_theme_toggle_switch"] label:hover {{
+        border-color: #3b82f6 !important;
+    }}
+
+    div[class*="login_theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] {{
+        display: flex !important;
+        align-items: center !important;
+    }}
+
+    div[class*="login_theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
+        font-size: 10px !important;
         font-weight: 800 !important;
         letter-spacing: 0.8px !important;
         text-transform: uppercase !important;
         color: {text_secondary} !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+    }}
+
+    /* Sun icon before toggle label text */
+    div[class*="login_theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
+        content: "" !important;
+        display: inline-block !important;
+        width: 14px !important;
+        height: 14px !important;
+        margin-right: 6px !important;
+        background-color: currentColor !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        flex-shrink: 0 !important;
+    }}
+
+    /* Track styles */
+    div[class*="login_theme_toggle_switch"] label > div:first-child {{
+        background-color: #cbd5e1 !important;
+    }}
+    div[class*="login_theme_toggle_switch"] label:has(input:checked) > div:first-child {{
+        background-color: #1d4ed8 !important;
     }}
 
     </style>
@@ -460,11 +524,11 @@ def render_auth_page():
         with col_btn1:
             st.markdown('<div class="toggle-link-container">', unsafe_allow_html=True)
             if st.session_state["auth_mode"] == "login":
-                if st.button("Belum punya akun? Daftar Sekarang", use_container_width=False, key="btn_toggle_reg"):
+                if st.button("BELUM PUNYA AKUN? DAFTAR SEKARANG", use_container_width=False, key="btn_toggle_reg"):
                     st.session_state["auth_mode"] = "register"
                     st.rerun()
             else:
-                if st.button("Sudah punya akun? Masuk", use_container_width=False, key="btn_toggle_login"):
+                if st.button("SUDAH PUNYA AKUN? MASUK", use_container_width=False, key="btn_toggle_login"):
                     st.session_state["auth_mode"] = "login"
                     st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
