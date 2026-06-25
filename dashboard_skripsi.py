@@ -2761,7 +2761,7 @@ with st.sidebar:
         flex-direction: column !important;
         visibility: visible !important;
         opacity: 1 !important;
-        padding: 16px 8px 14px 8px !important;
+        padding: 8px 6px 8px 6px !important;
         height: 100% !important;
         box-sizing: border-box !important;
     }}
@@ -2851,7 +2851,7 @@ with st.sidebar:
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        margin: 10px auto 20px auto !important;
+        margin: 5px auto 10px auto !important;
         padding: 0 !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container div {{
@@ -2924,11 +2924,14 @@ with st.sidebar:
         align-items: center !important;
         justify-content: center !important;
         padding: 0 !important;
-        width: 44px !important;
-        height: 44px !important;
-        border-radius: 10px !important;
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 8px !important;
         margin: 0 auto !important;
         position: relative !important;
+    }}
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
+        gap: 6px !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
         position: absolute !important;
@@ -3031,7 +3034,7 @@ with st.sidebar:
         display: flex !important;
         justify-content: center !important;
         height: auto !important;
-        margin: 4px 0 8px 0 !important;
+        margin: 2px 0 4px 0 !important;
         padding: 0 !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card {{
@@ -3066,15 +3069,20 @@ with st.sidebar:
         border: none !important;
     }}
     
-    /* Force overflow: visible on all sidebar containers to allow tooltips to show outside the dock */
-    [data-testid="stSidebar"][aria-expanded="false"],
-    [data-testid="stSidebar"][aria-expanded="false"] > div,
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"],
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"],
-        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"],
-        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
+    /* Force overflow: visible on all sidebar containers to allow tooltips to show outside the dock (only on screens with enough vertical space) */
+    @media (min-height: 750px) {{
+        [data-testid="stSidebar"][aria-expanded="false"],
+        [data-testid="stSidebar"][aria-expanded="false"] > div,
+        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"],
+        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
             overflow: visible !important;
         }}
+    }}
+    /* Always allow visible overflow for the radio elements so that the tooltip is not clipped locally */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
+        overflow: visible !important;
+    }}
     }}
     </style>
     """, unsafe_allow_html=True)
