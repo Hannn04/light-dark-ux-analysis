@@ -187,15 +187,10 @@ def render_auth_page():
     is_dark = (theme == "dark")
 
     if not st.session_state.get("logged_in") and not st.session_state.get("logged_out"):
-        if "cookie_checked" not in st.session_state:
-            st.session_state["cookie_checked"] = False
-            st.rerun()
-        
-        if not st.session_state["cookie_checked"]:
-            st.session_state["cookie_checked"] = True
-            if st.query_params.get("force_auth") != "true":
-                saved_user = controller.get("session_user")
-                if saved_user and saved_user in load_users():
+        if st.query_params.get("force_auth") != "true":
+            saved_user = controller.get("session_user")
+            if saved_user:
+                if saved_user in load_users():
                     st.session_state.update({"logged_in": True, "current_user": saved_user})
                     st.rerun()
 
