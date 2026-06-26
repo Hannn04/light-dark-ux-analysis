@@ -186,20 +186,7 @@ def render_auth_page():
         
     is_dark = (theme == "dark")
 
-    if not st.session_state.get("logged_in") and not st.session_state.get("logged_out"):
-        if st.query_params.get("force_auth") != "true":
-            
-            # Render pertama: CookieController belum siap, render dulu lalu rerun
-            if not st.session_state.get("_cookie_ready"):
-                st.session_state["_cookie_ready"] = True
-                st.rerun()
-            
-            # Render kedua: cookie sudah bisa dibaca
-            saved_user = controller.get("session_user")
-            if saved_user and saved_user in load_users():
-                st.session_state.update({"logged_in": True, "current_user": saved_user})
-                st.rerun()
-
+    # Langsung cek session state saja — pengecekan cookie sudah di dashboard_skripsi.py
     if st.session_state.get("logged_in") and st.query_params.get("force_auth") != "true":
         return True
 
@@ -1124,7 +1111,7 @@ def render_auth_page():
                         st.session_state.pop("logged_out", None)
                         if remember_me:
                             expires = datetime.datetime.now() + datetime.timedelta(hours=24)
-                            controller.set("session_user", user, expires=expires)
+                            controller.set("session_user", user)
                         else:
                             controller.remove("session_user")
                         st.rerun()

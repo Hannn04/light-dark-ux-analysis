@@ -26,7 +26,6 @@ from reportlab.lib import colors
 from scipy.stats import shapiro
 from scipy.stats import wilcoxon, norm
 from scipy.stats import rankdata
-from auth import render_auth_page, logout, render_settings_page
 import pingouin as pg
 from scipy.stats import t as t_dist
 import requests
@@ -40,6 +39,19 @@ from db import (
     load_pref, save_pref,
     pref_exists
 )
+
+from auth import render_auth_page, logout, render_settings_page, load_users, get_cookie_controller
+
+_controller = get_cookie_controller()
+if not st.session_state.get("logged_in") and not st.session_state.get("logged_out"):
+    if not st.session_state.get("_cookie_ready"):
+        st.session_state["_cookie_ready"] = True
+        st.rerun()
+    else:
+        _saved_user = _controller.get("session_user")
+        if _saved_user and _saved_user in load_users():
+            st.session_state.update({"logged_in": True, "current_user": _saved_user})
+            st.rerun()
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
