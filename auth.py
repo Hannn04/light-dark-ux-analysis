@@ -194,6 +194,8 @@ def render_auth_page():
 
     if "auth_mode" not in st.session_state:
         st.session_state["auth_mode"] = "login"
+    if "prev_auth_mode" not in st.session_state:
+        st.session_state["prev_auth_mode"] = st.session_state["auth_mode"]
 
     # Define CSS variables based on theme
     if is_dark:
@@ -231,14 +233,72 @@ def render_auth_page():
 
     html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {{
         background: {bg_gradient} !important;
-        min-height: 100vh !important;
-        display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important; /* Top align to allow scrolling */
         align-items: center !important;
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
+        overflow-y: auto !important;
+    }}
+
+    /* Force semua wrapper bisa scroll */
+    html, body {{
+        background: {bg_gradient} !important;
+        min-height: 100vh !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-y: auto !important;
+        display: block !important;
+        height: auto !important;
+    }}
+
+    [data-testid="stAppViewContainer"] {{
+        background: {bg_gradient} !important;
+        min-height: 100vh !important;
+        width: 100% !important;
+        display: block !important;
+        overflow-y: auto !important;
+    }}
+
+    [data-testid="stMain"] {{
+        background: transparent !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        width: 100% !important;
+    }}
+
+    [data-testid="stMainViewContainer"] {{
+        overflow-y: auto !important;
+        height: auto !important;
+    }}
+
+    /* Streamlit internal scroll fix */
+    section[data-testid="stMain"] > div {{
+        overflow-y: auto !important;
+        height: auto !important;
+    }}
+
+    .main > div {{
+        overflow-y: auto !important;
+        height: auto !important; 
+    }}
+
+    /* Root level */
+    #root > div:nth-child(1) > div > div > div > div > section > div {{
+        overflow: auto !important;
+        height: auto !important;
+        padding-bottom: 60px !important;
+    }}
+
+    /* Hapus display:flex yang memblokir natural flow */
+    html, body {{
+        display: block !important;
+    }}
+
+    [data-testid="stAppViewContainer"] {{
+        display: block !important;
     }}
     
     header, footer {{
@@ -265,14 +325,14 @@ def render_auth_page():
     [data-testid="stMain"] .block-container {{
         width: 100% !important;
         max-width: 420px !important;
-        margin-top: 60px !important;
-        margin-bottom: 60px !important;
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
         margin-left: auto !important;
         margin-right: auto !important;
         background-color: {card_bg} !important;
         border: 1px solid {card_border} !important;
         border-radius: 24px !important;
-        padding: 40px 36px !important;
+        padding: 32px 36px !important;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, {0.15 if is_dark else 0.05}), 0 10px 10px -5px rgba(0, 0, 0, {0.1 if is_dark else 0.03}) !important;
         box-sizing: border-box !important;
         position: relative !important;
@@ -291,6 +351,8 @@ def render_auth_page():
         padding: 0 !important;
         margin: 0 !important;
         box-shadow: none !important;
+        width: 100% !important;        
+        box-sizing: border-box !important;  
     }}
 
     /* Theme toggle styling using marker */
@@ -301,7 +363,7 @@ def render_auth_page():
     /* Style the column wrapper to position the theme toggle absolute in the card top-right */
     div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
         position: absolute !important;
-        top: 36px !important;
+        top: 42px !important; /* Vertically centered with logo */
         right: 36px !important;
         width: auto !important;
         min-width: 0 !important;
@@ -310,56 +372,147 @@ def render_auth_page():
         padding: 0 !important;
     }}
 
-    /* Style the checkbox label as a premium text toggle button */
-    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] label {{
-        display: flex !important;
+    /* Prevent clipping of the theme toggle capsule on all parent wrappers */
+    div[data-testid="stHorizontalBlock"]:has(.theme-toggle-marker),
+    div[data-testid="element-container"]:has(.theme-toggle-marker),
+    div[data-testid="stColumn"]:has(.theme-toggle-marker),
+    div[data-testid="stColumn"]:has(.theme-toggle-marker) * {{
+        overflow: visible !important;
+    }}
+
+    /* === THEME TOGGLE SWITCH — Pill Style (matches sidebar) === */
+    div[class*="theme_toggle_switch"] label {{
+        display: inline-flex !important;
+        flex-direction: row !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 8px 16px !important;
-        border-radius: 30px !important;
-        border: 1px solid {card_border} !important;
-        background-color: {toggle_bg} !important;
-        cursor: pointer !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        gap: 10px !important;
+        background: {'rgba(109,40,217,0.12)' if is_dark else 'rgba(237,233,254,0.9)'} !important;
+        border: 1.5px solid {'rgba(139,92,246,0.25)' if is_dark else 'rgba(167,139,250,0.4)'} !important;
+        padding: 6px 16px 6px 8px !important;
+        height: 44px !important;
+        border-radius: 999px !important;
         box-sizing: border-box !important;
-        width: auto !important;
-        height: auto !important;
+        cursor: pointer !important;
+        transition: background 0.2s ease, border-color 0.2s ease !important;
+        vertical-align: middle !important;
+        margin: 0 auto !important;
     }}
-    
-    /* Modern Switch Hover style */
-    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] label:hover {{
-        border-color: #4f46e5 !important;
-        background-color: {toggle_bg} !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1) !important;
+    div[class*="theme_toggle_switch"] label:hover {{
+        background: {'rgba(109,40,217,0.18)' if is_dark else 'rgba(221,214,254,0.95)'} !important;
+        border-color: {'rgba(139,92,246,0.4)' if is_dark else 'rgba(139,92,246,0.55)'} !important;
     }}
 
-    /* Hide the checkbox checkmark box (which is the first child of the label) */
-    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] label > :first-child {{
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-    }}
-
-    /* Style the markdown container holding the text */
-    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] {{
+    /* Track: light lavender (light mode) → deep indigo (dark mode) */
+    div[class*="theme_toggle_switch"] label > div:first-child,
+    div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] {{
+        background-color: {'rgba(167,139,250,0.35)' if is_dark else '#e9d5ff'} !important;
+        flex-shrink: 0 !important;
+        transition: background-color 0.25s ease !important;
+        width: 48px !important;
+        height: 26px !important;
+        padding: 0 !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: center !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        position: relative !important;
+        border-radius: 999px !important;
+        margin: 0 auto !important;
+        left: auto !important;
+        right: auto !important;
+        float: none !important;
     }}
-    div[data-testid="stColumn"]:has(.theme-toggle-marker) div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] p {{
-        font-size: 10px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        color: {text_secondary} !important;
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child,
+    div[class*="theme_toggle_switch"] label:has(input:checked) [data-testid="stCheckboxToToggle"] {{
+        background-color: #6d28d9 !important;
+    }}
+
+    /* Knob: vivid indigo in light mode → white in dark mode */
+    div[class*="theme_toggle_switch"] label > div:first-child > div,
+    div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] > div {{
+        background-color: #6366f1 !important;
+        box-shadow: 0 2px 6px rgba(99,102,241,0.45) !important;
+        transition: transform 0.25s ease, background-color 0.2s ease !important;
+        position: absolute !important;
+        top: 3px !important;
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+        transform: translate(3px, 0px) !important;
+        left: 0 !important;
+    }}
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div,
+    div[class*="theme_toggle_switch"] label:has(input:checked) [data-testid="stCheckboxToToggle"] > div {{
+        background-color: #ffffff !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
+        transform: translate(25px, 0px) !important;
+    }}
+
+    /* Icon inside knob */
+    div[class*="theme_toggle_switch"] label > div:first-child > div::after,
+    div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] > div::after {{
+        content: "" !important;
+        display: block !important;
+        width: 12px !important;
+        height: 12px !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-position: center !important;
+        mask-position: center !important;
+        background-color: #ffffff !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+    }}
+    div[class*="theme_toggle_switch"] label:has(input:checked) > div:first-child > div::after,
+    div[class*="theme_toggle_switch"] label:has(input:checked) [data-testid="stCheckboxToToggle"] > div::after {{
+        background-color: #4f46e5 !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+    }}
+
+    /* Label text area */
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] {{
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-grow: 1 !important;
+    }}
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
         margin: 0 !important;
-        line-height: 1 !important;
-        letter-spacing: 1px !important;
-        white-space: nowrap !important; /* Prevent text wrapping */
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: {'#a78bfa' if is_dark else '#5b21b6'} !important;
+        white-space: nowrap !important;
+        letter-spacing: 0.1px !important;
+    }}
+
+    /* Icon left of label text — moon or sun */
+    div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
+        content: "" !important;
+        display: inline-block !important;
+        flex-shrink: 0 !important;
+        width: 18px !important;
+        height: 18px !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+        -webkit-mask-position: center !important;
+        mask-position: center !important;
+        background-color: #7c3aed !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
+    }}
+    /* Light mode: sun icon (unchec    div[class*="theme_toggle_switch"] label:not(:has(input:checked)) div[data-testid="stMarkdownContainer"]::before {{
+        background-color: #f59e0b !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E") !important;
     }}
 
     /* Tab markers and wrapper styling */
@@ -368,6 +521,7 @@ def render_auth_page():
     }}
 
     /* Flat Tab Row Container - Sleek & Minimalist */
+    /* Remove ALL spacing between tab columns */
     div[data-testid="stHorizontalBlock"]:has(.auth-tab) {{
         background-color: transparent !important;
         background: transparent !important;
@@ -375,8 +529,7 @@ def render_auth_page():
         border-radius: 0px !important;
         padding: 0 !important;
         gap: 0px !important;
-        margin-bottom: 24px !important;
-        border-bottom: 1px solid {card_border} !important;
+        margin-bottom: 0px !important;  /* ← ubah dari 24px ke 0px */
     }}
 
     /* Remove column spacing */
@@ -393,7 +546,7 @@ def render_auth_page():
         font-size: 14px !important;
         height: 40px !important;
         width: 100% !important;
-        transition: all 0.2s ease !important;
+        transition: color 0.25s ease !important;
         margin: 0 !important;
         text-transform: none !important;
         letter-spacing: 0.5px !important;
@@ -402,21 +555,141 @@ def render_auth_page():
         border-bottom: 2px solid transparent !important;
     }}
 
-    /* Active Tab Button Style - flat bottom line */
+    /* Active Tab Button Style - transparent bottom border (using sliding line instead) */
     div[data-testid="stColumn"]:has(.active-tab) div[data-testid="stButton"] button {{
         color: {text_active} !important;
         font-weight: 700 !important;
-        border-bottom: 2px solid {text_active} !important;
+        border-bottom: 2px solid transparent !important;
     }}
 
-    /* Inactive Tab Button Style - transparent line */
+    /* Inactive Tab Button Style */
     div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button {{
         color: {text_secondary} !important;
         border-bottom: 2px solid transparent !important;
     }}
     div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button:hover {{
         color: {text_primary} !important;
-        border-bottom: 2px solid {card_border} !important;
+    }}
+
+    /* Sliding purple tab underline container (acts as the thin background line) */
+    .tab-slider-container {{
+        position: relative !important;
+        width: 100% !important;
+        height: 1px !important; /* The thin gray line height */
+        background-color: {card_border} !important; /* The thin gray line color */
+        margin-top: -25px !important; /* Offset the margin-bottom of the tab row exactly (which is 24px) */
+        margin-bottom: 24px !important;
+        overflow: visible !important;
+    }}
+
+    /* Hover state untuk tab button */
+    div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button:hover {{
+        background-color: transparent !important;
+        color: {text_primary} !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }}
+
+    /* Active tab hover - tetap warna aktif */
+    div[data-testid="stColumn"]:has(.active-tab) div[data-testid="stButton"] button:hover {{
+        color: {text_active} !important;
+        background-color: transparent !important;
+    }}
+
+    /* Inactive tab hover - subtle fade ke primary */
+    div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button:hover {{
+        color: {text_primary} !important;
+        background-color: transparent !important;
+    }}
+
+    .tab-slider-line {{
+        position: absolute !important;
+        top: -1px !important; /* Align exactly on top of the thin line */
+        height: 2px !important;
+        width: 50% !important;
+        background-color: {text_active} !important;
+        border-radius: 2px !important;
+        z-index: 2 !important;
+    }}
+
+    /* Hover states for the tabs */
+    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stColumn"]:first-child:has(.inactive-tab):hover) ~ .tab-slider-container::before {{
+        content: "" !important;
+        position: absolute !important;
+        top: -1px !important;
+        left: 0% !important;
+        width: 50% !important;
+        height: 2px !important;
+        background-color: {text_active} !important;
+        opacity: 0.3 !important; /* Soft preview on hover */
+        border-radius: 2px !important;
+        z-index: 1 !important;
+        transition: opacity 0.2s ease !important;
+    }}
+
+    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stColumn"]:last-child:has(.inactive-tab):hover) ~ .tab-slider-container::after {{
+        content: "" !important;
+        position: absolute !important;
+        top: -1px !important;
+        left: 50% !important;
+        width: 50% !important;
+        height: 2px !important;
+        background-color: {text_active} !important;
+        opacity: 0.3 !important; /* Soft preview on hover */
+        border-radius: 2px !important;
+        z-index: 1 !important;
+        transition: opacity 0.2s ease !important;
+    }}
+
+    .static-login {{
+        left: 0% !important;
+    }}
+    
+    .static-register {{
+        left: 50% !important;
+    }}
+
+    @keyframes slideToRegister {{
+        from {{
+            left: 0%;
+        }}
+        to {{
+            left: 50%;
+        }}
+    }}
+
+    @keyframes slideToLogin {{
+        from {{
+            left: 50%;
+        }}
+        to {{
+            left: 0%;
+        }}
+    }}
+
+    .animate-to-register {{
+        animation: slideToRegister 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }}
+
+    .animate-to-login {{
+        animation: slideToLogin 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }}
+
+    /* Soft Form Fade-In Transition (Clean & Aesthetic) */
+    @keyframes softFadeIn {{
+        from {{
+            opacity: 0;
+        }}
+        to {{
+            opacity: 1;
+        }}
+    }}
+
+    .form-animate {{
+        animation: softFadeIn 0.3s ease-in-out forwards !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
     }}
 
     /* Form wrappers */
@@ -476,6 +749,9 @@ def render_auth_page():
         box-sizing: border-box !important;
     }}
 
+    /* Sembunyikan tombol show/hide password agar lebar sama dengan username input */
+    
+
     /* Style actual input containers */
     div[data-testid="stForm"] [data-baseweb="input"] > div,
     div[data-testid="stForm"] [data-testid="stInputWidgetLink"] > div,
@@ -497,7 +773,49 @@ def render_auth_page():
         box-sizing: border-box !important;
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 100% !important;
+        min-width: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+    }}
+
+    /* Reset total - styling dari nol */
+    div[data-testid="stForm"] div[data-testid="stTextInput"] {{
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }}
+
+    div[data-testid="stForm"] div[data-testid="stTextInput"] > div {{
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+    }}
+
+    div[data-testid="stForm"] div[data-testid="stTextInput"] > div > div {{
+        background-color: {input_bg} !important;
+        border: 1px solid {input_border} !important;
+        border-radius: 8px !important;
+        height: 50px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        overflow: hidden !important;
+    }}
+
+    div[data-testid="stForm"] div[data-testid="stTextInput"] input {{
+        width: 100% !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+        padding: 0 16px !important;
+        border: none !important;
+        background: transparent !important;
+        font-size: 14px !important;
+        color: {input_text} !important;
+        box-sizing: border-box !important;
     }}
 
     /* Modern input hover & focus ring */
@@ -558,34 +876,61 @@ def render_auth_page():
     }}
 
     /* Style the normal form checkboxes (e.g. remember_me) */
+        /* Wrapper checkbox - beri margin di sini, bukan di label */
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] {{
+        margin: 16px 0 !important;
+        padding: 0 !important;
+    }}
+
+    /* Label checkbox - flex row, center vertical */
     div[data-testid="stForm"] div[data-testid="stCheckbox"] label {{
-        display: flex !important;
+        display: inline-flex !important;
         flex-direction: row !important;
         align-items: center !important;
-        justify-content: flex-start !important;
+        gap: 10px !important;
+        padding: 0 !important;
+        margin: 0 !important;
         width: auto !important;
         height: auto !important;
         border: none !important;
         background-color: transparent !important;
-        padding: 4px 0px !important;
-        margin: 16px 0px !important;
         cursor: pointer !important;
+        position: static !important;
     }}
-    div[data-testid="stForm"] div[data-testid="stCheckbox"] label > :not([data-testid="stMarkdownContainer"]) {{
+
+    /* Checkbox box icon - reset semua positioning */
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] label > div:first-child {{
+        position: static !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        flex-shrink: 0 !important;
         display: flex !important;
-        opacity: 1 !important;
-        visibility: visible !important;
+        align-items: center !important;
+        justify-content: center !important;
     }}
+
+    /* Teks label */
+    div[data-testid="stForm"] div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] {{
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+    }}
+
     div[data-testid="stForm"] div[data-testid="stCheckbox"] [data-testid="stMarkdownContainer"] p {{
+        margin: 0 !important;
         font-size: 10px !important;
         font-weight: 700 !important;
         letter-spacing: 0.8px !important;
         text-transform: uppercase !important;
         color: {text_secondary} !important;
+        line-height: 1 !important;
         transition: color 0.2s ease !important;
     }}
-    
-    /* Micro-animation hover checkbox text */
+
     div[data-testid="stForm"] div[data-testid="stCheckbox"] label:hover [data-testid="stMarkdownContainer"] p {{
         color: {text_primary} !important;
     }}
@@ -615,16 +960,21 @@ def render_auth_page():
     }}
 
     /* Responsive adjustments */
-    @media (max-width: 480px) {{
+    /* Responsive - hapus semua yang lama, pakai ini saja */
+    @media (max-width: 600px) {{
         [data-testid="stMain"] .block-container {{
-            padding: 24px 20px !important;
-            border-radius: 16px !important;
-            margin-top: 20px !important;
-            margin-bottom: 20px !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            border-radius: 0px !important;
+            padding: 28px 20px !important;
+            border: none !important;
+            box-shadow: none !important;
         }}
-        div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
-            top: 24px !important;
-            right: 20px !important;
+    }}
+
+    @media (max-width: 400px) {{
+        [data-testid="stMain"] .block-container {{
+            padding: 20px 16px !important;
         }}
     }}
 
@@ -648,10 +998,10 @@ def render_auth_page():
             )
         with col_toggle:
             st.markdown('<div class="theme-toggle-marker"></div>', unsafe_allow_html=True)
-            is_dark_toggle = st.checkbox(
-                label="LIGHT MODE" if is_dark else "DARK MODE",
+            is_dark_toggle = st.toggle(
+                label="Dark mode" if is_dark else "Light mode",
                 value=is_dark,
-                key="theme_toggle_checkbox"
+                key="theme_toggle_switch"
             )
             if is_dark_toggle != is_dark:
                 st.session_state["app_theme"] = "dark" if is_dark_toggle else "light"
@@ -687,29 +1037,55 @@ def render_auth_page():
         with col_tab1:
             st.markdown(f'<div class="auth-tab {"active-tab" if is_login else "inactive-tab"}"></div>', unsafe_allow_html=True)
             if st.button("Masuk", key="tab_login_btn", use_container_width=True):
+                st.session_state["prev_auth_mode"] = st.session_state["auth_mode"]
                 st.session_state["auth_mode"] = "login"
                 st.rerun()
         with col_tab2:
             st.markdown(f'<div class="auth-tab {"inactive-tab" if is_login else "active-tab"}"></div>', unsafe_allow_html=True)
             if st.button("Daftar", key="tab_register_btn", use_container_width=True):
+                st.session_state["prev_auth_mode"] = st.session_state["auth_mode"]
                 st.session_state["auth_mode"] = "register"
                 st.rerun()
 
+        # Determine sliding class based on transition
+        prev_mode = st.session_state.get("prev_auth_mode", "login")
+        current_mode = st.session_state.get("auth_mode", "login")
+
+        if prev_mode == "login" and current_mode == "register":
+            slider_class = "animate-to-register"
+        elif prev_mode == "register" and current_mode == "login":
+            slider_class = "animate-to-login"
+        elif current_mode == "register":
+            slider_class = "static-register"
+        else:
+            slider_class = "static-login"
+
+        # Render sliding line container
+        st.markdown(
+            f'<div class="tab-slider-container">'
+            f'<div class="tab-slider-line {slider_class}"></div>'
+            f'</div>',
+            unsafe_allow_html=True
+        )
+
         # Row 4: Forms
+        st.markdown('<div class="form-animate">', unsafe_allow_html=True)
         if st.session_state["auth_mode"] == "login":
             with st.form("login_form"):
                 st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase;">Username</div>', unsafe_allow_html=True)
                 user = st.text_input("Username", placeholder="Masukkan username", label_visibility="collapsed").strip().lower()
                 st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 6px; text-transform: uppercase;">Password</div>', unsafe_allow_html=True)
                 pw = st.text_input("Password", type="password", placeholder="Masukkan password", label_visibility="collapsed")
-                remember_me = st.checkbox("INGAT SAYA", value=True)
+                remember_me = st.checkbox("INGAT SAYA DALAM 24 JAM", value=True)
                 if st.form_submit_button("Masuk", use_container_width=True):
                     ok, msg = login_user(user, pw)
                     if ok:
                         st.session_state.update({"logged_in": True, "current_user": user})
                         st.session_state.pop("logged_out", None)
                         if remember_me:
-                            controller.set("session_user", user)
+                            # Set cookie dengan expiry 24 jam
+                            expires = datetime.datetime.now() + datetime.timedelta(hours=24)
+                            controller.set("session_user", user, expires=expires)
                         else:
                             controller.remove("session_user")
                         st.rerun()
@@ -734,6 +1110,7 @@ def render_auth_page():
                             st.rerun()
                         else:
                             st.error(msg)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown(
         f'<div style="text-align: center; margin-top: 32px; font-size: 11px; color: {text_secondary};">'
