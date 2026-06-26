@@ -117,7 +117,7 @@ def logout():
         if k not in ["cookie_controller", "app_theme"]:
             st.session_state.pop(k, None)
     st.session_state["logged_out"] = True
-    st.session_state.pop("cookie_checked", None)  # ← tambah ini
+    st.session_state.pop("_cookie_ready", None)  # ← reset ini
     st.query_params.clear()
     st.rerun()
 
@@ -188,11 +188,17 @@ def render_auth_page():
 
     if not st.session_state.get("logged_in") and not st.session_state.get("logged_out"):
         if st.query_params.get("force_auth") != "true":
+            
+            # Render pertama: CookieController belum siap, render dulu lalu rerun
+            if not st.session_state.get("_cookie_ready"):
+                st.session_state["_cookie_ready"] = True
+                st.rerun()
+            
+            # Render kedua: cookie sudah bisa dibaca
             saved_user = controller.get("session_user")
-            if saved_user:
-                if saved_user in load_users():
-                    st.session_state.update({"logged_in": True, "current_user": saved_user})
-                    st.rerun()
+            if saved_user and saved_user in load_users():
+                st.session_state.update({"logged_in": True, "current_user": saved_user})
+                st.rerun()
 
     if st.session_state.get("logged_in") and st.query_params.get("force_auth") != "true":
         return True
@@ -1117,7 +1123,6 @@ def render_auth_page():
                         st.session_state.update({"logged_in": True, "current_user": user})
                         st.session_state.pop("logged_out", None)
                         if remember_me:
-                            # Set cookie dengan expiry 24 jam
                             expires = datetime.datetime.now() + datetime.timedelta(hours=24)
                             controller.set("session_user", user, expires=expires)
                         else:
