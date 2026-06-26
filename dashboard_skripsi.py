@@ -992,7 +992,121 @@ if theme == "dark":
         --secondary-color: #818cf8 !important;
         --secondary-text-hover-color: #0f172a !important;
     }
+    /* ── DATA EDITOR / DATA FRAME — Dark Mode Override ── */
+    [data-testid="stDataEditor"] {
+        filter: none !important;
+        background-color: #0f172a !important;
+    }
 
+    /* Container utama data editor */
+    [data-testid="stDataEditor"] > div,
+    [data-testid="stDataEditorResizable"] {
+        background-color: #0f172a !important;
+        border-color: #1e293b !important;
+    }
+
+    /* Header kolom (baris judul) */
+    [data-testid="stDataEditor"] .dvn-scroller .rdg-header-row,
+    [data-testid="stDataEditor"] .rdg-header-row {
+        background-color: #1e293b !important;
+        color: #94a3b8 !important;
+        border-bottom: 1px solid #334155 !important;
+    }
+
+    /* Header cell */
+    [data-testid="stDataEditor"] .rdg-header-row .rdg-cell,
+    [data-testid="stDataEditor"] [role="columnheader"] {
+        background-color: #1e293b !important;
+        color: #94a3b8 !important;
+        border-right: 1px solid #334155 !important;
+        border-bottom: 1px solid #334155 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Row biasa */
+    [data-testid="stDataEditor"] .rdg-row,
+    [data-testid="stDataEditor"] [role="row"] {
+        background-color: #0f172a !important;
+        border-bottom: 1px solid #1e293b !important;
+    }
+
+    /* Row ganjil (zebra striping) */
+    [data-testid="stDataEditor"] .rdg-row:nth-child(odd) {
+        background-color: #0f172a !important;
+    }
+
+    /* Row genap */
+    [data-testid="stDataEditor"] .rdg-row:nth-child(even) {
+        background-color: rgba(30, 41, 59, 0.4) !important;
+    }
+
+    /* Row hover */
+    [data-testid="stDataEditor"] .rdg-row:hover,
+    [data-testid="stDataEditor"] [role="row"]:hover {
+        background-color: #1e293b !important;
+    }
+
+    /* Row yang sedang dipilih/selected */
+    [data-testid="stDataEditor"] .rdg-row-selected,
+    [data-testid="stDataEditor"] [aria-selected="true"] {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+    }
+
+    /* Cell biasa */
+    [data-testid="stDataEditor"] .rdg-cell,
+    [data-testid="stDataEditor"] [role="gridcell"] {
+        background-color: transparent !important;
+        color: #f1f5f9 !important;
+        border-right: 1px solid #1e293b !important;
+        border-bottom: 1px solid #1e293b !important;
+    }
+
+    /* Cell yang sedang diedit / aktif */
+    [data-testid="stDataEditor"] .rdg-cell-editing,
+    [data-testid="stDataEditor"] [role="gridcell"]:focus-within {
+        background-color: rgba(99, 102, 241, 0.1) !important;
+        outline: 2px solid #6366f1 !important;
+        outline-offset: -2px !important;
+    }
+
+    /* Input di dalam cell yang diedit */
+    [data-testid="stDataEditor"] .rdg-cell-editing input,
+    [data-testid="stDataEditor"] [role="gridcell"] input {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #6366f1 !important;
+        caret-color: #f1f5f9 !important;
+    }
+
+    /* Kolom nomor baris (row index) */
+    [data-testid="stDataEditor"] .rdg-cell[aria-colindex="1"],
+    [data-testid="stDataEditor"] [role="gridcell"]:first-child {
+        background-color: #1e293b !important;
+        color: #64748b !important;
+        border-right: 1px solid #334155 !important;
+    }
+
+    /* Scrollbar di dalam data editor */
+    [data-testid="stDataEditor"] .dvn-scroller::-webkit-scrollbar {
+        width: 6px !important;
+        height: 6px !important;
+    }
+    [data-testid="stDataEditor"] .dvn-scroller::-webkit-scrollbar-track {
+        background: #0f172a !important;
+    }
+    [data-testid="stDataEditor"] .dvn-scroller::-webkit-scrollbar-thumb {
+        background: #334155 !important;
+        border-radius: 4px !important;
+    }
+
+    /* Override filter invert yang dipakai untuk stDataFrame biasa */
+    [data-testid="stDataFrame"] {
+        filter: invert(0.92) hue-rotate(180deg) !important;
+    }
+    [data-testid="stDataEditor"] {
+        filter: none !important;
+    }
     /* 2. App & main background */
     .stApp {
         background-color: #020617 !important;
