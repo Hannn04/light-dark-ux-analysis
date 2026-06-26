@@ -1143,16 +1143,46 @@ if theme == "dark":
     }
 
     /* 11. Main area expanders */
-    details, details > div,
-    [data-testid="stExpander"],
-    [data-testid="stExpanderDetails"],
-    [data-testid="stExpanderDetails"] > div {
-        background-color: #0f172a !important;
-        color: #f1f5f9 !important;
-        border-color: #1e293b !important;
+    /* Modern Expander */
+    [data-testid="stExpander"]{
+        border:1px solid rgba(99,102,241,.18) !important;
+        border-radius:14px !important;
+        overflow:hidden !important;
+        background:#0f172a !important;
+        box-shadow:0 6px 20px rgba(0,0,0,.18);
     }
-    details summary {
-        color: #f1f5f9 !important;
+
+    [data-testid="stExpander"] details{
+        background:#0f172a !important;
+    }
+
+    [data-testid="stExpander"] summary{
+        background:#111827 !important;
+        padding:16px 20px !important;
+        font-size:16px !important;
+        font-weight:700 !important;
+        color:#f8fafc !important;
+        border-bottom:1px solid rgba(99,102,241,.15);
+    }
+
+    [data-testid="stExpanderDetails"]{
+        background:#0f172a !important;
+        padding:22px !important;
+    }
+                
+    .stDownloadButton button{
+        width:220px;
+        height:44px;
+        border-radius:10px !important;
+    }
+
+    .stRadio label{
+        font-weight:600 !important;
+    }
+
+    [data-baseweb="select"]>div{
+        min-height:44px !important;
+        border-radius:10px !important;
     }
 
     /* 12. File uploader */
