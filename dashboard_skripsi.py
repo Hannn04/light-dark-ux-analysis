@@ -3005,14 +3005,21 @@ with st.sidebar:
         padding-right: 0 !important;
     }}
 
-    /* Force semua markdown HTML (branding, univ label) ikut center */
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stMarkdownContainer"] {{
+    /* Force logo container center - HAPUS rule stMarkdownContainer yang lama */
+    [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container {{
+        margin: 0 auto !important;
+        padding: 0 !important;
+        width: 100% !important;
         display: flex !important;
         justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
+    }}
+
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-univ-short {{
+        margin: 0 auto !important;
+        text-align: center !important;
         padding: 0 !important;
-        margin: 0 !important;
+        width: 100% !important;
+        display: block !important;
     }}
 
     /* Force logo container center */
