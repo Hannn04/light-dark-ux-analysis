@@ -3018,27 +3018,33 @@ with st.sidebar:
     }}
 
 
+    /* Toggle: sembunyikan pill wrapper, tampilkan hanya track di tengah */
+    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label,
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label {{
         width: 70px !important;
+        height: auto !important;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
         padding: 0 !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
+        gap: 0 !important;
     }}
-    
-    /* Override the pill-style toggle label width when collapsed */
-    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label {{
-        width: 70px !important;
-        justify-content: center !important;
-        padding: 0 !important;
-        background: transparent !important;
-        border: none !important;
+
+    /* Pastikan track toggle (48x26px) tetap terlihat dan ter-center */
+    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label > div:first-child,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label > div:first-child {{
+        display: flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 auto !important;
+        left: auto !important;
+        right: auto !important;
+        position: relative !important;
     }}
-    
+
     /* Ensure the toggle label and input are always clickable */
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label,
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] input,
