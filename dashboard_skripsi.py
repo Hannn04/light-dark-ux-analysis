@@ -1965,67 +1965,20 @@ import streamlit.components.v1 as components
 components.html("""
 <script>
     const parentDoc = window.parent.document;
-    const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
-    const mainContainer = parentDoc.querySelector('[data-testid="stMainViewContainer"]');
-    const appContainer = parentDoc.querySelector('[data-testid="stAppViewContainer"]');
-
-    if (sidebar && mainContainer) {
-        let isResizing = false;
-        
-        sidebar.style.minWidth = 'initial';
-        sidebar.style.maxWidth = 'initial';
-
-        // Menambahkan border handle transparan visual di tepi kanan sidebar untuk interaksi drag
-        let handle = parentDoc.getElementById('sidebar-drag-handle');
-        if (!handle) {
-            handle = parentDoc.createElement('div');
-            handle.id = 'sidebar-drag-handle';
-            handle.style.position = 'absolute';
-            handle.style.top = '0';
-            handle.style.right = '0';
-            handle.style.width = '12px';
-            handle.style.height = '100%';
-            handle.style.cursor = 'ew-resize';
-            handle.style.zIndex = '999999';
-            sidebar.appendChild(handle);
-        }
-
-        handle.addEventListener('mousedown', function(e) {
-            isResizing = true;
-            parentDoc.body.style.cursor = 'ew-resize';
-            parentDoc.body.style.userSelect = 'none';
-            sidebar.style.transition = 'none';
-            mainContainer.style.transition = 'none';
-        });
-
-        parentDoc.addEventListener('mousemove', function(e) {
-            if (!isResizing) return;
-            
-            let newWidth = e.clientX;
-            
-            // Atur batas snapping
-            if (newWidth < 130) {
-                newWidth = 70; // Snap ke bentuk ringkas/tidak lengkap
-                sidebar.classList.add('collapsed-dock-mode');
-            } else {
-                if (newWidth > 400) newWidth = 450; // Batasi lebar maksimal
-                sidebar.classList.remove('collapsed-dock-mode');
-            }
-
-            sidebar.style.width = newWidth + 'px';
-            mainContainer.style.marginLeft = newWidth + 'px';
-            mainContainer.style.width = `calc(100% - ${newWidth}px)`;
-        });
-
-        parentDoc.addEventListener('mouseup', function() {
-            if (isResizing) {
-                isResizing = false;
-                parentDoc.body.style.cursor = 'default';
-                parentDoc.body.style.userSelect = 'initial';
-                sidebar.style.transition = 'width 0.2s ease';
-                mainContainer.style.transition = 'margin-left 0.2s ease, width 0.2s ease';
+    const makeReadonly = () => {
+        const selector = 'div[data-testid="stDialog"] div[data-baseweb="select"] input, div[role="dialog"] div[data-baseweb="select"] input, [data-testid="stModal"] div[data-baseweb="select"] input';
+        const inputs = parentDoc.querySelectorAll(selector);
+        inputs.forEach(input => {
+            if (!input.readOnly) {
+                input.readOnly = true;
+                input.style.caretColor = 'transparent';
+                input.style.pointerEvents = 'none';
             }
         });
+    };
+    makeReadonly();
+    if (!window.parent.readonlySelectboxInterval) {
+        window.parent.readonlySelectboxInterval = setInterval(makeReadonly, 100);
     }
 </script>
 """, height=0, width=0)
