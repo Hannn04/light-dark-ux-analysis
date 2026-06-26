@@ -3016,6 +3016,29 @@ with st.sidebar:
         border: none !important;
         background: transparent !important;
     }}
+
+
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label {{
+        width: 70px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }}
+    
+    /* Override the pill-style toggle label width when collapsed */
+    [data-testid="stSidebar"][aria-expanded="false"] div[class*="theme_toggle_switch"] label {{
+        width: 70px !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+    }}
+    
     /* Ensure the toggle label and input are always clickable */
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label,
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] input,
