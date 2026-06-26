@@ -565,10 +565,39 @@ def render_auth_page():
     /* Inactive Tab Button Style */
     div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button {{
         color: {text_secondary} !important;
+        position: relative !important;
         border-bottom: 2px solid transparent !important;
     }}
     div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button:hover {{
         color: {text_primary} !important;
+    }}
+
+    div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button::after {{
+        content: "" !important;
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 50% !important;
+        width: 0% !important;
+        height: 2px !important;
+        background-color: {text_active} !important;
+        opacity: 0.3 !important;
+        border-radius: 2px !important;
+        transform: translateX(-50%) !important;
+        transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }}
+
+    div[data-testid="stColumn"]:has(.inactive-tab) div[data-testid="stButton"] button:hover::after {{
+        width: 60% !important;
+    }}
+
+    /* Active tab - glow subtle pada hover */
+    div[data-testid="stColumn"]:has(.active-tab) div[data-testid="stButton"] button {{
+        text-shadow: 0 0 20px {'rgba(129,140,248,0.4)' if is_dark else 'rgba(79,70,229,0.25)'} !important;
+        transition: text-shadow 0.2s ease, color 0.2s ease !important;
+    }}
+
+    div[data-testid="stColumn"]:has(.active-tab) div[data-testid="stButton"] button:hover {{
+        text-shadow: 0 0 24px {'rgba(129,140,248,0.6)' if is_dark else 'rgba(79,70,229,0.4)'} !important;
     }}
 
     /* Sliding purple tab underline container (acts as the thin background line) */
@@ -1017,7 +1046,7 @@ def render_auth_page():
                 f'<div style="margin-bottom: 28px;">'
                 f'<div style="font-size: 24px; font-weight: 700; color: {text_primary}; letter-spacing: -0.5px; margin-bottom: 6px;">Selamat Datang</div>'
                 f'<div style="font-size: 12px; font-weight: 600; color: #4f46e5; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px;">Penelitian Light Mode vs Dark Mode</div>'
-                f'<div style="font-size: 13px; color: {text_secondary}; line-height: 1.5; font-weight: 400;">Silakan masuk untuk mengakses hasil analisis data dan perbandingan pengalaman pengguna (UX).</div>'
+                f'<div style="font-size: 13px; color: {text_secondary}; line-height: 1.5; font-weight: 400;">Silakan masuk untuk mengakses hasil analisis data dan perbedaan pengalaman pengguna (UX).</div>'
                 f'</div>',
                 unsafe_allow_html=True
             )
@@ -1076,7 +1105,7 @@ def render_auth_page():
                 user = st.text_input("Username", placeholder="Masukkan username", label_visibility="collapsed").strip().lower()
                 st.markdown(f'<div style="font-size: 11px; font-weight: 600; color: {text_secondary}; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 6px; text-transform: uppercase;">Password</div>', unsafe_allow_html=True)
                 pw = st.text_input("Password", type="password", placeholder="Masukkan password", label_visibility="collapsed")
-                remember_me = st.checkbox("INGAT SAYA DALAM 24 JAM", value=True)
+                remember_me = st.checkbox("INGAT SAYA SELAMA 24 JAM", value=True)
                 if st.form_submit_button("Masuk", use_container_width=True):
                     ok, msg = login_user(user, pw)
                     if ok:
