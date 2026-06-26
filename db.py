@@ -31,23 +31,30 @@ def load_app_list(username):
             f"{SUPABASE_URL}/rest/v1/app_list?select=app_name&username=eq.{username}",
             headers=HEADERS
         )
+
+        res.raise_for_status()
+
         return [row["app_name"] for row in res.json()]
     except Exception:
         return []
 
 def save_app_list(username, app_list):
     try:
-        requests.delete(
+        res = requests.delete(
             f"{SUPABASE_URL}/rest/v1/app_list?username=eq.{username}",
             headers=HEADERS
         )
+
+        res.raise_for_status()
         if app_list:
             rows = [{"username": username, "app_name": name} for name in app_list]
-            requests.post(
+            res = requests.post(
                 f"{SUPABASE_URL}/rest/v1/app_list",
                 headers=HEADERS,
                 json=rows
             )
+
+            res.raise_for_status()
     except Exception as e:
         st.error(f"Gagal simpan app list: {e}")
 
@@ -61,6 +68,7 @@ def load_data(table, username, app):
             f"{SUPABASE_URL}/rest/v1/{table}?select=*&username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
+        res.raise_for_status()
         data = res.json()
         if not data:
             return pd.DataFrame()
@@ -85,10 +93,12 @@ def load_data(table, username, app):
 
 def save_data(table, username, app, df):
     try:
-        requests.delete(
+        res = requests.delete(
             f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
+
+        res.raise_for_status()
         df_copy = df.copy()
         # Hanya ambil kolom yang relevan
         cols_keep = ["Responden","Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]
@@ -98,14 +108,16 @@ def save_data(table, username, app, df):
         df_copy["app"] = app
         records = df_copy.to_dict(orient="records")
         if records:
-            requests.post(
+            res = requests.post(
                 f"{SUPABASE_URL}/rest/v1/{table}",
                 headers=HEADERS,
                 json=records
             )
+
+            res.raise_for_status()
         return True
     except Exception as e:
-        st.error(f"Gagal simpan data: {e}")
+        st.exception(e)
         return False
 
 # ======================
@@ -118,6 +130,7 @@ def load_ueq(table, username, app, n):
             f"{SUPABASE_URL}/rest/v1/{table}?select=*&username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
+        res.raise_for_status()
         data = res.json()
         if not data:
             return pd.DataFrame(4, index=range(n), columns=ITEMS)
@@ -138,10 +151,12 @@ def load_ueq(table, username, app, n):
 
 def save_ueq(table, username, app, df):
     try:
-        requests.delete(
+        res = requests.delete(
             f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
+
+        res.raise_for_status()
         df_copy = df.copy()
         df_copy.columns = [c.lower() for c in df_copy.columns]
         df_copy["username"] = username
@@ -149,11 +164,13 @@ def save_ueq(table, username, app, df):
         df_copy["responden"] = [f"R{i+1}" for i in range(len(df_copy))]
         records = df_copy.to_dict(orient="records")
         if records:
-            requests.post(
+            res = requests.post(
                 f"{SUPABASE_URL}/rest/v1/{table}",
                 headers=HEADERS,
                 json=records
             )
+
+            res.raise_for_status()
         return True
     except Exception as e:
         st.error(f"Gagal simpan UEQ: {e}")
@@ -169,6 +186,7 @@ def load_pref(table, username, app, n):
             f"{SUPABASE_URL}/rest/v1/{table}?select=*&username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
+        res.raise_for_status()
         data = res.json()
         if not data:
             df = pd.DataFrame(0, index=range(n), columns=["Responden"] + PREF_COLS)
@@ -197,21 +215,25 @@ def load_pref(table, username, app, n):
 
 def save_pref(table, username, app, df):
     try:
-        requests.delete(
+        res = requests.delete(
             f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
+
+        res.raise_for_status()
         df_copy = df.copy()
         df_copy.columns = [c.lower() for c in df_copy.columns]
         df_copy["username"] = username
         df_copy["app"] = app
         records = df_copy.to_dict(orient="records")
         if records:
-            requests.post(
+            res = requests.post(
                 f"{SUPABASE_URL}/rest/v1/{table}",
                 headers=HEADERS,
                 json=records
             )
+
+            res.raise_for_status()
         return True
     except Exception as e:
         st.error(f"Gagal simpan preferensi: {e}")
@@ -223,6 +245,7 @@ def pref_exists(table, username, app):
             f"{SUPABASE_URL}/rest/v1/{table}?select=username&username=eq.{username}&app=eq.{app}&limit=1",
             headers=HEADERS
         )
+        res.raise_for_status()
         return len(res.json()) > 0
     except Exception:
         return False
