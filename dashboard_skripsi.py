@@ -2998,6 +2998,34 @@ with st.sidebar:
         width: 100% !important
     }}
 
+    /* Pastikan semua children langsung di dalam stVerticalBlock juga ter-center */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
+        align-items: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }}
+
+    /* Force semua markdown HTML (branding, univ label) ikut center */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stMarkdownContainer"] {{
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }}
+
+    /* Force logo container center */
+    [data-testid="stSidebar"][aria-expanded="false"] .brand-logo-container,
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-univ-short {{
+        margin: 0 auto !important;
+        text-align: center !important;
+        padding: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }}
+
     /* Style collapsed toggle switch to center it and hide its label text */
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has(div[class*="theme_toggle_switch"]),
     [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(div[class*="theme_toggle_switch"]),
