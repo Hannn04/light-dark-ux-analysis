@@ -2796,8 +2796,8 @@ with st.sidebar:
     [data-testid="stSidebarCollapsedControl"] {{
         left: 0px !important;
         top: 0px !important;
-        width: 70px !important;
-        height: 50px !important;
+        width: 100px !important;
+        height: 100px !important;
         background: transparent !important;
         display: flex !important;
         align-items: center !important;
@@ -2812,7 +2812,7 @@ with st.sidebar:
         color: {text_soft} !important;
         width: 100% !important;
         height: 100% !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         padding: 0 !important;
         display: flex !important;
         align-items: center !important;
