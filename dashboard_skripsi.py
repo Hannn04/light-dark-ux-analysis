@@ -2761,15 +2761,18 @@ with st.sidebar:
         flex-direction: column !important;
         visibility: visible !important;
         opacity: 1 !important;
-        padding: 8px 6px 8px 6px !important;
+        padding: 8px 0px 8px 0px !important;
         height: 100% !important;
         box-sizing: border-box !important;
+        align-items: center !important;
     }}
     /* Push the element containers to distribute: top group vs bottom group */
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
         display: flex !important;
         flex-direction: column !important;
         height: 100% !important;
+        align-items: center !important;
+        width: 100% !important;
     }}
     /* Spacer: push toggle + user card to bottom */
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.element-container:has(div[class*="theme_toggle_switch"]),
@@ -2932,6 +2935,10 @@ with st.sidebar:
     }}
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
         gap: 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] {{
         position: absolute !important;
@@ -2979,6 +2986,10 @@ with st.sidebar:
         padding-right: 0 !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important
     }}
 
     /* Style collapsed toggle switch to center it and hide its label text */
@@ -3082,6 +3093,10 @@ with st.sidebar:
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"],
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] {{
         overflow: visible !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
     }}
     }}
     </style>
