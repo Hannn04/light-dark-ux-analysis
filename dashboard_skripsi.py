@@ -2998,6 +2998,44 @@ with st.sidebar:
         width: 100% !important
     }}
 
+    /* Fix toggle position - paksa center sempurna */
+    [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has([data-testid="stToggle"]),
+    [data-testid="stSidebar"][aria-expanded="false"] div.element-container:has([data-testid="stToggle"]) {{
+        width: 70px !important;
+        min-width: 70px !important;
+        max-width: 70px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+    }}
+
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] {{
+        width: 48px !important;
+        min-width: 0 !important;
+        max-width: 48px !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }}
+
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stToggle"] label {{
+        width: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }}
+
     /* Pastikan semua children langsung di dalam stVerticalBlock juga ter-center */
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
         align-items: center !important;
