@@ -2818,6 +2818,12 @@ with st.sidebar:
         align-items: center !important;
         justify-content: center !important;
     }}
+
+    button[kind="header"] {{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    }}
     [data-testid="stSidebarCollapsedControl"]:hover button {{
         color: #6366f1 !important;
     }}
