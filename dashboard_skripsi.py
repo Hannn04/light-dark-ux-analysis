@@ -1579,6 +1579,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
     transition: all 0.3s ease;
     height: 100%;
     color: var(--text-color) !important;
+    margin-bottom: 20px !important;
 }
 
 /* Hanya target Streamlit markdown container, bukan semua elemen inline */
@@ -1894,6 +1895,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     border-radius: 14px;
     padding: 20px 18px;
     height: 100%;
+    margin-bottom: 20px !important;
 }
 .kpi-title {
     font-size: 10px;
