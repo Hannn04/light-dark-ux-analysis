@@ -2906,9 +2906,9 @@ with st.sidebar:
             margin-left: 0px !important;
             left: 0px !important;
             transform: translate3d(0px, 0px, 0px) !important;
-            min-width: 70px !important;
-            max-width: 70px !important;
-            width: 70px !important;
+            min-width: 54px !important;
+            max-width: 54px !important;
+            width: 54px !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             border-right: 1px solid rgba(128,128,128,0.15) !important;
             background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
@@ -2957,9 +2957,9 @@ with st.sidebar:
         padding-left: 0px !important;
     }}
     [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) [data-testid="stMainViewContainer"] {{
-        margin-left: 70px !important;
+        margin-left: 54px !important;
         padding-left: 0px !important;
-        width: calc(100% - 70px) !important;
+        width: calc(100% - 54px) !important;
     }}
     
     /* Style the collapse button inside the sidebar */
