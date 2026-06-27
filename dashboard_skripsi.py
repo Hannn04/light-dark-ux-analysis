@@ -1998,7 +1998,27 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     h3 {
         font-size: 1.1rem !important;
     }
+            
+    /* MOBILE FIX: Hide sidebar, reset margin */
+    [data-testid="stSidebar"] {
+        display: none !important;
+    }
+    [data-testid="stSidebar"][aria-expanded="false"] {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+    }
+    [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) [data-testid="stMainViewContainer"] {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    [data-testid="stMainViewContainer"] {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
 }
+            
+    
 
 </style>
 """, unsafe_allow_html=True)
