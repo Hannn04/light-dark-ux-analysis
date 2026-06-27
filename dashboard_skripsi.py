@@ -1443,6 +1443,11 @@ st.markdown("""
 :root {
     --secondary-color: #6366F1;
     --secondary-text-hover-color: #FFFFFF;
+    --background-color: #f8fafc;
+    --secondary-background-color: #ffffff;
+    --text-color: #111827;
+    --text-soft: #6b7280;
+    --border-color: #e5e7eb;
 }
 
 .stButton > button[kind="secondary"] {
@@ -1470,31 +1475,6 @@ div[role="dialog"] div[data-baseweb="select"] input,
 }
 /* Sembunyikan header Streamlit (Deploy & Menu) */
 header[data-testid="stHeader"] {
-    display: none !important;
-}
-
-/* Custom 3-line hamburger icon globally instead of default double-arrow */
-[data-testid="stSidebarCollapsedControl"] button {
-    background-color: transparent !important;
-    border: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-[data-testid="stSidebarCollapsedControl"] button::before {
-    content: "" !important;
-    display: block !important;
-    width: 20px !important;
-    height: 20px !important;
-    background-color: var(--text-color, #475569) !important;
-    -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
-    mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
-    -webkit-mask-repeat: no-repeat !important;
-    mask-repeat: no-repeat !important;
-    -webkit-mask-size: contain !important;
-    mask-size: contain !important;
-}
-[data-testid="stSidebarCollapsedControl"] button svg {
     display: none !important;
 }
 
@@ -2039,32 +2019,9 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
         left: 8px !important;
         z-index: 999999 !important;
     }
-    [data-testid="stSidebarCollapsedControl"] button {
-        background-color: transparent !important;
-        border: none !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    [data-testid="stSidebarCollapsedControl"] button::before {
-        content: "" !important;
-        display: block !important;
-        width: 20px !important;
-        height: 20px !important;
-        background-color: var(--text-color, #475569) !important;
-        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
-        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
-        -webkit-mask-repeat: no-repeat !important;
-        mask-repeat: no-repeat !important;
-        -webkit-mask-size: contain !important;
-        mask-size: contain !important;
-    }
-    [data-testid="stSidebarCollapsedControl"] button svg {
-        display: none !important;
-    }
     header[data-testid="stHeader"] {
         display: flex !important;
-        background-color: var(--secondary-background-color) !important;
+        background-color: var(--secondary-background-color, #ffffff) !important;
         border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
         height: 50px !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
@@ -2124,8 +2081,49 @@ components.html("""
 st.markdown(f"""
 <style>
 [data-testid="stSidebar"] {{
+    background-color: {bg_sidebar} !important;
     background: {bg_sidebar} !important;
+    opacity: 1 !important;
     border-right: 1px solid {border} !important;
+}}
+header[data-testid="stHeader"] {{
+    background-color: {bg_card} !important;
+    background: {bg_card} !important;
+    opacity: 1 !important;
+}}
+[data-testid="stSidebarCollapsedControl"] {{
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button {{
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button::before,
+[data-testid="collapsedControl"] button::before {{
+    content: "" !important;
+    display: block !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-color: {text_main} !important;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+    mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+    -webkit-mask-repeat: no-repeat !important;
+    mask-repeat: no-repeat !important;
+    -webkit-mask-size: contain !important;
+    mask-size: contain !important;
+}}
+[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="stSidebarCollapsedControl"] button svg,
+[data-testid="collapsedControl"] svg {{
+    display: none !important;
 }}
 [data-testid="stMetricV2"] {{
     background-color: {bg_card} !important;
