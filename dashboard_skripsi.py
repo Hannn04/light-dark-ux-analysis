@@ -4369,7 +4369,7 @@ if menu == "Overview":
         st.markdown(f"""
         <div style="background:{grand_bg};border:1px solid {grand_border};border-radius:14px;
             padding:28px 20px;text-align:center;height:100%;display:flex;flex-direction:column;
-            justify-content:center;align-items:center;min-height:200px;">
+            justify-content:center;align-items:center;min-height:200px;margin-bottom:20px;">
             <div style="font-size:10px;font-weight:700;color:{grand_color};text-transform:uppercase;
                 letter-spacing:0.08em;margin-bottom:10px;">Overall p-value</div>
             <div style="font-size:38px;font-weight:700;color:{grand_color};line-height:1;">
@@ -4410,7 +4410,7 @@ if menu == "Overview":
                     '<div>'
                       f'<div style="font-size:13px;font-weight:600;color:{text_main};">' + label + '</div>'
                       '<div style="font-size:10px;color:#6366F1;margin-top:1px;">' + method + '</div>'
-                    '</div>'
+                     '</div>'
                   '</div>'
                   '<div style="text-align:right;">'
                     '<div style="font-size:14px;font-weight:700;color:' + sig_color + ';">' + 'p = ' + p_text + '</div>'
@@ -4421,7 +4421,7 @@ if menu == "Overview":
             )
 
         card_html = (
-            f'<div style="border:1px solid rgba(128,128,128,0.2);border-radius:14px;padding:20px 22px;height:100%;">'
+            f'<div style="border:1px solid rgba(128,128,128,0.2);border-radius:14px;padding:20px 22px;height:100%;margin-bottom:20px;">'
               f'<div style="font-size:12px;font-weight:600;color:{text_main};margin-bottom:12px;">'
                 'Rincian Metode Analisis'
               '</div>'
