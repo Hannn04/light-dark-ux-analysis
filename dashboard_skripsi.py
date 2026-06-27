@@ -1473,8 +1473,14 @@ div[role="dialog"] div[data-baseweb="select"] input,
     caret-color: transparent !important;
     user-select: none !important;
 }
-/* Sembunyikan header Streamlit (Deploy & Menu) */
-header[data-testid="stHeader"] {
+/* Sembunyikan header Streamlit (Deploy & Menu) dan action elements di kanan atas */
+header[data-testid="stHeader"],
+[data-testid="stHeader"],
+[data-testid="stHeaderActionElements"],
+[data-testid="stMainMenu"],
+button[id="MainMenu"],
+div[class*="stHeaderActionElements"],
+button[class*="stHeaderActionElements"] {
     display: none !important;
 }
 
