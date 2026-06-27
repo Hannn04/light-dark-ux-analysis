@@ -3889,14 +3889,14 @@ if menu == "Home":
     # ======================
     # VISI & TUJUAN PLATFORM
     # ======================
-    st.markdown("### Tentang Platform")
+    st.markdown(f'<div style="font-size: 22px; font-weight: 700; color:{text_main}; margin-top: 20px; margin-bottom: 20px;">Tentang Platform</div>', unsafe_allow_html=True)
     
     c1, c2 = st.columns(2)
     with c1:
         st.markdown(f"""
-        <div class="card">
-            <div style="font-size:14px; font-weight:700; color:#4f46e5; margin-bottom:10px;">Analisis Statistik Otomatis</div>
-            <div style="font-size:12px; line-height:1.6; color:{text_main};">
+        <div class="card" style="padding: 28px; margin-bottom: 15px;">
+            <div style="font-size:18px; font-weight:700; color:#6366f1; margin-bottom:12px;">Analisis Statistik Otomatis</div>
+            <div style="font-size:15px; line-height:1.6; color:{text_main};">
                 Sistem secara otomatis melakukan uji normalitas Shapiro-Wilk dan menentukan metode uji 
                 yang sesuai — Paired T-Test (parametrik) atau Wilcoxon Signed Ranks Test (non-parametrik) — 
                 dengan output berformat SPSS untuk Time on Task dan Error Rate.
@@ -3906,9 +3906,9 @@ if menu == "Home":
     
     with c2:
         st.markdown(f"""
-        <div class="card">
-            <div style="font-size:14px; font-weight:700; color:#4f46e5; margin-bottom:10px;">Interactivity & Visual Insight</div>
-            <div style="font-size:12px; line-height:1.6; color:{text_main};">
+        <div class="card" style="padding: 28px; margin-bottom: 15px;">
+            <div style="font-size:18px; font-weight:700; color:#6366f1; margin-bottom:12px;">Interactivity & Visual Insight</div>
+            <div style="font-size:15px; line-height:1.6; color:{text_main};">
                 Menyediakan grafik interaktif, tabel perbandingan, serta kesimpulan otomatis untuk 
                 mempermudah interpretasi perbedaan UX antara Light Mode dan Dark Mode pada 
                 aplikasi mobile.
@@ -3919,7 +3919,7 @@ if menu == "Home":
     # ======================
     # INTEGRATED METRICS
     # ======================
-    st.markdown("### Modul Analisis Terintegrasi", unsafe_allow_html=True)
+    st.markdown(f'<div style="font-size: 22px; font-weight: 700; color:{text_main}; margin-top: 35px; margin-bottom: 20px;">Modul Analisis Terintegrasi</div>', unsafe_allow_html=True)
 
     col1, col2, col3, col4 = st.columns(4)
     
@@ -3932,9 +3932,9 @@ if menu == "Home":
 
     for col, (title, desc) in zip([col1, col2, col3, col4], modules):
         col.markdown(f"""
-        <div class="card" style="text-align:center;">
-            <div style="font-size:13px; font-weight:800; color:{text_main}; margin-bottom:5px;">{title}</div>
-            <div style="font-size:10px; color:{text_soft};">{desc}</div>
+        <div class="card" style="text-align:center; padding: 26px 20px; margin-bottom: 15px;">
+            <div style="font-size:16px; font-weight:700; color:{text_main}; margin-bottom:10px;">{title}</div>
+            <div style="font-size:13px; line-height:1.5; color:{text_soft};">{desc}</div>
         </div>
         """, unsafe_allow_html=True)
 
