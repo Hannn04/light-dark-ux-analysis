@@ -1104,13 +1104,30 @@ if theme == "dark":
 
     /* 10. DataFrames & tables */
     [data-testid="stDataFrame"],
-    [data-testid="stTable"],
     .stDataFrame,
-    .stTable,
     div[data-component-name="st.dataframe"],
     div[data-component-name="st.data_editor"] {
         filter: invert(0.9) hue-rotate(180deg) !important;
         background:#0f172a !important;
+    }
+
+    /* Static HTML Tables (st.table) in Dark Mode */
+    [data-testid="stTable"],
+    [data-testid="stTable"] table,
+    [data-testid="stTable"] th,
+    [data-testid="stTable"] td,
+    .stTable,
+    .stTable table,
+    .stTable th,
+    .stTable td {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #1e293b !important;
+    }
+    
+    [data-testid="stTable"] tr:nth-child(even) td,
+    .stTable tr:nth-child(even) td {
+        background-color: #1e293b !important;
     }
 
     [data-testid="stDataFrame"] div[role="grid"]{
