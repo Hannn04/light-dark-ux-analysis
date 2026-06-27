@@ -2933,29 +2933,36 @@ with st.sidebar:
         z-index: 100002 !important;
     }}
     
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
+    [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {{
         display: flex !important;
         flex-direction: column !important;
+        height: 100vh !important;
+        box-sizing: border-box !important;
+        padding-bottom: 20px !important;
+    }}
+    
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
         visibility: visible !important;
         opacity: 1 !important;
-        padding: 8px 0px 8px 0px !important;
-        height: 100% !important;
-        box-sizing: border-box !important;
+        padding: 8px 0px 20px 0px !important;
         align-items: center !important;
     }}
     /* Push the element containers to distribute: top group vs bottom group */
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
         display: flex !important;
         flex-direction: column !important;
+        flex-grow: 1 !important;
         height: 100% !important;
-        align-items: center !important;
         width: 100% !important;
     }}
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] {{
+        align-items: center !important;
+    }}
     /* Spacer: push toggle + user card to bottom */
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.element-container:has(div[class*="theme_toggle_switch"]),
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.stElementContainer:has(div[class*="theme_toggle_switch"]),
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.element-container:has([data-testid="stCheckbox"]),
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.stElementContainer:has([data-testid="stCheckbox"]) {{
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div.element-container:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div.stElementContainer:has(div[class*="theme_toggle_switch"]),
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div.element-container:has([data-testid="stCheckbox"]),
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div.stElementContainer:has([data-testid="stCheckbox"]) {{
         margin-top: auto !important;
     }}
     
