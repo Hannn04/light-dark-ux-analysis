@@ -4243,7 +4243,7 @@ if menu == "Overview":
                     margin-bottom:12px;">{label}</div>
                 """, unsafe_allow_html=True)
                 if any(v > 0 for v in percent_dict.values()):
-                    c_left, c_right = st.columns([1, 1.3])
+                    c_left, c_right = st.columns([1.3, 1])
                     with c_left:
                         fig = go.Figure(data=[go.Pie(
                             labels=list(percent_dict.keys()),
@@ -4821,9 +4821,10 @@ if menu == "Time on Task":
         # ============================================================
         st.markdown("### Benchmark Results")
         col_b1, col_b2 = st.columns(2)
+        color_dark = "#a78bfa" if theme == "dark" else "#1e293b"
         for i, (avg_time, label, color) in enumerate([
             (avg_light_err, "Light Mode", "#6366f1"),
-            (avg_dark_err,  "Dark Mode",  "#1e293b"),
+            (avg_dark_err,  "Dark Mode",  color_dark),
         ]):
             col = col_b1 if i == 0 else col_b2
             with col:
@@ -5126,9 +5127,10 @@ if menu == "Error Rate":
         # ============================================================
         st.markdown("### Benchmark Results")
         col_b1, col_b2 = st.columns(2)
+        color_dark = "#a78bfa" if theme == "dark" else "#1e293b"
         for i, (error_rate, label, color) in enumerate([
             (avg_light_err, "Light Mode", "#6366f1"),
-            (avg_dark_err,  "Dark Mode",  "#1e293b"),
+            (avg_dark_err,  "Dark Mode",  color_dark),
         ]):
             col = col_b1 if i == 0 else col_b2
             with col:
