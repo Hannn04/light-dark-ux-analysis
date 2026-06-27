@@ -1882,6 +1882,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     padding: 15px;
     border-radius: 10px;
     border-left: 5px solid #6366f1;
+    margin-bottom: 20px !important;
 }
 .unggul-light-title {
     color: #6366f1;
@@ -1891,6 +1892,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     padding: 15px;
     border-radius: 10px;
     border-left: 5px solid var(--text-color);
+    margin-bottom: 20px !important;
 }
 .unggul-dark-title {
     color: var(--text-color);
@@ -6228,6 +6230,11 @@ if menu == "Preferensi Responden":
 
         # 2. Grafik Batang
         st.markdown("### Grafik Kecenderungan Per Aspek")
+        is_dark = theme == "dark"
+        font_color = "#f1f5f9" if is_dark else "#1e293b"
+        grid_color = "rgba(255, 255, 255, 0.12)" if is_dark else "rgba(0, 0, 0, 0.08)"
+        annot_color = "#94a3b8" if is_dark else "#475569"
+
         fig = go.Figure()
         fig.add_trace(go.Bar(
             x=res_df["Aspek Pengalaman"],
@@ -6235,9 +6242,34 @@ if menu == "Preferensi Responden":
             marker_color=res_df["Color"],
             text=res_df["Grand Mean"],
             textposition='auto',
+            textfont=dict(color="#ffffff" if is_dark else "#1e293b")
         ))
-        fig.add_hline(y=4, line_dash="dash", line_color="red", annotation_text="Titik Netral (4.0)")
-        fig.update_layout(yaxis=dict(range=[1, 7], title="Skor Preferensi"), height=450)
+        fig.add_hline(
+            y=4, 
+            line_dash="dash", 
+            line_color="red", 
+            annotation_text="Titik Netral (4.0)",
+            annotation_font=dict(color=annot_color)
+        )
+        fig.update_layout(
+            yaxis=dict(
+                range=[1, 7], 
+                title="Skor Preferensi",
+                title_font=dict(color=font_color),
+                tickfont=dict(color=font_color),
+                gridcolor=grid_color,
+                zeroline=False
+            ),
+            xaxis=dict(
+                tickfont=dict(color=font_color),
+                gridcolor=grid_color
+            ),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            height=450,
+            margin=dict(t=20, b=40, l=40, r=20),
+            showlegend=False
+        )
         st.plotly_chart(fig, use_container_width=True)
 
         # 3. Narasi Hasil Detail
