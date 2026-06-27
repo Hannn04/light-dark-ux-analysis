@@ -2086,7 +2086,10 @@ header[data-testid="stHeader"] {{
     background: {bg_card} !important;
     opacity: 1 !important;
 }}
-[data-testid="stSidebarCollapsedControl"] {{
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+div[data-testid="stSidebarCollapsedControl"],
+div[data-testid="collapsedControl"] {{
     background-color: transparent !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -2096,12 +2099,14 @@ header[data-testid="stHeader"] {{
     left: 12px !important;
     width: 32px !important;
     height: 32px !important;
-    z-index: 1000000 !important;
+    z-index: 10000000 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 }}
-[data-testid="stSidebarCollapsedControl"] button {{
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button,
+button[aria-label="Expand sidebar"] {{
     background-color: transparent !important;
     background: transparent !important;
     border: none !important;
@@ -2113,7 +2118,8 @@ header[data-testid="stHeader"] {{
     height: 32px !important;
 }}
 [data-testid="stSidebarCollapsedControl"] button::before,
-[data-testid="collapsedControl"] button::before {{
+[data-testid="collapsedControl"] button::before,
+button[aria-label="Expand sidebar"]::before {{
     content: "" !important;
     display: block !important;
     width: 20px !important;
@@ -2128,7 +2134,9 @@ header[data-testid="stHeader"] {{
 }}
 [data-testid="stSidebarCollapsedControl"] svg,
 [data-testid="stSidebarCollapsedControl"] button svg,
-[data-testid="collapsedControl"] svg {{
+[data-testid="collapsedControl"] svg,
+[data-testid="collapsedControl"] button svg,
+button[aria-label="Expand sidebar"] svg {{
     display: none !important;
 }}
 [data-testid="stMetricV2"] {{
