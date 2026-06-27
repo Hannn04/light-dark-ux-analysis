@@ -2898,7 +2898,7 @@ with st.sidebar:
        COLLAPSED SIDEBAR DOCK STYLES (Ultra-Sleek Vertical Dock)
        ======================================================== */
     @media (min-width: 768px) {{
-        /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
+        /* Keep collapsed sidebar visible as 54px dock instead of translation off-screen */
         [data-testid="stSidebar"][aria-expanded="false"] {{
             display: flex !important;
             visibility: visible !important;
@@ -2919,12 +2919,28 @@ with st.sidebar:
         
         /* Auto expand collapsed sidebar on hover like a floating drawer */
         [data-testid="stSidebar"][aria-expanded="false"]:hover {{
-            min-width: 300px !important;
-            max-width: 300px !important;
-            width: 300px !important;
+            min-width: 240px !important;
+            max-width: 240px !important;
+            width: 240px !important;
             box-shadow: 10px 0 30px rgba(0,0,0,0.15) !important;
             z-index: 100002 !important;
         }}
+
+        /* Limit normal expanded sidebar width to 240px instead of default 336px */
+        [data-testid="stSidebar"][aria-expanded="true"] {{
+            min-width: 240px !important;
+            max-width: 240px !important;
+            width: 240px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }}
+    
+    /* Clean up default Streamlit sidebar paddings for centering */
+    [data-testid="stSidebar"] [data-testid="stSidebarUserContent"],
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        align-items: center !important;
+    }}
     
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
         display: flex !important;
@@ -2951,6 +2967,45 @@ with st.sidebar:
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stVerticalBlock"] > div.stElementContainer:has([data-testid="stCheckbox"]) {{
         margin-top: auto !important;
     }}
+
+    /* Global Center Alignment for all Sidebar items (Branding, Navigation, and Widgets) */
+    [data-testid="stSidebar"] .sidebar-branding,
+    [data-testid="stSidebar"] .sidebar-title,
+    [data-testid="stSidebar"] .menu-label,
+    [data-testid="stSidebar"] .sidebar-univ-short,
+    [data-testid="stSidebar"] .sidebar-univ-full,
+    [data-testid="stSidebar"] .brand-logo-container,
+    [data-testid="stSidebar"] .sidebar-user-card,
+    [data-testid="stSidebar"] div[class*="theme_toggle_switch"] {{
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+    }}
+    
+    /* Ensure stRadio items are perfectly centered in both expanded and collapsed states */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {{
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label {{
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }}
     
     /* Adjust main content layout spacing and width when sidebar is collapsed to prevent overlapping */
     [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) {{
@@ -2960,6 +3015,13 @@ with st.sidebar:
         margin-left: 54px !important;
         padding-left: 0px !important;
         width: calc(100% - 54px) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }}
+    [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="true"]) [data-testid="stMainViewContainer"] {{
+        margin-left: 240px !important;
+        padding-left: 0px !important;
+        width: calc(100% - 240px) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }}
     
     /* Style the collapse button inside the sidebar */
