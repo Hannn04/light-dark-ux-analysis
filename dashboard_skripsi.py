@@ -1999,14 +1999,40 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
         font-size: 1.1rem !important;
     }
             
-    /* MOBILE FIX: Hide sidebar, reset margin */
+    /* MOBILE ADJUSTMENTS: Allow sidebar to collapse naturally */
     [data-testid="stSidebar"] {
-        display: none !important;
+        display: flex !important;
     }
     [data-testid="stSidebar"][aria-expanded="false"] {
         display: none !important;
         width: 0 !important;
         min-width: 0 !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] {
+        display: flex !important;
+        top: 8px !important;
+        left: 8px !important;
+        z-index: 999999 !important;
+    }
+    header[data-testid="stHeader"] {
+        display: flex !important;
+        background-color: var(--secondary-background-color) !important;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
+        height: 50px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+    }
+    header[data-testid="stHeader"]::after {
+        content: "UX Analytics" !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #2563eb !important;
+        position: absolute !important;
+        left: 52px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        display: flex !important;
+        align-items: center !important;
     }
     [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) [data-testid="stMainViewContainer"] {
         margin-left: 0 !important;
