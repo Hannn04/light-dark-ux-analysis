@@ -2107,32 +2107,41 @@ div[data-testid="collapsedControl"] {{
 [data-testid="stSidebarCollapsedControl"] button,
 [data-testid="collapsedControl"] button,
 button[aria-label="Expand sidebar"] {{
-    background-color: {text_main} !important;
-    background: {text_main} !important;
-    border: none !important;
+    background-color: {'rgba(255, 255, 255, 0.15)' if theme == 'dark' else 'rgba(0, 0, 0, 0.06)'} !important;
+    background: {'rgba(255, 255, 255, 0.15)' if theme == 'dark' else 'rgba(0, 0, 0, 0.06)'} !important;
+    border: 1px solid {'rgba(255, 255, 255, 0.25)' if theme == 'dark' else 'rgba(0, 0, 0, 0.1)'} !important;
     box-shadow: none !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: 32px !important;
     height: 32px !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    border-radius: 8px !important;
     opacity: 1 !important;
     visibility: visible !important;
-    -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=") !important;
-    mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=") !important;
-    -webkit-mask-repeat: no-repeat !important;
-    mask-repeat: no-repeat !important;
-    -webkit-mask-size: 20px 20px !important;
-    mask-size: 20px 20px !important;
-    -webkit-mask-position: center !important;
-    mask-position: center !important;
+    color: {text_main} !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button:hover,
+[data-testid="collapsedControl"] button:hover,
+button[aria-label="Expand sidebar"]:hover {{
+    background-color: {'rgba(255, 255, 255, 0.25)' if theme == 'dark' else 'rgba(0, 0, 0, 0.12)'} !important;
+    border-color: #6366f1 !important;
 }}
 [data-testid="stSidebarCollapsedControl"] svg,
 [data-testid="stSidebarCollapsedControl"] button svg,
 [data-testid="collapsedControl"] svg,
 [data-testid="collapsedControl"] button svg,
 button[aria-label="Expand sidebar"] svg {{
-    display: none !important;
+    display: inline-block !important;
+    color: {text_main} !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+    width: 18px !important;
+    height: 18px !important;
 }}
 [data-testid="stMetricV2"] {{
     background-color: {bg_card} !important;
