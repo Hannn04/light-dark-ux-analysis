@@ -987,21 +987,79 @@ def render_auth_page():
     }}
 
     /* Responsive adjustments */
-    /* Responsive - hapus semua yang lama, pakai ini saja */
+    @media (max-width: 768px) {{
+        [data-testid="stMain"] .block-container {{
+            max-width: 100% !important;
+            margin: 0 !important;
+            border-radius: 16px !important;
+            padding: 28px 22px !important;
+            margin-top: 16px !important;
+            margin-bottom: 16px !important;
+        }}
+        
+        /* Logo area lebih compact di mobile */
+        div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
+            top: 32px !important;
+            right: 22px !important;
+        }}
+    }}
+
     @media (max-width: 600px) {{
         [data-testid="stMain"] .block-container {{
             max-width: 100% !important;
             margin: 0 !important;
             border-radius: 0px !important;
-            padding: 28px 20px !important;
+            padding: 24px 18px !important;
             border: none !important;
             box-shadow: none !important;
+            margin-top: 0 !important;
+        }}
+        
+        /* Welcome text compact on mobile */
+        [data-testid="stMain"] .block-container [data-testid="stMarkdownContainer"] div[style*="font-size: 24px"],
+        [data-testid="stMain"] .block-container [data-testid="stMarkdownContainer"] div[style*="font-size:24px"] {{
+            font-size: 20px !important;
+        }}
+        
+        /* Input height normal on mobile */
+        div[data-testid="stForm"] div[data-testid="stTextInput"] > div > div {{
+            height: 46px !important;
+            min-height: 46px !important;
+        }}
+        
+        /* Submit button */
+        div[data-testid="stFormSubmitButton"] button {{
+            height: 46px !important;
+            font-size: 14px !important;
+        }}
+        
+        /* Toggle theme button compact */
+        div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
+            top: 28px !important;
+            right: 18px !important;
+        }}
+        div[class*="theme_toggle_switch"] label {{
+            padding: 5px 12px 5px 6px !important;
+            height: 38px !important;
+        }}
+        div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"] p {{
+            font-size: 12px !important;
         }}
     }}
 
     @media (max-width: 400px) {{
         [data-testid="stMain"] .block-container {{
-            padding: 20px 16px !important;
+            padding: 20px 14px !important;
+        }}
+        
+        div[data-testid="stFormSubmitButton"] button {{
+            font-size: 13px !important;
+        }}
+        
+        /* Tab buttons smaller on very small screens */
+        div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button {{
+            font-size: 12px !important;
+            height: 36px !important;
         }}
     }}
 

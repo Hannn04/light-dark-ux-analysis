@@ -536,7 +536,8 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
     <div style="margin:20px 0 8px 0;color:{text_color};">
       <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};
         padding-bottom:4px;">Paired Samples Statistics</div>
-      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;min-width:480px;width:100%;color:{text_color};">
         <thead><tr style="background:{bg_header};">
           <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
           <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">Mean</th>
@@ -546,12 +547,14 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
         </tr></thead>
         <tbody>{stat_rows}</tbody>
       </table>
+      </div>
     </div>
 
     <div style="margin:16px 0 8px 0;color:{text_color};">
       <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};
         padding-bottom:4px;">Paired Samples Correlations</div>
-      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;min-width:360px;width:100%;color:{text_color};">
         <thead><tr style="background:{bg_header};">
           <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
           <th style="border:1px solid {border_color};padding:7px 12px;text-align:center;color:{text_color};">N</th>
@@ -560,12 +563,14 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
         </tr></thead>
         <tbody>{corr_rows}</tbody>
       </table>
+      </div>
     </div>
 
     <div style="margin:16px 0 24px 0;color:{text_color};">
       <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};
         padding-bottom:4px;">Paired Samples Test</div>
-      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;min-width:700px;width:100%;color:{text_color};">
         <thead>
           <tr style="background:{bg_header};">
             <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
@@ -588,6 +593,7 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
         </thead>
         <tbody>{test_rows}</tbody>
       </table>
+      </div>
       <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;">
         α = 0.05 · Two-tailed · 95% Confidence Interval of the Difference
       </div>
@@ -667,7 +673,8 @@ def render_spss_wilcoxon(pairs_data):
     ranks_html = f"""
     <div style="margin:20px 0 8px 0;color:{text_color};">
         <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};padding-bottom:4px;margin-bottom:0;">Ranks</div>
-        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;min-width:500px;width:100%;color:{text_color};">
             <thead>
                 <tr style="background:{bg_header};color:{text_color};">
                     <th colspan="2" style="border:1px solid {border_color};padding:7px 12px;"></th>
@@ -678,6 +685,7 @@ def render_spss_wilcoxon(pairs_data):
             </thead>
             <tbody>{ranks_rows}</tbody>
         </table>
+        </div>
         <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;line-height:1.6;">
             {footnote_html}
         </div>
@@ -730,7 +738,8 @@ def render_spss_wilcoxon(pairs_data):
         <div style="font-weight:700;font-size:14px;border-bottom:2px solid {border_color};padding-bottom:4px;margin-bottom:0;">
             Test Statistics<sup>a</sup>
         </div>
-        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;width:100%;color:{text_color};">
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;min-width:400px;width:100%;color:{text_color};">
             <thead>
                 <tr style="background:{bg_header};color:{text_color};">
                     <th style="border:1px solid {border_color};padding:7px 12px;text-align:left;"></th>
@@ -748,6 +757,7 @@ def render_spss_wilcoxon(pairs_data):
                 </tr>
             </tbody>
         </table>
+        </div>
         <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;line-height:1.8;">
             a. Wilcoxon Signed Ranks Test<br>
             {z_footnote_html}
@@ -1953,17 +1963,26 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     /* For tablets and smaller: allow columns to wrap */
     [data-testid="stHorizontalBlock"] {
         flex-wrap: wrap !important;
-        gap: 16px !important;
+        gap: 12px !important;
     }
     [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-        min-width: 220px !important;
-        flex: 1 1 calc(50% - 16px) !important;
+        min-width: 200px !important;
+        flex: 1 1 calc(50% - 12px) !important;
         width: 100% !important;
+    }
+    .block-container {
+        max-width: 100% !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
     }
 }
 
 @media (max-width: 767px) {
     /* For mobile screens: force full width vertical stack */
+    [data-testid="stHorizontalBlock"] {
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+    }
     [data-testid="stHorizontalBlock"] > [data-testid="column"] {
         min-width: 100% !important;
         width: 100% !important;
@@ -1972,31 +1991,208 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     
     /* Clean up container paddings for tight mobile screens */
     .block-container {
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        padding-top: 16px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        max-width: 100% !important;
     }
     
-    /* Ensure tables can scroll horizontally without overflowing the page */
+    /* All HTML tables inside markdown should scroll horizontally */
+    [data-testid="stMarkdownContainer"] div[style*="overflow-x:auto"],
+    [data-testid="stMarkdownContainer"] div[style*="overflow-x: auto"] {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    [data-testid="stMarkdownContainer"] table {
+        min-width: 500px !important;
+    }
+    
+    /* Ensure all Streamlit dataframes and tables can scroll horizontally */
     .stDataFrame, .stTable {
         width: 100% !important;
         overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
     }
     
     /* Optimize fonts and padding inside KPI cards on mobile */
     .kpi-card {
-        padding: 16px 14px !important;
+        padding: 14px 12px !important;
+    }
+    .kpi-title {
+        font-size: 9px !important;
+    }
+    .kpi-value-light,
+    .kpi-value-dark {
+        font-size: 14px !important;
+    }
+    
+    /* Cards on mobile */
+    .card {
+        padding: 16px !important;
+        border-radius: 14px !important;
+    }
+    .pref-card {
+        padding: 14px !important;
+        border-radius: 12px !important;
+    }
+    .p-card {
+        padding: 14px !important;
     }
     
     /* Scaled down heading fonts on mobile */
     h1 {
-        font-size: 1.8rem !important;
+        font-size: 1.6rem !important;
     }
     h2 {
-        font-size: 1.4rem !important;
+        font-size: 1.3rem !important;
     }
     h3 {
+        font-size: 1rem !important;
+    }
+    
+    /* Metric value font size on mobile */
+    .metric-value {
+        font-size: 20px !important;
+    }
+    
+    /* Reduce sidebar width on mobile and fix z-index */
+    [data-testid="stSidebar"] {
+        min-width: 240px !important;
+        max-width: 280px !important;
+    }
+    
+    /* Make sure expanders don't overflow */
+    [data-testid="stExpander"] {
+        max-width: 100% !important;
+    }
+    [data-testid="stExpanderDetails"] {
+        padding: 14px !important;
+        overflow-x: auto !important;
+    }
+    
+    /* Sidebar radio menu labels smaller on mobile */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label p {
+        font-size: 12px !important;
+    }
+    
+    /* Charts should not overflow */
+    .js-plotly-plot, .plotly {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    
+    /* Make download buttons full width on mobile */
+    .stDownloadButton button {
+        width: 100% !important;
+    }
+    
+    /* Reduce margins for alert boxes */
+    .stAlert, [data-testid="stAlert"] {
+        padding: 10px 12px !important;
+    }
+    
+    /* Sidebar user card more compact */
+    .sidebar-user-card {
+        padding: 10px 12px !important;
+        font-size: 11px !important;
+    }
+    .sidebar-active-card {
+        padding: 12px !important;
+    }
+    .sidebar-active-value {
+        font-size: 15px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small phones */
+    .block-container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        padding-top: 10px !important;
+    }
+    
+    h1 {
+        font-size: 1.4rem !important;
+    }
+    h2 {
         font-size: 1.1rem !important;
+    }
+    h3 {
+        font-size: 0.95rem !important;
+    }
+    
+    .card {
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+    
+    .kpi-card {
+        padding: 12px 10px !important;
+    }
+    
+    /* Sidebar smaller on very small phones */
+    [data-testid="stSidebar"] {
+        min-width: 220px !important;
+        max-width: 260px !important;
+    }
+    
+    /* Radio menu labels */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label {
+        padding: 6px 10px !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label::before {
+        width: 15px !important;
+        height: 15px !important;
+        margin-right: 8px !important;
+    }
+    
+    /* Metric value */
+    .metric-value {
+        font-size: 18px !important;
+    }
+    
+    /* Stacked columns gap */
+    [data-testid="stHorizontalBlock"] {
+        gap: 8px !important;
+    }
+}
+
+/* ====================================================
+   GLOBAL MOBILE ANTI-OVERFLOW
+   Prevents horizontal scrolling on narrow screens
+   ==================================================== */
+@media (max-width: 767px) {
+    /* Prevent horizontal overflow on the entire viewport */
+    body, html {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    
+    /* Streamlit app container must never exceed viewport */
+    .stApp, [data-testid="stAppViewContainer"] {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    
+    /* Main content area: no overflow */
+    [data-testid="stMain"] {
+        overflow-x: hidden !important;
+    }
+    
+    /* All inline HTML div wrappers with overflow-x:auto get touch scrolling */
+    div[style*="overflow-x"] {
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Plotly charts should scale down not overflow */
+    .js-plotly-plot .plotly .svg-container {
+        max-width: 100% !important;
+    }
+    .js-plotly-plot .plotly .main-svg {
+        max-width: 100% !important;
     }
 }
 
