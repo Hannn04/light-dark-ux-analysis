@@ -2014,6 +2014,29 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
         left: 8px !important;
         z-index: 999999 !important;
     }
+    [data-testid="stSidebarCollapsedControl"] button {
+        background-color: transparent !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] button::before {
+        content: "" !important;
+        display: block !important;
+        width: 20px !important;
+        height: 20px !important;
+        background-color: var(--text-color, #475569) !important;
+        -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+        mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-repeat: no-repeat !important;
+        -webkit-mask-size: contain !important;
+        mask-size: contain !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] button svg {
+        display: none !important;
+    }
     header[data-testid="stHeader"] {
         display: flex !important;
         background-color: var(--secondary-background-color) !important;
