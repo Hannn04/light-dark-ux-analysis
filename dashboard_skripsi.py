@@ -2013,9 +2013,6 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     }
     [data-testid="stSidebarCollapsedControl"] {
         display: flex !important;
-        top: 8px !important;
-        left: 8px !important;
-        z-index: 999999 !important;
     }
     header[data-testid="stHeader"] {
         display: flex !important;
@@ -2094,6 +2091,15 @@ header[data-testid="stHeader"] {{
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
+    position: fixed !important;
+    top: 10px !important;
+    left: 12px !important;
+    width: 32px !important;
+    height: 32px !important;
+    z-index: 1000000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }}
 [data-testid="stSidebarCollapsedControl"] button {{
     background-color: transparent !important;
@@ -2103,6 +2109,8 @@ header[data-testid="stHeader"] {{
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
 }}
 [data-testid="stSidebarCollapsedControl"] button::before,
 [data-testid="collapsedControl"] button::before {{
@@ -2111,8 +2119,8 @@ header[data-testid="stHeader"] {{
     width: 20px !important;
     height: 20px !important;
     background-color: {text_main} !important;
-    -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
-    mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+    -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=") !important;
+    mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=") !important;
     -webkit-mask-repeat: no-repeat !important;
     mask-repeat: no-repeat !important;
     -webkit-mask-size: contain !important;
@@ -2923,42 +2931,6 @@ with st.sidebar:
         margin-left: 70px !important;
         padding-left: 0px !important;
         width: calc(100% - 70px) !important;
-    }}
-    
-    /* Style the floating expand button control when collapsed */
-    [data-testid="stSidebarCollapsedControl"] {{
-        left: 0px !important;
-        top: 0px !important;
-        width: 100px !important;
-        height: 100px !important;
-        background: transparent !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-shadow: none !important;
-        border: none !important;
-        z-index: 100001 !important;
-    }}
-    [data-testid="stSidebarCollapsedControl"] button {{
-        background: transparent !important;
-        border: none !important;
-        color: {text_soft} !important;
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0 auto !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }}
-
-    button[kind="header"] {{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    }}
-    [data-testid="stSidebarCollapsedControl"]:hover button {{
-        color: #6366f1 !important;
     }}
     
     /* Style the collapse button inside the sidebar */
@@ -4828,7 +4800,7 @@ if menu == "Time on Task":
                 <div style="display:flex;flex-direction:column;align-items:center;
                   padding:25px;background:{bg_card};color:{text_main};border-radius:16px;
                   border:2px solid {color}20;box-shadow:0 4px 12px rgba(0,0,0,0.08);
-                  height:140px;justify-content:center;">
+                  height:140px;justify-content:center;margin-bottom:20px;">
                   <div style="font-size:32px;font-weight:900;color:{color};margin-bottom:8px;">
                     {avg_time:.1f}s</div>
                   <div style="font-size:14px;color:{color};font-weight:600;">{label}</div>
@@ -5133,7 +5105,7 @@ if menu == "Error Rate":
                 <div style="display:flex;flex-direction:column;align-items:center;
                   padding:25px;background:{bg_card};color:{text_main};border-radius:16px;
                   border:2px solid {color}20;box-shadow:0 4px 12px rgba(0,0,0,0.08);
-                  height:140px;justify-content:center;">
+                  height:140px;justify-content:center;margin-bottom:20px;">
                   <div style="font-size:32px;font-weight:900;color:{color};margin-bottom:8px;">
                     {error_rate:.1f}</div>
                   <div style="font-size:14px;color:{color};font-weight:600;">{label}</div>
