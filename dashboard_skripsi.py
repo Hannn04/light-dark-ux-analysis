@@ -1478,8 +1478,12 @@ div[role="dialog"] div[data-baseweb="select"] input,
     caret-color: transparent !important;
     user-select: none !important;
 }
-/* Sembunyikan header Streamlit (Deploy & Menu) */
+/* Sembunyikan toolbar (Deploy & Menu) tapi biarkan header untuk tombol sidebar */
 header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+[data-testid="stToolbar"] {
     display: none !important;
 }
 
