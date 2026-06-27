@@ -2107,30 +2107,25 @@ div[data-testid="collapsedControl"] {{
 [data-testid="stSidebarCollapsedControl"] button,
 [data-testid="collapsedControl"] button,
 button[aria-label="Expand sidebar"] {{
-    background-color: transparent !important;
-    background: transparent !important;
+    background-color: {text_main} !important;
+    background: {text_main} !important;
     border: none !important;
     box-shadow: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display: block !important;
     width: 32px !important;
     height: 32px !important;
-}}
-[data-testid="stSidebarCollapsedControl"] button::before,
-[data-testid="collapsedControl"] button::before,
-button[aria-label="Expand sidebar"]::before {{
-    content: "" !important;
-    display: block !important;
-    width: 20px !important;
-    height: 20px !important;
-    background-color: {text_main} !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=") !important;
     mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIzIiB5MT0iMTIiIHgyPSIyMSIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSI2IiB4Mj0iMjEiIHkyPSI2Ij48L2xpbmU+PGxpbmUgeDE9IjMiIHkxPSIxOCIgeDI9IjIxIiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=") !important;
     -webkit-mask-repeat: no-repeat !important;
     mask-repeat: no-repeat !important;
-    -webkit-mask-size: contain !important;
-    mask-size: contain !important;
+    -webkit-mask-size: 20px 20px !important;
+    mask-size: 20px 20px !important;
+    -webkit-mask-position: center !important;
+    mask-position: center !important;
 }}
 [data-testid="stSidebarCollapsedControl"] svg,
 [data-testid="stSidebarCollapsedControl"] button svg,
