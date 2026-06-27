@@ -301,8 +301,7 @@ def shapiro_and_ks(light: pd.Series, dark: pd.Series, label: str) -> dict:
 def render_normality_table(results: list) -> None:
     """
     Tabel Tests of Normality SPSS-style:
-    Kolmogorov-Smirnov (dengan Lilliefors) + Shapiro-Wilk,
-    identik dengan output SPSS Explore.
+    Hanya Shapiro-Wilk, identik dengan output SPSS Explore (tanpa Kolmogorov-Smirnov).
     """
     is_dark = st.session_state.get("app_theme", "light") == "dark"
     bg_header = "#1e293b" if is_dark else "#d9d9d9"
@@ -328,17 +327,12 @@ def render_normality_table(results: list) -> None:
     rows_html = ""
     for r in results:
         sw_sig  = (not (isinstance(r["sw_p"], float) and np.isnan(r["sw_p"]))) and r["sw_p"] < 0.05
-        ks_sig  = (not (isinstance(r["ks_p"], float) and np.isnan(r["ks_p"]))) and r["ks_p"] < 0.05
         p_sw_color  = "#ef4444" if sw_sig else "inherit"  # soft red
-        p_ks_color  = "#ef4444" if ks_sig else "inherit"
 
         rows_html += f"""
         <tr>
           <td style="border:1px solid {border_cell};padding:6px 12px;font-weight:600;
             background:{bg_first_col};color:{text_color};white-space:nowrap;">{r['label']}</td>
-          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{_fmt_stat(r['ks_stat'])}</td>
-          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{r['n']}</td>
-          <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{p_ks_color};font-weight:{'700' if ks_sig else '400'};">{_fmt_p(r['ks_p'])}</td>
           <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{_fmt_stat(r['sw_stat'])}</td>
           <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{text_color};">{r['n']}</td>
           <td style="border:1px solid {border_cell};padding:6px 12px;text-align:center;color:{p_sw_color};font-weight:{'700' if sw_sig else '400'};">{_fmt_p(r['sw_p'])}</td>
@@ -347,16 +341,12 @@ def render_normality_table(results: list) -> None:
     st.markdown(f"""
     <div style="margin:16px 0 4px 0;overflow-x:auto;">
       <table style="border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif;
-        min-width:600px;width:100%;color:{text_color};">
+        min-width:400px;width:100%;color:{text_color};">
         <thead>
           <tr>
             <th rowspan="2" style="border:1px solid {border_color};padding:7px 12px;background:{bg_header};
               color:{text_color};text-align:left;font-weight:700;font-size:13px;">
               Tests of Normality
-            </th>
-            <th colspan="3" style="border:1px solid {border_color};padding:7px 12px;background:{bg_header};
-              color:{text_color};text-align:center;font-weight:600;font-size:12px;">
-              Kolmogorov-Smirnov<sup>a</sup>
             </th>
             <th colspan="3" style="border:1px solid {border_color};padding:7px 12px;background:{bg_header};
               color:{text_color};text-align:center;font-weight:600;font-size:12px;">
@@ -367,16 +357,10 @@ def render_normality_table(results: list) -> None:
             <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Statistic</th>
             <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">df</th>
             <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Sig.</th>
-            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Statistic</th>
-            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">df</th>
-            <th style="border:1px solid {border_color};padding:6px 12px;text-align:center;font-size:12px;color:{text_color};">Sig.</th>
           </tr>
         </thead>
         <tbody>{rows_html}</tbody>
       </table>
-      <div style="font-size:11px;color:{text_soft};margin-top:4px;font-style:italic;">
-        a. Lilliefors Significance Correction
-      </div>
     </div>
     """, unsafe_allow_html=True)
  
