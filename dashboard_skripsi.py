@@ -1496,6 +1496,21 @@ button[class*="stHeaderActionElements"] {
     background-color: var(--secondary-background-color) !important;
     border-right: 1px solid rgba(128, 128, 128, 0.2) !important;
 }
+
+/* Disable sidebar resize drag handle completely */
+[data-testid="stSidebarDragSurface"],
+div[data-testid="stSidebarDragSurface"],
+div[class*="stSidebarDragSurface"],
+div[style*="cursor: col-resize"],
+div[style*="cursor: ew-resize"],
+div[class*="Resizer"] {
+    display: none !important;
+    pointer-events: none !important;
+    width: 0px !important;
+    min-width: 0px !important;
+    max-width: 0px !important;
+    cursor: default !important;
+}
 [data-testid="stSidebar"] .stMarkdown p, 
 [data-testid="stSidebar"] label, 
 [data-testid="stSidebar"] .sidebar-title {
@@ -2915,18 +2930,7 @@ with st.sidebar:
         z-index: 100000 !important;
         position: relative !important;
     }}
-    
-    /* Invisible drag-to-expand handle on the right edge of the collapsed sidebar */
-    [data-testid="stSidebar"][aria-expanded="false"]::after {{
-        content: "" !important;
-        position: absolute !important;
-        top: 0 !important;
-        right: 0 !important;
-        width: 12px !important;
-        height: 100% !important;
-        cursor: ew-resize !important;
-        z-index: 100002 !important;
-    }}
+
     
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
         display: flex !important;
