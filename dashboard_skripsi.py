@@ -1963,59 +1963,45 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
 }
 
 @media (max-width: 767px) {
-    /* For mobile screens: force full width vertical stack */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"][aria-expanded="true"],
+    [data-testid="stSidebar"][aria-expanded="false"],
+    [data-testid="stSidebarCollapsedControl"] {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    [data-testid="stMainViewContainer"],
+    [data-testid="stAppViewContainer"] > section:not([data-testid="stSidebar"]) {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .block-container {
+        padding-bottom: 80px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        padding-top: 16px !important;
+        max-width: 100% !important;
+    }
+    header[data-testid="stHeader"] { display: none !important; }
     [data-testid="stHorizontalBlock"] > [data-testid="column"] {
         min-width: 100% !important;
         width: 100% !important;
         flex: 1 1 100% !important;
     }
-    
-    /* Clean up container paddings for tight mobile screens */
-    .block-container {
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        padding-top: 16px !important;
-    }
-    
-    /* Ensure tables can scroll horizontally without overflowing the page */
-    .stDataFrame, .stTable {
-        width: 100% !important;
-        overflow-x: auto !important;
-    }
-    
-    /* Optimize fonts and padding inside KPI cards on mobile */
-    .kpi-card {
-        padding: 16px 14px !important;
-    }
-    
-    /* Scaled down heading fonts on mobile */
-    h1 {
-        font-size: 1.8rem !important;
-    }
-    h2 {
-        font-size: 1.4rem !important;
-    }
-    h3 {
-        font-size: 1.1rem !important;
-    }
-            
-    /* MOBILE FIX: Hide sidebar, reset margin */
-    [data-testid="stSidebar"] {
-        display: none !important;
-    }
-    [data-testid="stSidebar"][aria-expanded="false"] {
-        display: none !important;
-        width: 0 !important;
-        min-width: 0 !important;
-    }
-    [data-testid="stAppViewContainer"]:has([data-testid="stSidebar"][aria-expanded="false"]) [data-testid="stMainViewContainer"] {
-        margin-left: 0 !important;
-        width: 100% !important;
-    }
-    [data-testid="stMainViewContainer"] {
-        margin-left: 0 !important;
-        width: 100% !important;
-    }
+    .stDataFrame, .stTable { width: 100% !important; overflow-x: auto !important; }
+    h1 { font-size: 1.7rem !important; }
+    h2 { font-size: 1.3rem !important; }
+    h3 { font-size: 1.05rem !important; }
+    .kpi-card { padding: 14px 12px !important; }
+    .card { padding: 16px !important; }
 }
             
     
@@ -2128,6 +2114,533 @@ def create_donut_chart(data_dict, colors):
 # SIDEBAR UI (MODERN VERSION)
 # ======================
 
+
+def inject_mobile_nav(menu_options, current_menu, theme):
+    """
+    Inject bottom navigation bar untuk mobile + hamburger toggle.
+    Panggil setelah semua CSS di-inject dan sebelum konten halaman.
+    
+    Args:
+        menu_options: list nama menu (harus sama persis dengan radio options)
+        current_menu: string menu aktif saat ini
+        theme: "light" atau "dark"
+    """
+    import streamlit as st
+    import streamlit.components.v1 as components
+ 
+    is_dark = theme == "dark"
+ 
+    # Warna sesuai tema
+    nav_bg      = "#0f172a" if is_dark else "#ffffff"
+    nav_border  = "#1e293b" if is_dark else "#e5e7eb"
+    nav_text    = "#94a3b8" if is_dark else "#6b7280"
+    nav_active  = "#6366f1"
+    nav_active_bg = "rgba(99,102,241,0.12)"
+    hamburger_bg  = "#1e293b" if is_dark else "#f1f5f9"
+    hamburger_color = "#f1f5f9" if is_dark else "#374151"
+    overlay_bg  = "rgba(0,0,0,0.5)"
+    drawer_bg   = "#0f172a" if is_dark else "#ffffff"
+    drawer_text = "#f1f5f9" if is_dark else "#111827"
+    drawer_soft = "#94a3b8" if is_dark else "#6b7280"
+    drawer_hover = "rgba(99,102,241,0.1)"
+    drawer_active_bg = "#3b82f6" if not is_dark else "#3b82f6"
+    drawer_active_text = "#ffffff"
+ 
+    # Icon SVG per menu (outline style)
+    icons = {
+        "Home": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>""",
+        "Overview": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>""",
+        "Time on Task": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>""",
+        "Error Rate": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>""",
+        "UEQ Analysis": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>""",
+        "Preferensi Responden": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>""",
+        "Settings": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>""",
+    }
+ 
+    # Hanya 5 item pertama di bottom nav (sisanya di drawer)
+    bottom_items = menu_options[:5]
+    
+    # Build bottom nav items HTML
+    bottom_nav_items = ""
+    for m in bottom_items:
+        is_active = m == current_menu
+        icon_svg = icons.get(m, "")
+        label_short = m.split(" ")[0] if len(m) > 8 else m
+        active_style = f"color:{nav_active};" if is_active else f"color:{nav_text};"
+        active_dot = f'<div style="position:absolute;top:4px;right:50%;transform:translateX(50%);width:4px;height:4px;border-radius:50%;background:{nav_active};"></div>' if is_active else ''
+        bottom_nav_items += f"""
+        <button 
+          class="mobile-nav-btn {'mobile-nav-active' if is_active else ''}"
+          data-menu="{m}"
+          style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+            gap:3px;padding:8px 4px 10px;border:none;background:transparent;cursor:pointer;
+            position:relative;{active_style}min-width:0;"
+          aria-label="{m}"
+        >
+          {active_dot}
+          <span style="display:flex;align-items:center;justify-content:center;
+            width:32px;height:32px;border-radius:10px;
+            background:{'rgba(99,102,241,0.12)' if is_active else 'transparent'};
+            transition:background 0.2s;">
+            {icon_svg}
+          </span>
+          <span style="font-size:10px;font-weight:{'600' if is_active else '400'};
+            letter-spacing:0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+            max-width:52px;">
+            {label_short}
+          </span>
+        </button>
+        """
+ 
+    # Build drawer items HTML (semua menu)
+    drawer_items = ""
+    for m in menu_options:
+        is_active = m == current_menu
+        icon_svg = icons.get(m, "")
+        bg = f"background:{drawer_active_bg};color:{drawer_active_text};" if is_active else f"color:{drawer_text};"
+        drawer_items += f"""
+        <button
+          class="drawer-nav-btn"
+          data-menu="{m}"
+          style="width:100%;display:flex;align-items:center;gap:14px;padding:12px 20px;
+            border:none;cursor:pointer;border-radius:10px;margin-bottom:4px;
+            font-size:14px;font-weight:{'600' if is_active else '400'};
+            text-align:left;transition:all 0.15s;{bg}"
+        >
+          <span style="flex-shrink:0;width:24px;height:24px;display:flex;align-items:center;
+            justify-content:center;opacity:{'1' if is_active else '0.75'};">
+            {icon_svg}
+          </span>
+          {m}
+        </button>
+        """
+ 
+    # CSS untuk mobile nav
+    css = f"""
+    <style>
+    /* =====================================================
+       MOBILE BOTTOM NAV — hanya aktif di layar ≤ 767px
+       ===================================================== */
+    
+    /* Reset sidebar di mobile - SEMBUNYIKAN TOTAL */
+    @media (max-width: 767px) {{
+        [data-testid="stSidebar"],
+        [data-testid="stSidebar"][aria-expanded="true"],
+        [data-testid="stSidebar"][aria-expanded="false"],
+        [data-testid="stSidebarCollapsedControl"] {{
+            display: none !important;
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }}
+        
+        /* Main content full width di mobile */
+        [data-testid="stMainViewContainer"],
+        [data-testid="stAppViewContainer"] > section:not([data-testid="stSidebar"]) {{
+            margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }}
+        
+        /* Padding bawah agar konten tidak tertutup bottom nav */
+        .block-container {{
+            padding-bottom: 90px !important;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }}
+        
+        /* Sembunyikan header Streamlit */
+        header[data-testid="stHeader"] {{
+            display: none !important;
+        }}
+    }}
+    
+    /* Bottom nav container */
+    #mobile-bottom-nav {{
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999999;
+        background: {nav_bg};
+        border-top: 1px solid {nav_border};
+        padding: 0 4px env(safe-area-inset-bottom, 0px);
+        box-sizing: border-box;
+        height: 64px;
+    }}
+    
+    @media (max-width: 767px) {{
+        #mobile-bottom-nav {{
+            display: flex !important;
+            align-items: stretch;
+        }}
+    }}
+    
+    /* Hamburger button (item ke-6: "More") */
+    #mobile-nav-more-btn {{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 8px 4px 10px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: {nav_text};
+        min-width: 0;
+    }}
+    #mobile-nav-more-btn span.more-icon {{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        transition: background 0.2s;
+    }}
+    #mobile-nav-more-btn:active span.more-icon {{
+        background: rgba(99,102,241,0.12);
+    }}
+    #mobile-nav-more-btn .more-label {{
+        font-size: 10px;
+        font-weight: 400;
+    }}
+    
+    /* Overlay gelap saat drawer terbuka */
+    #mobile-drawer-overlay {{
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: {overlay_bg};
+        z-index: 999997;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }}
+    #mobile-drawer-overlay.visible {{
+        opacity: 1;
+    }}
+    
+    /* Drawer slide-up */
+    #mobile-nav-drawer {{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999998;
+        background: {drawer_bg};
+        border-radius: 20px 20px 0 0;
+        padding: 12px 16px calc(80px + env(safe-area-inset-bottom, 0px));
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 -4px 32px rgba(0,0,0,0.18);
+    }}
+    #mobile-nav-drawer.open {{
+        transform: translateY(0);
+    }}
+    
+    /* Drag handle */
+    #mobile-nav-drawer::before {{
+        content: '';
+        display: block;
+        width: 36px;
+        height: 4px;
+        background: {'rgba(255,255,255,0.2)' if is_dark else 'rgba(0,0,0,0.15)'};
+        border-radius: 2px;
+        margin: 0 auto 16px;
+    }}
+    
+    /* Drawer title */
+    .drawer-title {{
+        font-size: 11px;
+        font-weight: 700;
+        color: {drawer_soft};
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 0 8px 8px;
+        margin-bottom: 4px;
+    }}
+    
+    .drawer-nav-btn:hover {{
+        background: {drawer_hover} !important;
+        color: {drawer_text} !important;
+    }}
+    
+    /* Tap feedback */
+    .mobile-nav-btn:active {{
+        opacity: 0.7;
+    }}
+    
+    /* iOS safe area */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {{
+        #mobile-bottom-nav {{
+            padding-bottom: env(safe-area-inset-bottom);
+            height: calc(64px + env(safe-area-inset-bottom));
+        }}
+    }}
+    </style>
+    """
+ 
+    # HTML struktur
+    html = f"""
+    {css}
+    
+    <!-- Overlay -->
+    <div id="mobile-drawer-overlay"></div>
+    
+    <!-- Drawer navigasi lengkap -->
+    <div id="mobile-nav-drawer" role="dialog" aria-label="Menu Navigasi">
+        <div class="drawer-title">Menu Dashboard</div>
+        {drawer_items}
+    </div>
+    
+    <!-- Bottom Navigation Bar -->
+    <nav id="mobile-bottom-nav" role="navigation" aria-label="Navigasi Bawah">
+        {bottom_nav_items}
+        
+        <!-- Tombol More (hamburger) -->
+        <button id="mobile-nav-more-btn" aria-label="Lihat semua menu">
+            <span class="more-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" x2="20" y1="6" y2="6"/>
+                    <line x1="4" x2="20" y1="12" y2="12"/>
+                    <line x1="4" x2="20" y1="18" y2="18"/>
+                </svg>
+            </span>
+            <span class="more-label">Lainnya</span>
+        </button>
+    </nav>
+    
+    <script>
+    (function() {{
+        const parentDoc = window.parent.document;
+        
+        function findStreamlitRadio() {{
+            // Cari radio group navigasi di sidebar
+            const radios = parentDoc.querySelectorAll('[data-testid="stSidebar"] [data-testid="stRadio"] input[type="radio"]');
+            return radios;
+        }}
+        
+        function clickMenu(menuName) {{
+            const radios = findStreamlitRadio();
+            // Coba match by label text
+            const labels = parentDoc.querySelectorAll('[data-testid="stSidebar"] [data-testid="stRadio"] label');
+            for (let label of labels) {{
+                if (label.textContent && label.textContent.trim() === menuName) {{
+                    label.click();
+                    return true;
+                }}
+            }}
+            // Fallback: match by index
+            const menuOptions = {str(menu_options)};
+            const idx = menuOptions.indexOf(menuName);
+            if (idx >= 0 && radios[idx]) {{
+                radios[idx].click();
+                return true;
+            }}
+            return false;
+        }}
+        
+        function openDrawer() {{
+            const overlay = parentDoc.getElementById('mobile-drawer-overlay');
+            const drawer = parentDoc.getElementById('mobile-nav-drawer');
+            if (!overlay || !drawer) return;
+            overlay.style.display = 'block';
+            requestAnimationFrame(() => {{
+                overlay.classList.add('visible');
+                drawer.classList.add('open');
+            }});
+            parentDoc.body.style.overflow = 'hidden';
+        }}
+        
+        function closeDrawer() {{
+            const overlay = parentDoc.getElementById('mobile-drawer-overlay');
+            const drawer = parentDoc.getElementById('mobile-nav-drawer');
+            if (!overlay || !drawer) return;
+            overlay.classList.remove('visible');
+            drawer.classList.remove('open');
+            setTimeout(() => {{
+                overlay.style.display = 'none';
+                parentDoc.body.style.overflow = '';
+            }}, 300);
+        }}
+        
+        function setupListeners() {{
+            // Bottom nav buttons
+            const navBtns = parentDoc.querySelectorAll('.mobile-nav-btn');
+            navBtns.forEach(btn => {{
+                btn.addEventListener('click', function() {{
+                    const menu = this.getAttribute('data-menu');
+                    if (menu) clickMenu(menu);
+                }});
+            }});
+            
+            // More button
+            const moreBtn = parentDoc.getElementById('mobile-nav-more-btn');
+            if (moreBtn) {{
+                moreBtn.addEventListener('click', openDrawer);
+            }}
+            
+            // Overlay close
+            const overlay = parentDoc.getElementById('mobile-drawer-overlay');
+            if (overlay) {{
+                overlay.addEventListener('click', closeDrawer);
+            }}
+            
+            // Drawer nav buttons
+            const drawerBtns = parentDoc.querySelectorAll('.drawer-nav-btn');
+            drawerBtns.forEach(btn => {{
+                btn.addEventListener('click', function() {{
+                    const menu = this.getAttribute('data-menu');
+                    if (menu) {{
+                        closeDrawer();
+                        setTimeout(() => clickMenu(menu), 150);
+                    }}
+                }});
+            }});
+            
+            // Swipe down to close drawer
+            let touchStartY = 0;
+            const drawer = parentDoc.getElementById('mobile-nav-drawer');
+            if (drawer) {{
+                drawer.addEventListener('touchstart', e => {{
+                    touchStartY = e.touches[0].clientY;
+                }}, {{ passive: true }});
+                drawer.addEventListener('touchend', e => {{
+                    const deltaY = e.changedTouches[0].clientY - touchStartY;
+                    if (deltaY > 60) closeDrawer();
+                }}, {{ passive: true }});
+            }}
+        }}
+        
+        // Setup setelah DOM siap
+        if (parentDoc.readyState === 'loading') {{
+            parentDoc.addEventListener('DOMContentLoaded', setupListeners);
+        }} else {{
+            setupListeners();
+        }}
+        
+        // Re-setup setiap kali Streamlit re-render (interval pendek di awal)
+        let setupCount = 0;
+        const setupInterval = setInterval(() => {{
+            setupListeners();
+            setupCount++;
+            if (setupCount > 10) clearInterval(setupInterval);
+        }}, 500);
+    }})();
+    </script>
+    """
+    
+    # Inject via components.html (height=0 agar tidak makan space)
+    import streamlit.components.v1 as components
+    components.html(html, height=0, scrolling=False)
+ 
+ 
+# ============================================================
+# CARA INTEGRASI KE app.py
+# ============================================================
+# 
+# 1. Tambahkan fungsi inject_mobile_nav() di app.py
+#    (paste seluruh fungsi ini sebelum blok sidebar)
+#
+# 2. Di bagian bawah sidebar, TEPAT SETELAH blok with st.sidebar: ... selesai,
+#    tambahkan baris ini:
+#
+#    inject_mobile_nav(menu_options, menu, theme)
+#
+#    Dimana:
+#    - menu_options = ["Home", "Overview", "Time on Task", "Error Rate", 
+#                      "UEQ Analysis", "Preferensi Responden", "Settings"]
+#    - menu = variabel menu aktif (hasil st.radio)
+#    - theme = st.session_state["app_theme"]
+#
+# 3. Ganti CSS mobile di st.markdown yang SUDAH ADA dengan versi baru ini
+#    (cari @media (max-width: 767px) dan ganti semua blok mobile):
+#
+MOBILE_CSS_REPLACEMENT = """
+/* ========================================================
+   RESPONSIVE — MOBILE (≤767px)
+   Bottom nav menggantikan sidebar sepenuhnya
+   ======================================================== */
+@media (max-width: 767px) {
+    /* Sembunyikan sidebar di mobile */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"][aria-expanded="true"],
+    [data-testid="stSidebar"][aria-expanded="false"],
+    [data-testid="stSidebarCollapsedControl"] {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+    
+    /* Full width main content */
+    [data-testid="stMainViewContainer"],
+    [data-testid="stAppViewContainer"] > section:not([data-testid="stSidebar"]) {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Padding bawah agar tidak tertutup bottom nav (64px) */
+    .block-container {
+        padding-bottom: 80px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        padding-top: 16px !important;
+    }
+    
+    /* Header Streamlit hidden */
+    header[data-testid="stHeader"] {
+        display: none !important;
+    }
+    
+    /* Table horizontal scroll */
+    .stDataFrame, .stTable {
+        width: 100% !important;
+        overflow-x: auto !important;
+    }
+    
+    /* Font sizes */
+    h1 { font-size: 1.8rem !important; }
+    h2 { font-size: 1.4rem !important; }
+    h3 { font-size: 1.1rem !important; }
+    
+    /* Cards full width */
+    .kpi-card { padding: 16px 14px !important; }
+}
+ 
+/* Tablet (768px - 1024px): sidebar visible tapi konten bisa wrap */
+@media (max-width: 1024px) and (min-width: 768px) {
+    [data-testid="stHorizontalBlock"] {
+        flex-wrap: wrap !important;
+        gap: 16px !important;
+    }
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        min-width: 220px !important;
+        flex: 1 1 calc(50% - 16px) !important;
+    }
+}
+"""
+ 
+print("Mobile responsive fix siap digunakan!")
+print("\nCara penggunaan:")
+print("1. Copy fungsi inject_mobile_nav() ke app.py")
+print("2. Panggil inject_mobile_nav(menu_options, menu, theme) setelah blok sidebar")
+print("3. Ganti CSS @media (max-width: 767px) dengan MOBILE_CSS_REPLACEMENT")
 if not render_auth_page():
     st.stop()
 
@@ -3596,6 +4109,8 @@ def logout_dialog():
 
 if st.session_state.get("show_logout_confirm") == True:
     logout_dialog()
+
+inject_mobile_nav(menu_options, menu, theme)
 
 @st.dialog("Kelola Objek Penelitian")
 def manage_objects_dialog():
