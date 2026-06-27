@@ -71,7 +71,7 @@ if "show_logout_confirm" not in st.session_state:
 if "show_reset_confirm" not in st.session_state:
     st.session_state.show_reset_confirm = False
 
-# ✅ Perbaikan — sesuai handbook (>0.8 = positif, -0.8 s.d. 0.8 = netral, <-0.8 = negatif)
+# Ã¢Å“â€¦ Perbaikan Ã¢â‚¬â€ sesuai handbook (>0.8 = positif, -0.8 s.d. 0.8 = netral, <-0.8 = negatif)
 def interpret_ueq(score):
     if score > 0.8:    return "Positive"
     elif score >= -0.8: return "Neutral"
@@ -149,7 +149,7 @@ def wilcoxon_full_spss(light, dark):
     
 
     # ======================
-    # 🔥 P-VALUE DARI SCIPY (SUDAH BENAR)
+    # Ã°Å¸â€Â¥ P-VALUE DARI SCIPY (SUDAH BENAR)
     # ======================
     light_clean = light[df.index]
     dark_clean = dark[df.index]
@@ -158,7 +158,7 @@ def wilcoxon_full_spss(light, dark):
         light,
         dark,
         zero_method='wilcox',
-        correction=False,   # 🔥 WAJIB
+        correction=False,   # Ã°Å¸â€Â¥ WAJIB
         alternative='two-sided',
         method='approx'
     )
@@ -315,14 +315,14 @@ def render_normality_table(results: list) -> None:
 
     def _fmt_p(v):
         if v is None or (isinstance(v, float) and np.isnan(v)):
-            return "—"
+            return "Ã¢â‚¬â€"
         if v < 0.001:
-            return "<,001"   # ← pakai koma seperti SPSS Indonesia
-        return f"{v:.3f}".replace(".", ",")  # ← ganti titik ke koma
+            return "<,001"   # Ã¢â€ Â pakai koma seperti SPSS Indonesia
+        return f"{v:.3f}".replace(".", ",")  # Ã¢â€ Â ganti titik ke koma
 
     def _fmt_stat(v):
         if v is None or (isinstance(v, float) and np.isnan(v)):
-            return "—"
+            return "Ã¢â‚¬â€"
         return f"{v:.3f}"
 
     rows_html = ""
@@ -394,8 +394,8 @@ def render_normality_recommendation(results: list) -> str:
  
     if all_normal:
         color, bg, border = "#166534", "#F0FDF4", "#BBF7D0"
-        icon   = "✓"
-        title  = "Selisih berdistribusi normal pada semua variabel (Sig. Shapiro-Wilk ≥ 0,05)"
+        icon   = "Ã¢Å“â€œ"
+        title  = "Selisih berdistribusi normal pada semua variabel (Sig. Shapiro-Wilk Ã¢â€°Â¥ 0,05)"
         desc   = "Rekomendasi otomatis: Paired Samples T-Test (Parametrik)"
         rec    = "t-test"
     else:
@@ -416,7 +416,7 @@ def render_normality_recommendation(results: list) -> str:
       </div>
     </div>
     <div style="font-size:11px;color:#64748b;font-style:italic;margin-bottom:8px;">
-      H₀: Selisih berdistribusi normal · α = 0,05 · Acuan: Shapiro-Wilk (n &lt; 50)
+      HÃ¢â€šâ‚¬: Selisih berdistribusi normal Ã‚Â· ÃŽÂ± = 0,05 Ã‚Â· Acuan: Shapiro-Wilk (n &lt; 50)
     </div>
     """, unsafe_allow_html=True)
  
@@ -490,8 +490,8 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
     # ---- Correlations ----
     corr_rows = ""
     for idx, p in enumerate(pairs_data):
-        cr = f"{p['corr_r']:.3f}" if not np.isnan(p["corr_r"]) else "—"
-        cp = f"{p['corr_p']:.3f}" if not np.isnan(p["corr_p"]) else "—"
+        cr = f"{p['corr_r']:.3f}" if not np.isnan(p["corr_r"]) else "Ã¢â‚¬â€"
+        cp = f"{p['corr_p']:.3f}" if not np.isnan(p["corr_p"]) else "Ã¢â‚¬â€"
         corr_rows += f"""
         <tr>
           <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;
@@ -506,7 +506,7 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
     # ---- Test ----
     test_rows = ""
     for idx, p in enumerate(pairs_data):
-        sig2   = f"{p['p_two']:.3f}" if not np.isnan(p["p_two"]) else "—"
+        sig2   = f"{p['p_two']:.3f}" if not np.isnan(p["p_two"]) else "Ã¢â‚¬â€"
         is_sig = (not np.isnan(p["p_two"])) and p["p_two"] < 0.05
         if is_dark:
             sig_bg = "rgba(74, 222, 128, 0.15)" if is_sig else "rgba(96, 165, 250, 0.15)"
@@ -520,7 +520,7 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
           <td style="border:1px solid {border_cell};padding:7px 12px;font-weight:600;
             background:{bg_first_col};color:{text_color};white-space:nowrap;">Pair {idx+1}</td>
           <td style="border:1px solid {border_cell};padding:7px 12px;color:{text_color};">
-            {p['light_lbl']} − {p['dark_lbl']}</td>
+            {p['light_lbl']} Ã¢Ë†â€™ {p['dark_lbl']}</td>
           <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['diff_mean']:.4f}</td>
           <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['diff_std']:.4f}</td>
           <td style="border:1px solid {border_cell};padding:7px 12px;text-align:right;color:{text_color};">{p['diff_se']:.4f}</td>
@@ -595,7 +595,7 @@ def render_spss_paired_ttest(pairs_data: list) -> None:
       </table>
       </div>
       <div style="font-size:11px;color:{text_soft};margin-top:5px;font-style:italic;">
-        α = 0.05 · Two-tailed · 95% Confidence Interval of the Difference
+        ÃŽÂ± = 0.05 Ã‚Â· Two-tailed Ã‚Â· 95% Confidence Interval of the Difference
       </div>
     </div>""", unsafe_allow_html=True)
 
@@ -697,8 +697,8 @@ def render_spss_wilcoxon(pairs_data):
     def get_z_superscript(pd_item):
         """
         Tentukan superscript Z sesuai SPSS:
-        - Z negatif → based on negative ranks → superscript 'b'
-        - Z positif → based on positive ranks → superscript 'c'
+        - Z negatif Ã¢â€ â€™ based on negative ranks Ã¢â€ â€™ superscript 'b'
+        - Z positif Ã¢â€ â€™ based on positive ranks Ã¢â€ â€™ superscript 'c'
         """
         z = pd_item["z_val"]
         neg_n = pd_item["neg_n"]
@@ -949,7 +949,7 @@ def render_delete_button(file_path, label, columns, default_value=0, key_suffix=
                     st.rerun()
                 except Exception as e:
                     st.error(f"Gagal menghapus: {e}")
-# ── Theme toggle (session_state) — default: light ─────────────────────────
+# Ã¢â€â‚¬Ã¢â€â‚¬ Theme toggle (session_state) Ã¢â‚¬â€ default: light Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 if "app_theme" not in st.session_state:
     q_theme = st.query_params.get("theme", "light")
     st.session_state["app_theme"] = q_theme
@@ -988,10 +988,10 @@ else:
 if theme == "dark":
     st.markdown("""
     <style>
-    /* ══════════════════════════════════════════════════
-       DARK MODE — Comprehensive CSS Override
+    /* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+       DARK MODE Ã¢â‚¬â€ Comprehensive CSS Override
        config.toml = light, so we override everything here
-    ══════════════════════════════════════════════════ */
+    Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 
     /* 1. CSS Variables */
     :root {
@@ -1011,7 +1011,7 @@ if theme == "dark":
         background-color: #020617 !important;
     }
 
-    /* 3. Global text — use .stApp as scope to allow inline overrides */
+    /* 3. Global text Ã¢â‚¬â€ use .stApp as scope to allow inline overrides */
     .stApp p, .stApp li, .stApp td, .stApp th,
     .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
     .stApp label, .stApp legend,
@@ -1024,7 +1024,7 @@ if theme == "dark":
         color: #f1f5f9 !important;
     }
 
-    /* 4. Sidebar — all children inherit dark */
+    /* 4. Sidebar Ã¢â‚¬â€ all children inherit dark */
     [data-testid="stSidebar"] {
         background-color: #020617 !important;
     }
@@ -1043,7 +1043,7 @@ if theme == "dark":
         color: #f1f5f9 !important;
     }
 
-    /* 5. Sidebar — input, select, number input */
+    /* 5. Sidebar Ã¢â‚¬â€ input, select, number input */
     [data-testid="stSidebar"] [data-baseweb="input"] > div,
     [data-testid="stSidebar"] [data-baseweb="select"] > div,
     [data-testid="stSidebar"] [data-baseweb="textarea"] > div,
@@ -1062,7 +1062,7 @@ if theme == "dark":
         color: #64748b !important;
     }
 
-    /* 6. Sidebar — expander & its inner content */
+    /* 6. Sidebar Ã¢â‚¬â€ expander & its inner content */
     [data-testid="stSidebar"] details,
     [data-testid="stSidebar"] details > div,
     [data-testid="stSidebar"] [data-testid="stExpanderDetails"],
@@ -1070,7 +1070,7 @@ if theme == "dark":
         background-color: #0f172a !important;
         border-color: rgba(99,102,241,0.3) !important;
     }
-    /* Expander header/summary — background + text */
+    /* Expander header/summary Ã¢â‚¬â€ background + text */
     [data-testid="stSidebar"] details summary,
     [data-testid="stSidebar"] details summary > div,
     [data-testid="stSidebar"] [data-testid="stExpander"] > div:first-child,
@@ -1079,7 +1079,7 @@ if theme == "dark":
         background-color: #0f172a !important;
         color: #6366f1 !important;
     }
-    /* Streamlit wraps expander in an extra div — force it dark too */
+    /* Streamlit wraps expander in an extra div Ã¢â‚¬â€ force it dark too */
     [data-testid="stSidebar"] [data-testid="stExpander"] {
         background-color: #0f172a !important;
         border: 1px solid rgba(99,102,241,0.3) !important;
@@ -1089,7 +1089,7 @@ if theme == "dark":
         background-color: #0f172a !important;
     }
 
-    /* 7. Main content — input, select */
+    /* 7. Main content Ã¢â‚¬â€ input, select */
     [data-baseweb="input"] > div,
     [data-baseweb="select"] > div,
     [data-baseweb="select"] li,
@@ -1253,7 +1253,7 @@ if theme == "dark":
     [data-testid="stMetricValue"] { color: #f1f5f9 !important; }
     [data-testid="stMetricDelta"] { color: #94a3b8 !important; }
 
-    /* 17. Number input — polished dark styling */
+    /* 17. Number input Ã¢â‚¬â€ polished dark styling */
     [data-testid="stNumberInput"] > div {
         background-color: #1e293b !important;
         border: 1px solid #334155 !important;
@@ -1376,7 +1376,7 @@ if theme == "dark":
     code { background: #1e293b !important; color: #a78bfa !important; }
     pre { background: #0f172a !important; border-color: #1e293b !important; }
 
-    /* 21. Buttons — default secondary */
+    /* 21. Buttons Ã¢â‚¬â€ default secondary */
     [data-testid="stBaseButton-secondary"] {
         background-color: #1e293b !important;
         color: #f1f5f9 !important;
@@ -1479,12 +1479,26 @@ div[role="dialog"] div[data-baseweb="select"] input,
     user-select: none !important;
 }
 /* Sembunyikan toolbar (Deploy & Menu) tapi biarkan header untuk tombol sidebar */
-header[data-testid="stHeader"] {
+header[data-testid="stHeader"], [data-testid="stHeader"] {
     background-color: transparent !important;
     box-shadow: none !important;
+    display: flex !important;
+    z-index: 999998 !important;
+    pointer-events: none !important;
 }
 [data-testid="stToolbar"] {
     display: none !important;
+}
+/* Pastikan tombol expand sidebar (hamburger / >) selalu terlihat dan berada di paling depan */
+[data-testid="collapsedControl"], 
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] button,
+[data-testid="stSidebarCollapsedControl"] button {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 999999 !important;
+    pointer-events: auto !important;
 }
 
 /* Sidebar Styling yang lebih clean */
@@ -1553,10 +1567,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
     border-radius: 12px !important;
 }
 
-.block-container {
+html:has(.dashboard-marker) .block-container {
     max-width: 1500px;
     padding-top: 24px;
 }
+
+
 
 /* Tambahkan ini di dalam <style> */
 .stDataFrame, .stTable {
@@ -1598,6 +1614,29 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
     transition: all 0.3s ease;
     height: 100%;
     color: var(--text-color) !important;
+}
+.card-title-text {
+    font-size: 16.5px !important;
+    font-weight: 700 !important;
+    color: #4f46e5 !important;
+    margin-bottom: 12px !important;
+}
+.card-body-text {
+    font-size: 14.5px !important;
+    line-height: 1.6 !important;
+    color: inherit !important;
+}
+.module-card-title {
+    font-size: 16.5px !important;
+    font-weight: 800 !important;
+    color: var(--text-color) !important;
+    margin-bottom: 8px !important;
+}
+.module-card-desc {
+    font-size: 13.5px !important;
+    color: var(--text-color) !important;
+    opacity: 0.8 !important;
+    line-height: 1.5 !important;
 }
 
 /* Hanya target Streamlit markdown container, bukan semua elemen inline */
@@ -1826,7 +1865,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     cursor: pointer !important;
 }
             
-/* Manage Applications expander — styling keren */
+/* Manage Applications expander Ã¢â‚¬â€ styling keren */
     div[data-testid="stSidebar"] details {
         background: rgba(128, 128, 128, 0.05) !important;
         border: 1px solid rgba(128, 128, 128, 0.2) !important;
@@ -1994,14 +2033,53 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     }
     
     /* Clean up container paddings for tight mobile screens */
-    .block-container {
+    html:has(.dashboard-marker) .block-container {
         padding-left: 10px !important;
         padding-right: 10px !important;
-        padding-top: 12px !important;
+        padding-top: 70px !important;
         padding-bottom: 12px !important;
         max-width: 100% !important;
     }
     
+    /* Hide native Streamlit header bar completely on mobile */
+    header[data-testid="stHeader"], [data-testid="stHeader"] {
+        display: none !important;
+    }
+
+    /* Hide ALL native toggle/hamburger controls on mobile */
+    [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"],
+    [data-testid="stSidebarCollapseButton"],
+    button[data-testid="collapsedControl"],
+    button[data-testid="stSidebarCollapsedControl"],
+    button[data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] button,
+    [data-testid="stSidebarCollapseButton"] button {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+    /* ALWAYS hide sidebar on mobile â€” JS controls show/hide via setProperty */
+    [data-testid="stSidebar"] {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+    /* Main content always fills full width on mobile */
+    [data-testid="stMainViewContainer"],
+    [data-testid="stAppViewContainer"] > section.main {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Custom navbar: only visible on mobile */
+    #ux-mobile-navbar {
+        display: flex !important;
+    }
+
     /* All HTML tables inside markdown should scroll horizontally */
     [data-testid="stMarkdownContainer"] div[style*="overflow-x:auto"],
     [data-testid="stMarkdownContainer"] div[style*="overflow-x: auto"] {
@@ -2036,6 +2114,21 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     .card {
         padding: 16px !important;
         border-radius: 14px !important;
+        margin-bottom: 16px !important;
+    }
+    .card-title-text {
+        font-size: 15px !important;
+        margin-bottom: 10px !important;
+    }
+    .card-body-text {
+        font-size: 13px !important;
+    }
+    .module-card-title {
+        font-size: 15.5px !important;
+        margin-bottom: 6px !important;
+    }
+    .module-card-desc {
+        font-size: 12.5px !important;
     }
     .pref-card {
         padding: 14px !important;
@@ -2107,6 +2200,13 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     }
     .sidebar-active-value {
         font-size: 15px !important;
+    }
+}
+
+/* Hide the custom mobile navbar on desktop screens */
+@media (min-width: 768px) {
+    #ux-mobile-navbar {
+        display: none !important;
     }
 }
 
@@ -2208,7 +2308,7 @@ components.html("""
 </script>
 """, height=0, width=0)
 
-# CSS override tema — blok f-string terpisah, hanya berisi aturan tema
+# CSS override tema Ã¢â‚¬â€ blok f-string terpisah, hanya berisi aturan tema
 st.markdown(f"""
 <style>
 [data-testid="stSidebar"] {{
@@ -2228,6 +2328,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {{
     background: {bg_card} !important;
     border-color: {border} !important;
     color: {text_main} !important;
+}}
+.module-card-title {{
+    color: {text_main} !important;
+}}
+.module-card-desc {{
+    color: {text_soft} !important;
 }}
 .card b, .card strong {{ color: {text_main} !important; }}
 .card span {{ color: {text_soft} !important; }}
@@ -2293,6 +2399,176 @@ def create_donut_chart(data_dict, colors):
 if not render_auth_page():
     st.stop()
 
+# --- INJECT CUSTOM MOBILE HEADER VIA JAVASCRIPT ---
+import streamlit.components.v1 as _sc_mobile
+_is_dark_str = 'true' if theme == 'dark' else 'false'
+_sc_mobile.html(f"""
+<script>
+(function() {{
+    var isDark = {_is_dark_str};
+    var bgColor = isDark ? '#0c111d' : '#ffffff';
+    var textColor = isDark ? '#f8fafc' : '#1e293b';
+    var borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+    var iconColor = isDark ? '#94a3b8' : '#475569';
+    var sidebarOpen = false;
+
+    function injectHeader() {{
+        var parentDoc = window.parent.document;
+        if (parentDoc.body.clientWidth > 767) return;
+        if (parentDoc.getElementById('ux-mobile-navbar')) return;
+
+        // â”€â”€ Sidebar show/hide (fully JS-controlled) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        function getSidebar() {{
+            return parentDoc.querySelector('[data-testid="stSidebar"]');
+        }}
+
+        function showSidebar() {{
+            var sb = getSidebar();
+            if (!sb) return;
+            // Use setProperty with 'important' to override CSS display:none !important
+            sb.style.setProperty('display', 'flex', 'important');
+            sb.style.setProperty('visibility', 'visible', 'important');
+            sb.style.setProperty('pointer-events', 'auto', 'important');
+            sb.style.setProperty('position', 'fixed', 'important');
+            sb.style.setProperty('top', '0', 'important');
+            sb.style.setProperty('left', '0', 'important');
+            sb.style.setProperty('height', '100vh', 'important');
+            sb.style.setProperty('width', '85vw', 'important');
+            sb.style.setProperty('max-width', '320px', 'important');
+            sb.style.setProperty('min-width', '0', 'important');
+            sb.style.setProperty('z-index', '999998', 'important');
+            sb.style.setProperty('background-color', bgColor, 'important');
+            sb.style.setProperty('background', bgColor, 'important');
+            sb.style.setProperty('box-shadow', '4px 0 32px rgba(0,0,0,0.35)', 'important');
+            sb.style.setProperty('overflow-y', 'auto', 'important');
+            sb.style.setProperty('overflow-x', 'hidden', 'important');
+            sb.style.setProperty('flex-direction', 'column', 'important');
+            sb.style.setProperty('border-right', '1px solid ' + borderColor, 'important');
+            sidebarOpen = true;
+            showBackdrop();
+        }}
+
+        function hideSidebar() {{
+            var sb = getSidebar();
+            if (!sb) return;
+            sb.style.setProperty('display', 'none', 'important');
+            sb.style.setProperty('visibility', 'hidden', 'important');
+            sb.style.setProperty('pointer-events', 'none', 'important');
+            sidebarOpen = false;
+            hideBackdrop();
+        }}
+
+        // â”€â”€ Backdrop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        function showBackdrop() {{
+            var bd = parentDoc.getElementById('ux-sidebar-backdrop');
+            if (!bd) {{
+                bd = parentDoc.createElement('div');
+                bd.id = 'ux-sidebar-backdrop';
+                bd.style.setProperty('position', 'fixed', 'important');
+                bd.style.setProperty('inset', '0', 'important');
+                bd.style.setProperty('top', '0', 'important');
+                bd.style.setProperty('left', '0', 'important');
+                bd.style.setProperty('right', '0', 'important');
+                bd.style.setProperty('bottom', '0', 'important');
+                bd.style.setProperty('background', 'rgba(0,0,0,0.5)', 'important');
+                bd.style.setProperty('z-index', '999997', 'important');
+                bd.style.setProperty('display', 'block', 'important');
+                bd.style.setProperty('cursor', 'pointer', 'important');
+                bd.addEventListener('click', function() {{ hideSidebar(); }});
+                parentDoc.body.appendChild(bd);
+            }} else {{
+                bd.style.setProperty('display', 'block', 'important');
+            }}
+        }}
+
+        function hideBackdrop() {{
+            var bd = parentDoc.getElementById('ux-sidebar-backdrop');
+            if (bd) bd.style.display = 'none';
+        }}
+
+        // â”€â”€ Build custom top navbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        var navbar = parentDoc.createElement('div');
+        navbar.id = 'ux-mobile-navbar';
+        Object.assign(navbar.style, {{
+            position: 'fixed', top: '0', left: '0', right: '0',
+            height: '56px', background: bgColor,
+            borderBottom: '1px solid ' + borderColor,
+            display: 'flex', alignItems: 'center',
+            padding: '0 14px', gap: '10px',
+            zIndex: '999995',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+            fontFamily: 'Inter, Plus Jakarta Sans, sans-serif',
+        }});
+
+        // Hamburger (3 lines)
+        var hamBtn = parentDoc.createElement('button');
+        hamBtn.id = 'ux-hamburger-btn';
+        Object.assign(hamBtn.style, {{
+            background: 'none', border: 'none', cursor: 'pointer',
+            display: 'flex', flexDirection: 'column',
+            justifyContent: 'space-around', alignItems: 'center',
+            width: '36px', height: '36px', padding: '8px',
+            borderRadius: '8px', flexShrink: '0', boxSizing: 'border-box',
+        }});
+        hamBtn.innerHTML = [
+            '<span style="display:block;width:18px;height:2px;background:' + iconColor + ';border-radius:2px"></span>',
+            '<span style="display:block;width:18px;height:2px;background:' + iconColor + ';border-radius:2px"></span>',
+            '<span style="display:block;width:18px;height:2px;background:' + iconColor + ';border-radius:2px"></span>',
+        ].join('');
+        hamBtn.addEventListener('click', function(e) {{
+            e.stopPropagation();
+            if (sidebarOpen) {{ hideSidebar(); }} else {{ showSidebar(); }}
+        }});
+
+        // Logo circle
+        var logoIcon = parentDoc.createElement('div');
+        Object.assign(logoIcon.style, {{
+            width: '30px', height: '30px', borderRadius: '50%',
+            background: '#1d4ed8', display: 'flex',
+            alignItems: 'center', justifyContent: 'center',
+            flexShrink: '0', boxShadow: '0 2px 8px rgba(29,78,216,0.3)',
+        }});
+        logoIcon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>';
+
+        // Brand name
+        var brandText = parentDoc.createElement('span');
+        Object.assign(brandText.style, {{
+            fontSize: '17px', fontWeight: '700',
+            color: textColor, letterSpacing: '-0.4px', lineHeight: '1',
+        }});
+        brandText.textContent = 'UX Analytics';
+
+        navbar.appendChild(hamBtn);
+        navbar.appendChild(logoIcon);
+        navbar.appendChild(brandText);
+        parentDoc.body.appendChild(navbar);
+
+        // Auto-hide navbar on resize to desktop
+        window.parent.addEventListener('resize', function() {{
+            var nb = parentDoc.getElementById('ux-mobile-navbar');
+            if (nb) {{
+                if (window.parent.innerWidth > 767) {{
+                    nb.style.display = 'none';
+                    hideSidebar();
+                }} else {{
+                    nb.style.display = 'flex';
+                }}
+            }}
+        }});
+    }}
+
+    if (window.parent.document.readyState === 'complete') {{
+        injectHeader();
+    }} else {{
+        window.parent.document.addEventListener('DOMContentLoaded', injectHeader);
+    }}
+    setTimeout(injectHeader, 400);
+    setTimeout(injectHeader, 900);
+}})();
+</script>
+""", height=0, width=0)
+
+
 current_user = st.session_state.get("current_user", "default")
 USER_DIR = os.path.join(BASE_DIR, "userdata", current_user)
 
@@ -2301,6 +2577,17 @@ if "last_user" not in st.session_state or st.session_state["last_user"] != curre
     st.session_state["app_list"] = load_app_list(current_user)
 
 with st.sidebar:
+    st.markdown('<div class="dashboard-marker"></div>', unsafe_allow_html=True)
+    st.markdown("""
+    <img src="x" onerror="
+        const loginStyles = window.parent.document.getElementById('login-css-styles');
+        if (loginStyles) {
+            loginStyles.remove();
+            console.log('Login styles removed successfully!');
+        }
+        this.remove();
+    " style="display:none;">
+    """, unsafe_allow_html=True)
 
     # ======================
     # BRANDING HEADER (Orbicular style)
@@ -2387,7 +2674,6 @@ with st.sidebar:
         "Preferensi Responden", 
         "Settings"
     ]
-    
     default_idx = 0
     if "current_page" in st.session_state:
         try:
@@ -2724,7 +3010,7 @@ with st.sidebar:
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E") !important;
     }}
 
-    /* === THEME TOGGLE SWITCH — Pill Style (matches reference) === */
+    /* === THEME TOGGLE SWITCH Ã¢â‚¬â€ Pill Style (matches reference) === */
     div[class*="theme_toggle_switch"] label {{
         display: inline-flex !important;
         flex-direction: row !important;
@@ -2747,7 +3033,7 @@ with st.sidebar:
         border-color: {'rgba(139,92,246,0.4)' if is_dark else 'rgba(139,92,246,0.55)'} !important;
     }}
 
-    /* Track: light lavender (light mode) → deep indigo (dark mode) */
+    /* Track: light lavender (light mode) Ã¢â€ â€™ deep indigo (dark mode) */
     div[class*="theme_toggle_switch"] label > div:first-child,
     div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] {{
         background-color: {'rgba(167,139,250,0.35)' if is_dark else '#e9d5ff'} !important;
@@ -2770,7 +3056,7 @@ with st.sidebar:
         background-color: #6d28d9 !important;
     }}
 
-    /* Knob: vivid indigo in light mode → white in dark mode */
+    /* Knob: vivid indigo in light mode Ã¢â€ â€™ white in dark mode */
     div[class*="theme_toggle_switch"] label > div:first-child > div,
     div[class*="theme_toggle_switch"] [data-testid="stCheckboxToToggle"] > div {{
         background-color: #6366f1 !important;
@@ -2838,7 +3124,7 @@ with st.sidebar:
         letter-spacing: 0.1px !important;
     }}
 
-    /* Icon left of label text — moon or sun */
+    /* Icon left of label text Ã¢â‚¬â€ moon or sun */
     div[class*="theme_toggle_switch"] label div[data-testid="stMarkdownContainer"]::before {{
         content: "" !important;
         display: inline-block !important;
@@ -2852,7 +3138,7 @@ with st.sidebar:
         -webkit-mask-position: center !important;
         mask-position: center !important;
         background-color: #7c3aed !important;
-        /* Moon icon — default (dark mode checked) */
+        /* Moon icon Ã¢â‚¬â€ default (dark mode checked) */
         -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
         mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z'/%3E%3C/svg%3E") !important;
     }}
@@ -3018,23 +3304,27 @@ with st.sidebar:
     }}
     
     /* Style the floating expand button control when collapsed */
-    [data-testid="stSidebarCollapsedControl"] {{
-        left: 0px !important;
-        top: 0px !important;
-        width: 100px !important;
-        height: 100px !important;
-        background: transparent !important;
+    [data-testid="collapsedControl"] {{
+        position: fixed !important;
+        left: 16px !important;
+        top: 16px !important;
+        width: 40px !important;
+        height: 40px !important;
+        background: {'rgba(15, 23, 42, 0.65)' if is_dark else 'rgba(255, 255, 255, 0.85)'} !important;
+        backdrop-filter: blur(8px) !important;
+        border: 1px solid {'rgba(255, 255, 255, 0.15)' if is_dark else 'rgba(0, 0, 0, 0.1)'} !important;
+        border-radius: 8px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        box-shadow: none !important;
-        border: none !important;
-        z-index: 100001 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+        z-index: 999999 !important;
+        transition: all 0.2s ease !important;
     }}
-    [data-testid="stSidebarCollapsedControl"] button {{
+    [data-testid="collapsedControl"] button {{
         background: transparent !important;
         border: none !important;
-        color: {text_soft} !important;
+        color: {'#f8fafc' if is_dark else '#0f172a'} !important;
         width: 100% !important;
         height: 100% !important;
         margin: 0 auto !important;
@@ -3045,11 +3335,11 @@ with st.sidebar:
     }}
 
     button[kind="header"] {{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }}
-    [data-testid="stSidebarCollapsedControl"]:hover button {{
+    [data-testid="collapsedControl"]:hover button {{
         color: #6366f1 !important;
     }}
     
@@ -3564,7 +3854,7 @@ with st.sidebar:
         function triggerExpand() {
             isDragging = false;
             window.parent.__sidebarDragTriggered = true;
-            const expandBtn = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button, button[data-testid="stSidebarCollapsedControl"], button[class*="CollapsedControl"]');
+            const expandBtn = parentDoc.querySelector('[data-testid="collapsedControl"] button, button[data-testid="collapsedControl"], [data-testid="stSidebarCollapsedControl"] button, button[data-testid="stSidebarCollapsedControl"], button[class*="CollapsedControl"]');
             if (expandBtn) {
                 expandBtn.click();
             }
@@ -3763,12 +4053,12 @@ if st.session_state.get("show_logout_confirm") == True:
 def manage_objects_dialog():
     # Notifikasi add berhasil
     if st.session_state.get("app_added"):
-        st.success(f"✓ '{st.session_state.app_added}' berhasil ditambahkan!")
+        st.success(f"Ã¢Å“â€œ '{st.session_state.app_added}' berhasil ditambahkan!")
         st.session_state["app_added"] = None
 
     # Notifikasi delete berhasil
     if st.session_state.get("app_deleted"):
-        st.warning(f"✓ '{st.session_state.app_deleted}' berhasil dihapus!")
+        st.warning(f"Ã¢Å“â€œ '{st.session_state.app_deleted}' berhasil dihapus!")
         st.session_state["app_deleted"] = None
 
     if "input_key" not in st.session_state:
@@ -3952,7 +4242,7 @@ UEQ_SKALA_MAP = {
 }
 
 def ueq_transform_global(df_raw):
-    """Transformasi UEQ: raw (1-7) → skala -3 s.d. +3, dengan reverse."""
+    """Transformasi UEQ: raw (1-7) Ã¢â€ â€™ skala -3 s.d. +3, dengan reverse."""
     dt = df_raw.copy().apply(pd.to_numeric, errors="coerce") - 4
     for i in UEQ_REVERSE_ITEMS:
         col = f"I{i}"
@@ -3963,7 +4253,7 @@ def ueq_transform_global(df_raw):
 def ueq_scale_mean_global(df_raw):
     """
     Hitung mean per skala sesuai UEQ Tools V13:
-    1. Transform raw → -3..+3 dengan reverse
+    1. Transform raw Ã¢â€ â€™ -3..+3 dengan reverse
     2. Per responden: mean item dalam skala
     3. Scale mean = mean dari per-responden mean
     """
@@ -4030,12 +4320,12 @@ if menu == "Home":
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     ">
         <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;">
-            Dashboard Analitik UX — Light Mode vs Dark Mode 
+            Dashboard Analitik UX Ã¢â‚¬â€ Light Mode vs Dark Mode 
         </div>
         <div style="font-size:14px;margin-top:12px;max-width:700px;line-height:1.7;opacity:0.9;">
             Platform analitik berbasis web untuk penelitian perbandingan pengalaman pengguna (UX) antara 
             Light Mode dan Dark Mode pada aplikasi mobile. Dikembangkan menggunakan Python Streamlit 
-            dan Supabase dengan metodologi Within-Subject Design — otomatis, akurat, dan interaktif.
+            dan Supabase dengan metodologi Within-Subject Design Ã¢â‚¬â€ otomatis, akurat, dan interaktif.
         </div>
         <div style="margin-top:20px; display: flex; gap: 15px;">
             <div style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 30px; font-size: 11px; font-weight: 600;">
@@ -4057,10 +4347,10 @@ if menu == "Home":
     with c1:
         st.markdown(f"""
         <div class="card">
-            <div style="font-size:14px; font-weight:700; color:#4f46e5; margin-bottom:10px;">Analisis Statistik Otomatis</div>
-            <div style="font-size:12px; line-height:1.6; color:{text_main};">
+            <div class="card-title-text">Analisis Statistik Otomatis</div>
+            <div class="card-body-text">
                 Sistem secara otomatis melakukan uji normalitas Shapiro-Wilk dan menentukan metode uji 
-                yang sesuai — Paired T-Test (parametrik) atau Wilcoxon Signed Ranks Test (non-parametrik) — 
+                yang sesuai Ã¢â‚¬â€ Paired T-Test (parametrik) atau Wilcoxon Signed Ranks Test (non-parametrik) Ã¢â‚¬â€ 
                 dengan output berformat SPSS untuk Time on Task dan Error Rate.
             </div>
         </div>
@@ -4069,8 +4359,8 @@ if menu == "Home":
     with c2:
         st.markdown(f"""
         <div class="card">
-            <div style="font-size:14px; font-weight:700; color:#4f46e5; margin-bottom:10px;">Interactivity & Visual Insight</div>
-            <div style="font-size:12px; line-height:1.6; color:{text_main};">
+            <div class="card-title-text">Interactivity & Visual Insight</div>
+            <div class="card-body-text">
                 Menyediakan grafik interaktif, tabel perbandingan, serta kesimpulan otomatis untuk 
                 mempermudah interpretasi perbedaan UX antara Light Mode dan Dark Mode pada 
                 aplikasi mobile.
@@ -4095,8 +4385,8 @@ if menu == "Home":
     for col, (title, desc) in zip([col1, col2, col3, col4], modules):
         col.markdown(f"""
         <div class="card" style="text-align:center;">
-            <div style="font-size:13px; font-weight:800; color:{text_main}; margin-bottom:5px;">{title}</div>
-            <div style="font-size:10px; color:{text_soft};">{desc}</div>
+            <div class="module-card-title">{title}</div>
+            <div class="module-card-desc">{desc}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -4106,7 +4396,7 @@ if menu == "Home":
     st.markdown("<br>", unsafe_allow_html=True)
     st.info(f"""
     Panduan Penggunaan:
-    1. Pilih atau tambahkan objek penelitian (aplikasi) melalui sidebar — saat ini: {app}.
+    1. Pilih atau tambahkan objek penelitian (aplikasi) melalui sidebar Ã¢â‚¬â€ saat ini: {app}.
     2. Input data Time on Task dan Error Rate per responden pada menu yang tersedia.
     3. Input data kuesioner UEQ (Light Mode & Dark Mode) pada menu UEQ Analysis.
     4. Input data preferensi responden pada menu Preferensi Responden.
@@ -4167,13 +4457,13 @@ if menu == "Overview":
             Research Overview
         </div>
         <div style="font-size:13px;color:{text_soft};margin-top:3px;">
-            {app} &nbsp;·&nbsp; {n} responden &nbsp;·&nbsp; Within-Subject Design
+            {app} &nbsp;Ã‚Â·&nbsp; {n} responden &nbsp;Ã‚Â·&nbsp; Within-Subject Design
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     # ======================
-    # KPI CARDS — 4 METRIK + 1 KESIMPULAN
+    # KPI CARDS Ã¢â‚¬â€ 4 METRIK + 1 KESIMPULAN
     # ======================
     def _winner_badge(wins):
         if wins:
@@ -4227,7 +4517,7 @@ if menu == "Overview":
                 {best_pref}
             </div>
             <div class="pref-badge" style="background:{pref_bg}; color:{pref_color} !important;">
-                {light_pref} Light &nbsp;·&nbsp; {dark_pref} Dark
+                {light_pref} Light &nbsp;Ã‚Â·&nbsp; {dark_pref} Dark
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -4245,7 +4535,7 @@ if menu == "Overview":
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
 
     # ======================
-    # CHART ROW — ToT, Error, UEQ side by side (Plotly, bersih)
+    # CHART ROW Ã¢â‚¬â€ ToT, Error, UEQ side by side (Plotly, bersih)
     # ======================
     st.markdown(f"""
     <div style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;
@@ -4290,7 +4580,7 @@ if menu == "Overview":
     st.markdown("<div style='margin-top:24px;'></div>", unsafe_allow_html=True)
 
     # ======================
-    # PREFERENSI DONUT — POSITIF & NEGATIF
+    # PREFERENSI DONUT Ã¢â‚¬â€ POSITIF & NEGATIF
     # ======================
     pos_percent = {a: 0.0 for a in aspek.keys()}
     neg_percent = {a: 0.0 for a in aspek.keys()}
@@ -4425,7 +4715,7 @@ if menu == "Overview":
     p_ueq = np.nan
     if not ueq_empty:
         _, p_ueq = stats.ttest_rel(
-            ueq_transform_global(light_df).mean(axis=1),   # ✅
+            ueq_transform_global(light_df).mean(axis=1),   # Ã¢Å“â€¦
             ueq_transform_global(dark_df).mean(axis=1)
         )
 
@@ -4463,7 +4753,7 @@ if menu == "Overview":
     col_grand, col_detail = st.columns([1, 2.6])
 
     with col_grand:
-        p_display = f"{round(grand_p, 4)}" if not pd.isna(grand_p) else "—"
+        p_display = f"{round(grand_p, 4)}" if not pd.isna(grand_p) else "Ã¢â‚¬â€"
         st.markdown(f"""
         <div style="background:{grand_bg};border:1px solid {grand_border};border-radius:14px;
             padding:28px 20px;text-align:center;height:100%;display:flex;flex-direction:column;
@@ -4562,17 +4852,17 @@ if menu == "Overview":
             nv2 = (8 - df_neg_r[cols].apply(pd.to_numeric, errors="coerce")).mean().mean()
             pref_scores[a] = (pv2 + nv2) / 2
 
-        best_pref_aspect  = max(pref_scores, key=pref_scores.get) if pref_scores else "—"
-        worst_pref_aspect = min(pref_scores, key=pref_scores.get) if pref_scores else "—"
+        best_pref_aspect  = max(pref_scores, key=pref_scores.get) if pref_scores else "Ã¢â‚¬â€"
+        worst_pref_aspect = min(pref_scores, key=pref_scores.get) if pref_scores else "Ã¢â‚¬â€"
 
         aspect_scores = {}
         if pref_scores:
             for a, score in pref_scores.items():
                 aspect_scores[a] = {"score": score, "mode": "LIGHT" if score < 4 else "DARK"}
-        best_aspect       = max(aspect_scores, key=lambda x: aspect_scores[x]["score"]) if aspect_scores else "—"
-        best_aspect_mode  = aspect_scores[best_aspect]["mode"] if aspect_scores else "—"
-        worst_aspect      = min(aspect_scores, key=lambda x: aspect_scores[x]["score"]) if aspect_scores else "—"
-        worst_aspect_mode = aspect_scores[worst_aspect]["mode"] if aspect_scores else "—"
+        best_aspect       = max(aspect_scores, key=lambda x: aspect_scores[x]["score"]) if aspect_scores else "Ã¢â‚¬â€"
+        best_aspect_mode  = aspect_scores[best_aspect]["mode"] if aspect_scores else "Ã¢â‚¬â€"
+        worst_aspect      = min(aspect_scores, key=lambda x: aspect_scores[x]["score"]) if aspect_scores else "Ã¢â‚¬â€"
+        worst_aspect_mode = aspect_scores[worst_aspect]["mode"] if aspect_scores else "Ã¢â‚¬â€"
 
         sig_label  = "Signifikan" if p_val_final < 0.05 else "Tidak Signifikan"
         sig_color  = "#22c55e" if p_val_final < 0.05 else "#f59e0b"
@@ -4581,7 +4871,7 @@ if menu == "Overview":
         rec_bg     = "rgba(99,102,241,0.1)" if best_pref == "Light Mode" else "rgba(167,139,250,0.1)"
         rec_border = "rgba(99,102,241,0.3)" if best_pref == "Light Mode" else "rgba(167,139,250,0.3)"
 
-        # ── build grid cards ──────────────────────────────────────────
+        # Ã¢â€â‚¬Ã¢â€â‚¬ build grid cards Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         def _grid_card(subtitle, body):
             return (
                 f'<div style="background:var(--secondary-background-color);border:1px solid rgba(128,128,128,0.2);padding:14px 16px;border-radius:10px;">'
@@ -4662,7 +4952,7 @@ if menu == "Time on Task":
     
     st.markdown(f"""
     <div style="font-size:14px;color:{text_soft};">
-    Uji normalitas Shapiro-Wilk otomatis · Rekomendasi metode: Paired T-Test atau Wilcoxon Signed Ranks Test
+    Uji normalitas Shapiro-Wilk otomatis Ã‚Â· Rekomendasi metode: Paired T-Test atau Wilcoxon Signed Ranks Test
     </div>
     """, unsafe_allow_html=True)
 
@@ -4754,21 +5044,21 @@ if menu == "Time on Task":
         dark_per_user  = df_edit[["Dark_T1","Dark_T2","Dark_T3"]].mean(axis=1)
  
         # ============================================================
-        # 1. UJI NORMALITAS — Shapiro-Wilk pada SELISIH (Dark − Light)
+        # 1. UJI NORMALITAS Ã¢â‚¬â€ Shapiro-Wilk pada SELISIH (Dark Ã¢Ë†â€™ Light)
         # ============================================================
-        st.markdown("### Uji Normalitas Selisih (Dark − Light)")
+        st.markdown("### Uji Normalitas Selisih (Dark Ã¢Ë†â€™ Light)")
  
         norm_results = []
         for i in range(1, 4):
             r = shapiro_and_ks(
                 df_edit[f"Light_T{i}"], df_edit[f"Dark_T{i}"],
-                label=f"Dark_T{i} − Light_T{i}"
+                label=f"Dark_T{i} Ã¢Ë†â€™ Light_T{i}"
             )
             norm_results.append(r)
  
         r_overall = shapiro_and_ks(
             light_per_user, dark_per_user,
-            label="Dark (mean) − Light (mean)"
+            label="Dark (mean) Ã¢Ë†â€™ Light (mean)"
         )
         norm_results.append(r_overall)
  
@@ -4828,7 +5118,7 @@ if menu == "Time on Task":
         z_or_t_values = []
  
         if use_ttest:
-            st.markdown("### Paired Samples T-Test — Per Task")
+            st.markdown("### Paired Samples T-Test Ã¢â‚¬â€ Per Task")
             pairs_per_task = []
             for i in range(1, 4):
                 light = pd.to_numeric(df_edit[f"Light_T{i}"], errors="coerce")
@@ -4849,7 +5139,7 @@ if menu == "Time on Task":
             stat_label    = "t"
  
         else:
-            st.markdown("### Wilcoxon Signed Ranks Test — Per Task")
+            st.markdown("### Wilcoxon Signed Ranks Test Ã¢â‚¬â€ Per Task")
             pairs_per_task = []
             for i in range(1, 4):
                 light = pd.to_numeric(df_edit[f"Light_T{i}"], errors="coerce")
@@ -4897,7 +5187,7 @@ if menu == "Time on Task":
         ax3.grid(True, alpha=0.3)
  
         ax4.bar(tasks, p_values, color=colors_sig, alpha=0.8)
-        ax4.axhline(y=0.05, color='red', linestyle='--', alpha=0.7, label='α=0.05')
+        ax4.axhline(y=0.05, color='red', linestyle='--', alpha=0.7, label='ÃŽÂ±=0.05')
         ax4.set_title("P-Values")
         ax4.set_ylim(0, max(0.3, max(p_values) * 1.1))
         ax4.legend(); ax4.grid(True, alpha=0.3)
@@ -4945,7 +5235,7 @@ if menu == "Time on Task":
           <ul style="font-size:14px;color:{text_main};line-height:1.8;margin:0;">
             <li>Metode yang digunakan: <b>{method_name}</b></li>
             <li><b>{significant_tasks}/3 tasks</b> menunjukkan perbedaan signifikan (p &lt; 0.05)</li>
-            <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} — {overall_sig}</li>
+            <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} Ã¢â‚¬â€ {overall_sig}</li>
             <li>Mean Light Mode: <b>{avg_light_err:.1f}s</b></li>
             <li>Mean Dark Mode: <b>{avg_dark_err:.1f}s</b></li>
             <li>{'Light Mode lebih cepat' if avg_light_err < avg_dark_err else 'Dark Mode lebih cepat'} secara deskriptif</li>
@@ -4954,7 +5244,7 @@ if menu == "Time on Task":
  
         st.markdown("---")
         cap = "Paired Samples T-Test (Parametrik)" if use_ttest else "Wilcoxon Signed Ranks Test (Non-Parametrik)"
-        st.caption(f"*{cap} · SPSS Compatible Output · Mean per User*")
+        st.caption(f"*{cap} Ã‚Â· SPSS Compatible Output Ã‚Â· Mean per User*")
 
 # ======================
 # ERROR RATE (WILCOXON - FIXED)
@@ -4970,7 +5260,7 @@ if menu == "Error Rate":
     
     st.markdown(f"""
     <div style="font-size:14px;color:{text_soft};">
-    Uji normalitas Shapiro-Wilk otomatis · Rekomendasi metode: Paired T-Test atau Wilcoxon Signed Ranks Test
+    Uji normalitas Shapiro-Wilk otomatis Ã‚Â· Rekomendasi metode: Paired T-Test atau Wilcoxon Signed Ranks Test
     </div>
     """, unsafe_allow_html=True)
 
@@ -5061,21 +5351,21 @@ if menu == "Error Rate":
         dark_per_user  = df_edit[["Dark_T1","Dark_T2","Dark_T3"]].mean(axis=1)
  
         # ============================================================
-        # 1. UJI NORMALITAS — Shapiro-Wilk pada SELISIH (Dark − Light)
+        # 1. UJI NORMALITAS Ã¢â‚¬â€ Shapiro-Wilk pada SELISIH (Dark Ã¢Ë†â€™ Light)
         # ============================================================
-        st.markdown("### Uji Normalitas Selisih (Dark − Light)")
+        st.markdown("### Uji Normalitas Selisih (Dark Ã¢Ë†â€™ Light)")
  
         norm_results = []
         for i in range(1, 4):
             r = shapiro_and_ks(
                 df_edit[f"Light_T{i}"], df_edit[f"Dark_T{i}"],
-                label=f"Dark_T{i} − Light_T{i}"
+                label=f"Dark_T{i} Ã¢Ë†â€™ Light_T{i}"
             )
             norm_results.append(r)
  
         r_overall = shapiro_and_ks(
             light_per_user, dark_per_user,
-            label="Dark (mean) − Light (mean)"
+            label="Dark (mean) Ã¢Ë†â€™ Light (mean)"
         )
         norm_results.append(r_overall)
  
@@ -5133,7 +5423,7 @@ if menu == "Error Rate":
         z_or_t_values = []
  
         if use_ttest:
-            st.markdown("### Paired Samples T-Test — Per Task")
+            st.markdown("### Paired Samples T-Test Ã¢â‚¬â€ Per Task")
             pairs_per_task = []
             for i in range(1, 4):
                 light = pd.to_numeric(df_edit[f"Light_T{i}"], errors="coerce")
@@ -5154,7 +5444,7 @@ if menu == "Error Rate":
             stat_label    = "t"
  
         else:
-            st.markdown("### Wilcoxon Signed Ranks Test — Per Task")
+            st.markdown("### Wilcoxon Signed Ranks Test Ã¢â‚¬â€ Per Task")
             pairs_per_task = []
             for i in range(1, 4):
                 light = pd.to_numeric(df_edit[f"Light_T{i}"], errors="coerce")
@@ -5202,7 +5492,7 @@ if menu == "Error Rate":
         ax3.grid(True, alpha=0.3)
  
         ax4.bar(tasks, p_values, color=colors_sig, alpha=0.8)
-        ax4.axhline(y=0.05, color='red', linestyle='--', alpha=0.7, label='α=0.05')
+        ax4.axhline(y=0.05, color='red', linestyle='--', alpha=0.7, label='ÃŽÂ±=0.05')
         ax4.set_title("P-Values")
         ax4.set_ylim(0, max(0.3, max(p_values) * 1.1))
         ax4.legend(); ax4.grid(True, alpha=0.3)
@@ -5250,7 +5540,7 @@ if menu == "Error Rate":
           <ul style="font-size:14px;color:{text_main};line-height:1.8;margin:0;">
             <li>Metode yang digunakan: <b>{method_name}</b></li>
             <li><b>{significant_tasks}/3 tasks</b> menunjukkan perbedaan signifikan (p &lt; 0.05)</li>
-            <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} — {overall_sig}</li>
+            <li><b>Overall {method_name}:</b> {stat_label}={overall_stat:.3f}, p={overall_p:.3f} Ã¢â‚¬â€ {overall_sig}</li>
             <li>Mean Light Mode: <b>{avg_light_err:.1f} kesalahan</b></li>
             <li>Mean Dark Mode: <b>{avg_dark_err:.1f} kesalahan</b></li>
             <li>{'Light Mode lebih sedikit kesalahan' if avg_light_err < avg_dark_err else 'Dark Mode lebih sedikit kesalahan'} secara deskriptif</li>
@@ -5259,16 +5549,16 @@ if menu == "Error Rate":
  
         st.markdown("---")
         cap = "Paired Samples T-Test (Parametrik)" if use_ttest else "Wilcoxon Signed Ranks Test (Non-Parametrik)"
-        st.caption(f"*{cap} · SPSS Compatible Output · Mean per User*")
+        st.caption(f"*{cap} Ã‚Â· SPSS Compatible Output Ã‚Â· Mean per User*")
 
 # ==============================================================================
-# MENU: UEQ ANALYSIS — STANDAR UEQ DATA ANALYSIS TOOL VERSION 13
+# MENU: UEQ ANALYSIS Ã¢â‚¬â€ STANDAR UEQ DATA ANALYSIS TOOL VERSION 13
 # Logika identik dengan UEQ_Data_Analysis_Tool_Version13_Light_FB.xlsx
 # Bahasa: Indonesia (sesuai pilihan bahasa di tool)
 # ==============================================================================
  
 # ==============================================================================
-# MENU: UEQ ANALYSIS — STANDAR UEQ DATA ANALYSIS TOOL VERSION 13
+# MENU: UEQ ANALYSIS Ã¢â‚¬â€ STANDAR UEQ DATA ANALYSIS TOOL VERSION 13
 # REVERSE_ITEMS terverifikasi langsung dari file Excel asli
 # ==============================================================================
 
@@ -5276,7 +5566,7 @@ if menu == "UEQ Analysis":
 
     st.markdown(f"""
     <div style="font-size:24px;font-weight:700;color:{text_main};margin-bottom:4px;">
-    Analisis UEQ (User Experience Questionnaire) — {app}
+    Analisis UEQ (User Experience Questionnaire) Ã¢â‚¬â€ {app}
     </div>
     <div style="font-size:13px;color:{text_soft};margin-bottom:20px;">
     Logika identik UEQ Data Analysis Tool Version 13
@@ -5284,10 +5574,10 @@ if menu == "UEQ Analysis":
     """, unsafe_allow_html=True)
 
     # =========================================================================
-    # KONSTANTA — TERVERIFIKASI DARI FILE EXCEL ASLI V13
+    # KONSTANTA Ã¢â‚¬â€ TERVERIFIKASI DARI FILE EXCEL ASLI V13
     # REVERSE_ITEMS = item yang di-reverse pada sheet DT
-    # Dicek satu per satu dari sheet DT: jika raw=7 → DT=+3, berarti TIDAK di-reverse
-    #                                    jika raw=7 → DT=-3, berarti DI-REVERSE
+    # Dicek satu per satu dari sheet DT: jika raw=7 Ã¢â€ â€™ DT=+3, berarti TIDAK di-reverse
+    #                                    jika raw=7 Ã¢â€ â€™ DT=-3, berarti DI-REVERSE
     # =========================================================================
     REVERSE_ITEMS = {3, 4, 5, 9, 10, 12, 17, 18, 19, 21, 23, 24, 25}
 
@@ -5329,7 +5619,7 @@ if menu == "UEQ Analysis":
     }
 
     # =========================================================================
-    # FUNGSI INTI — TERVERIFIKASI IDENTIK DENGAN UEQ TOOLS V13
+    # FUNGSI INTI Ã¢â‚¬â€ TERVERIFIKASI IDENTIK DENGAN UEQ TOOLS V13
     # =========================================================================
 
     def ueq_transform(df_raw):
@@ -5360,7 +5650,7 @@ if menu == "UEQ Analysis":
                 "Mean":           round(mean, 4),
                 "Varians":        round(var,  4),
                 "Std. Dev.":      round(std,  4),
-                "Confidence (±)": round(ci,   4),
+                "Confidence (Ã‚Â±)": round(ci,   4),
                 "CI Bawah":       round(mean - ci, 4),
                 "CI Atas":        round(mean + ci, 4),
             })
@@ -5387,7 +5677,7 @@ if menu == "UEQ Analysis":
                 "Varians":        round(var,  2),
                 "Std. Dev.":      round(std,  2),
                 "N":              n,
-                "Confidence (±)": round(ci,   3),
+                "Confidence (Ã‚Â±)": round(ci,   3),
                 "CI Bawah":       round(mean - ci, 3),
                 "CI Atas":        round(mean + ci, 3),
             })
@@ -5398,7 +5688,7 @@ if menu == "UEQ Analysis":
         if mean >= b["Good"]:           return "Good"
         elif mean >= b["Above Average"]:return "Above Average"
         elif mean >= b["Below Average"]:return "Below Average"
-        elif mean >= b["Bad"]:          return "Bad"            # ← benar
+        elif mean >= b["Bad"]:          return "Bad"            # Ã¢â€ Â benar
         else:                              return "Bad"
 
     def benchmark_interpretasi(k):
@@ -5466,9 +5756,9 @@ if menu == "UEQ Analysis":
         st.markdown("### Input Data Skor Kuesioner (Skala 1-7)")
         st.caption("1 = alternatif paling kiri, 7 = alternatif paling kanan.")
 
-        with st.expander("Dataset Manager — Light Mode", expanded=False):
+        with st.expander("Dataset Manager Ã¢â‚¬â€ Light Mode", expanded=False):
             dataset_manager(u_light, items_label, file_ueq_light, "UEQ Light Mode", f"ueq_light_{app}")
-        with st.expander("Dataset Manager — Dark Mode", expanded=False):
+        with st.expander("Dataset Manager Ã¢â‚¬â€ Dark Mode", expanded=False):
             dataset_manager(u_dark, items_label, file_ueq_dark, "UEQ Dark Mode", f"ueq_dark_{app}")
 
         st.markdown("---")
@@ -5527,7 +5817,7 @@ if menu == "UEQ Analysis":
     # TAB 2: DATA TRANSFORMATION (DT)
     # ------------------------------------------------------------------
     with tab_dt:
-        st.markdown("### Data Transformation — Identik Sheet DT")
+        st.markdown("### Data Transformation Ã¢â‚¬â€ Identik Sheet DT")
         st.caption("Nilai dikonversi ke rentang -3 s.d. +3 (Nilai - 4). Item negatif di-reverse (x-1).")
         st.caption(f"**Item yang di-reverse:** {sorted(REVERSE_ITEMS)}")
 
@@ -5559,7 +5849,7 @@ if menu == "UEQ Analysis":
     # TAB 3: HASIL SKALA
     # ------------------------------------------------------------------
     with tab_hasil:
-        st.markdown("### Hasil Analisis Skala UEQ — Identik Sheet Results")
+        st.markdown("### Hasil Analisis Skala UEQ Ã¢â‚¬â€ Identik Sheet Results")
 
         # Tabel gabungan Light vs Dark
         tabel_gabung = pd.DataFrame({
@@ -5587,8 +5877,8 @@ if menu == "UEQ Analysis":
         c1, c2, c3 = st.columns(3)
         for col, title, lv, dv, sub in [
             (c1, "Daya Tarik",        at_light, at_dark, "Attractiveness"),
-            (c2, "Kualitas Pragmatis", pq_light, pq_dark, "Kejelasan · Efisiensi · Ketepatan"),
-            (c3, "Kualitas Hedonis",   hq_light, hq_dark, "Stimulasi · Kebaruan"),
+            (c2, "Kualitas Pragmatis", pq_light, pq_dark, "Kejelasan Ã‚Â· Efisiensi Ã‚Â· Ketepatan"),
+            (c3, "Kualitas Hedonis",   hq_light, hq_dark, "Stimulasi Ã‚Â· Kebaruan"),
         ]:
             col.markdown(f"""
             <div class="card" style="text-align:center;">
@@ -5614,7 +5904,7 @@ if menu == "UEQ Analysis":
             textposition="outside",
             error_y=dict(
                 type='data',
-                array=stats_light["Confidence (±)"].tolist(),
+                array=stats_light["Confidence (Ã‚Â±)"].tolist(),
                 visible=True,
                 color="#6366f1",
                 thickness=1.5,
@@ -5628,7 +5918,7 @@ if menu == "UEQ Analysis":
             textposition="outside",
             error_y=dict(
                 type='data',
-                array=stats_dark["Confidence (±)"].tolist(),
+                array=stats_dark["Confidence (Ã‚Â±)"].tolist(),
                 visible=True,
                 color="#a78bfa",
                 thickness=1.5,
@@ -5649,7 +5939,7 @@ if menu == "UEQ Analysis":
         st.plotly_chart(fig_bar, use_container_width=True)
 
         # Versi -2 sampai +2 (untuk presentasi)
-        st.markdown("#### Grafik Mean Skala (Skala -2 s.d. +2) — Versi Presentasi")
+        st.markdown("#### Grafik Mean Skala (Skala -2 s.d. +2) Ã¢â‚¬â€ Versi Presentasi")
         fig_bar2 = go.Figure()
         fig_bar2.add_trace(go.Bar(
             x=stats_light["Skala"], y=stats_light["Mean"], name="Light Mode",
@@ -5717,7 +6007,7 @@ if menu == "UEQ Analysis":
             line=dict(color=color_sel, width=1.5),
             error_y=dict(
                 type='data',
-                array=item_stats_sel["Confidence (±)"].tolist(),
+                array=item_stats_sel["Confidence (Ã‚Â±)"].tolist(),
                 visible=True,
                 color=color_sel,
                 thickness=1.5,
@@ -5775,13 +6065,13 @@ if menu == "UEQ Analysis":
         with col_ci1:
             st.markdown("**Light Mode**")
             st.dataframe(
-                stats_light[["Skala","Mean","Std. Dev.","N","Confidence (±)","CI Bawah","CI Atas"]],
+                stats_light[["Skala","Mean","Std. Dev.","N","Confidence (Ã‚Â±)","CI Bawah","CI Atas"]],
                 use_container_width=True, hide_index=True
             )
         with col_ci2:
             st.markdown("**Dark Mode**")
             st.dataframe(
-                stats_dark[["Skala","Mean","Std. Dev.","N","Confidence (±)","CI Bawah","CI Atas"]],
+                stats_dark[["Skala","Mean","Std. Dev.","N","Confidence (Ã‚Â±)","CI Bawah","CI Atas"]],
                 use_container_width=True, hide_index=True
             )
 
@@ -5801,7 +6091,7 @@ if menu == "UEQ Analysis":
                 y=stats_sel["Mean"].tolist(),
                 error_y=dict(
                     type='data',
-                    array=stats_sel["Confidence (±)"].tolist(),
+                    array=stats_sel["Confidence (Ã‚Â±)"].tolist(),
                     visible=True,
                     color=color,
                     thickness=2,
@@ -5831,13 +6121,13 @@ if menu == "UEQ Analysis":
         with col_ci3:
             st.markdown("**Light Mode**")
             st.dataframe(
-                item_light[["Item","Kiri","Kanan","Mean","Std. Dev.","N","Confidence (±)","CI Bawah","CI Atas"]],
+                item_light[["Item","Kiri","Kanan","Mean","Std. Dev.","N","Confidence (Ã‚Â±)","CI Bawah","CI Atas"]],
                 use_container_width=True, hide_index=True
             )
         with col_ci4:
             st.markdown("**Dark Mode**")
             st.dataframe(
-                item_dark[["Item","Kiri","Kanan","Mean","Std. Dev.","N","Confidence (±)","CI Bawah","CI Atas"]],
+                item_dark[["Item","Kiri","Kanan","Mean","Std. Dev.","N","Confidence (Ã‚Â±)","CI Bawah","CI Atas"]],
                 use_container_width=True, hide_index=True
             )
 
@@ -5893,7 +6183,7 @@ if menu == "UEQ Analysis":
     # TAB 6: BENCHMARK
     # ------------------------------------------------------------------
     with tab_bench:
-        st.markdown("### Benchmark UEQ — Identik Sheet Benchmark")
+        st.markdown("### Benchmark UEQ Ã¢â‚¬â€ Identik Sheet Benchmark")
         st.caption("Benchmark: 468 studi, 21.175 responden.")
 
         BENCH_RANGES = {
@@ -6008,7 +6298,7 @@ if menu == "UEQ Analysis":
             marker=dict(color=color_bench, size=8, symbol="diamond"),
             error_y=dict(
                 type='data',
-                array=stats_bench["Confidence (±)"].tolist(),
+                array=stats_bench["Confidence (Ã‚Â±)"].tolist(),
                 visible=True,
                 color=color_bench,
                 thickness=2,
@@ -6085,7 +6375,7 @@ if menu == "UEQ Analysis":
     # TAB 7: DETEKSI INKONSISTENSI
     # ------------------------------------------------------------------
     with tab_inkonsisten:
-        st.markdown("### Deteksi Jawaban Tidak Konsisten — Identik Sheet Inconsistencies")
+        st.markdown("### Deteksi Jawaban Tidak Konsisten Ã¢â‚¬â€ Identik Sheet Inconsistencies")
         mode_ink = st.radio("Pilih Mode", ["Light Mode","Dark Mode"], horizontal=True, key="inkons_mode")
         df_ink   = df_light_clean if mode_ink == "Light Mode" else df_dark_clean
         df_check = inconsistency_check(df_ink)
@@ -6112,8 +6402,8 @@ if menu == "UEQ Analysis":
 
     st.markdown("---")
     st.caption(
-        "UEQ Analysis · Logika identik UEQ Data Analysis Tool Version 13 · "
-        "Benchmark: 468 studi, 21.175 responden · Muhammad Farhan, UII 2026"
+        "UEQ Analysis Ã‚Â· Logika identik UEQ Data Analysis Tool Version 13 Ã‚Â· "
+        "Benchmark: 468 studi, 21.175 responden Ã‚Â· Muhammad Farhan, UII 2026"
     )
             
 
@@ -6130,9 +6420,9 @@ if menu == "Preferensi Responden":
     """, unsafe_allow_html=True)
 
     st.info("""
-    Metode Analisis: Mean Preference Analysis (Skala Likert 1–7, Bipolar).
-    Nilai 1 = kecenderungan Light Mode · Nilai 7 = kecenderungan Dark Mode · Nilai 4 = Netral.
-    Sistem otomatis melakukan Reverse Scoring (8 − Nilai Asli) pada pernyataan negatif sebelum 
+    Metode Analisis: Mean Preference Analysis (Skala Likert 1Ã¢â‚¬â€œ7, Bipolar).
+    Nilai 1 = kecenderungan Light Mode Ã‚Â· Nilai 7 = kecenderungan Dark Mode Ã‚Â· Nilai 4 = Netral.
+    Sistem otomatis melakukan Reverse Scoring (8 Ã¢Ë†â€™ Nilai Asli) pada pernyataan negatif sebelum 
     digabungkan menjadi Grand Mean per aspek (Keterbacaan, Kelelahan Mata, Usability, 
     Konsumsi Baterai, Efisiensi Kinerja, Estetika & Daya Tarik).
     """)

@@ -221,7 +221,7 @@ def render_auth_page():
 
     # Fullscreen CSS injection & Scroll Lock (Premium Design Match)
     css = f"""
-    <style>
+    <style id="login-css-styles">
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
     /* Force Plus Jakarta Sans font globally on absolutely all elements */
@@ -229,7 +229,7 @@ def render_auth_page():
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }}
 
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {{
+    html:has(.login-card-marker), html:has(.login-card-marker) body, html:has(.login-card-marker) [data-testid="stAppViewContainer"], html:has(.login-card-marker) [data-testid="stMain"] {{
         background: {bg_gradient} !important;
         flex-direction: column !important;
         justify-content: flex-start !important; /* Top align to allow scrolling */
@@ -241,7 +241,7 @@ def render_auth_page():
     }}
 
     /* Force semua wrapper bisa scroll */
-    html, body {{
+    html:has(.login-card-marker), html:has(.login-card-marker) body {{
         background: {bg_gradient} !important;
         min-height: 100vh !important;
         width: 100% !important;
@@ -252,7 +252,7 @@ def render_auth_page():
         height: auto !important;
     }}
 
-    [data-testid="stAppViewContainer"] {{
+    html:has(.login-card-marker) [data-testid="stAppViewContainer"] {{
         background: {bg_gradient} !important;
         min-height: 100vh !important;
         width: 100% !important;
@@ -260,36 +260,37 @@ def render_auth_page():
         overflow-y: auto !important;
     }}
 
-    [data-testid="stMain"] {{
+    html:has(.login-card-marker) [data-testid="stMain"] {{
         background: transparent !important;
         overflow-y: auto !important;
         height: auto !important;
         width: 100% !important;
     }}
 
-    [data-testid="stMainViewContainer"] {{
+    html:has(.login-card-marker) [data-testid="stMainViewContainer"] {{
         overflow-y: auto !important;
         height: auto !important;
     }}
 
     /* Streamlit internal scroll fix */
-    section[data-testid="stMain"] > div {{
+    html:has(.login-card-marker) section[data-testid="stMain"] > div {{
         overflow-y: auto !important;
         height: auto !important;
     }}
 
-    .main > div {{
+    html:has(.login-card-marker) .main > div {{
         overflow-y: auto !important;
         height: auto !important; 
     }}
 
     /* Root level */
-    #root > div:nth-child(1) > div > div > div > div > section > div {{
+    html:has(.login-card-marker) #root > div:nth-child(1) > div > div > div > div > section > div {{
         overflow: auto !important;
         height: auto !important;
         padding-bottom: 60px !important;
     }}
 
+    /* Hapus display:flex yang memblokir natural flow */
     /* Hapus display:flex yang memblokir natural flow */
     html:has(.login-card-marker), html:has(.login-card-marker) body {{
         display: block !important;
@@ -521,7 +522,7 @@ def render_auth_page():
     }}
 
     /* Flat Tab Row Container - Sleek & Minimalist */
-    /* Remove ALL spacing between tab columns */
+    /* Remove ALL spacing between tab columns and FORCE them to stay side-by-side on mobile */
     div[data-testid="stHorizontalBlock"]:has(.auth-tab) {{
         background-color: transparent !important;
         background: transparent !important;
@@ -529,13 +530,21 @@ def render_auth_page():
         border-radius: 0px !important;
         padding: 0 !important;
         gap: 0px !important;
-        margin-bottom: 0px !important;  /* ← ubah dari 24px ke 0px */
+        margin-bottom: 0px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        width: 100% !important;
     }}
 
-    /* Remove column spacing */
+    /* Remove column spacing and force 50% width on all screens */
     div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stColumn"] {{
         padding: 0 !important;
         margin: 0 !important;
+        flex: 1 1 50% !important;
+        min-width: 0 !important; /* Force overrides default min-width of 240px */
+        max-width: 50% !important;
+        width: 50% !important;
     }}
 
     /* Base tab button style inside flat row */
@@ -990,7 +999,7 @@ def render_auth_page():
 
     /* Responsive adjustments */
     @media (max-width: 768px) {{
-        html:has(.login-card-marker) [data-testid="stMain"] .block-container {{
+        [data-testid="stMain"] .block-container {{
             max-width: 100% !important;
             margin: 0 !important;
             border-radius: 16px !important;
@@ -1000,7 +1009,7 @@ def render_auth_page():
         }}
         
         /* Logo area lebih compact di mobile */
-        html:has(.login-card-marker) div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
+        div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
             top: 32px !important;
             right: 22px !important;
         }}
@@ -1050,16 +1059,16 @@ def render_auth_page():
     }}
 
     @media (max-width: 400px) {{
-        html:has(.login-card-marker) [data-testid="stMain"] .block-container {{
+        [data-testid="stMain"] .block-container {{
             padding: 20px 14px !important;
         }}
         
-        html:has(.login-card-marker) div[data-testid="stFormSubmitButton"] button {{
+        div[data-testid="stFormSubmitButton"] button {{
             font-size: 13px !important;
         }}
         
         /* Tab buttons smaller on very small screens */
-        html:has(.login-card-marker) div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button {{
+        div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button {{
             font-size: 12px !important;
             height: 36px !important;
         }}
@@ -1067,7 +1076,7 @@ def render_auth_page():
 
     </style>
     """
-    st.markdown(css, unsafe_allow_html=True)
+    st.html(css)
 
     # Main Card Container
     with st.container():
