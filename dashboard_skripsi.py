@@ -2014,7 +2014,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     }
     [data-testid="stMainViewContainer"] {
         margin-left: 0 !important;
-        
+        width: 100% !important;
     }
 }
             
