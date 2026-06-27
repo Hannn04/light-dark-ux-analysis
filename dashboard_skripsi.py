@@ -1971,14 +1971,14 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
 /* ========================================================
    RESPONSIVE GRID COLUMN RULES & MOBILE OPTIMIZATIONS
    ======================================================== */
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
     /* For tablets and smaller: allow columns to wrap */
     [data-testid="stHorizontalBlock"] {
         flex-wrap: wrap !important;
         gap: 16px !important;
     }
     [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-        min-width: 220px !important;
+        min-width: 190px !important;
         flex: 1 1 calc(50% - 16px) !important;
         width: 100% !important;
     }
