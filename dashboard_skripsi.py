@@ -1971,14 +1971,14 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
 /* ========================================================
    RESPONSIVE GRID COLUMN RULES & MOBILE OPTIMIZATIONS
    ======================================================== */
-@media (max-width: 1280px) {
+@media (max-width: 1024px) {
     /* For tablets and smaller: allow columns to wrap */
     [data-testid="stHorizontalBlock"] {
         flex-wrap: wrap !important;
         gap: 16px !important;
     }
     [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-        min-width: 190px !important;
+        min-width: 220px !important;
         flex: 1 1 calc(50% - 16px) !important;
         width: 100% !important;
     }
@@ -2900,31 +2900,33 @@ with st.sidebar:
     @media (min-width: 768px) {{
         /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
         [data-testid="stSidebar"][aria-expanded="false"] {{
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            margin-left: 0px !important;
-            left: 0px !important;
-            transform: translate3d(0px, 0px, 0px) !important;
-            min-width: 70px !important;
-            max-width: 70px !important;
-            width: 70px !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            border-right: 1px solid rgba(128,128,128,0.15) !important;
-            background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
-            z-index: 100000 !important;
-            position: relative !important;
-            overflow-x: hidden !important;
-        }}
-        
-        /* Auto expand collapsed sidebar on hover like a floating drawer */
-        [data-testid="stSidebar"][aria-expanded="false"]:hover {{
-            min-width: 300px !important;
-            max-width: 300px !important;
-            width: 300px !important;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.15) !important;
-            z-index: 100002 !important;
-        }}
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin-left: 0px !important;
+        left: 0px !important;
+        transform: translate3d(0px, 0px, 0px) !important;
+        min-width: 70px !important;
+        max-width: 70px !important;
+        width: 70px !important;
+        transition: all 0.2s ease !important;
+        border-right: 1px solid rgba(128,128,128,0.15) !important;
+        background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
+        z-index: 100000 !important;
+        position: relative !important;
+    }}
+    
+    /* Invisible drag-to-expand handle on the right edge of the collapsed sidebar */
+    [data-testid="stSidebar"][aria-expanded="false"]::after {{
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 12px !important;
+        height: 100% !important;
+        cursor: ew-resize !important;
+        z-index: 100002 !important;
+    }}
     
     [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"] {{
         display: flex !important;
