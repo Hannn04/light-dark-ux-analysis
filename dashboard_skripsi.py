@@ -2916,8 +2916,9 @@ with st.sidebar:
             position: relative !important;
             overflow-x: hidden !important;
         }}
-        [data-testid="stSidebar"][aria-expanded="false"] * {{
-            overflow-x: hidden !important;
+        /* Remove icon margin-right in collapsed sidebar to center the icon perfectly */
+        [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label::before {{
+            margin-right: 0px !important;
         }}
     
     /* Invisible drag-to-expand handle on the right edge of the collapsed sidebar */
