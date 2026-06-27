@@ -3143,7 +3143,7 @@ with st.sidebar:
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        width: 100% !important
+        width: 100% !important;
     }}
 
     /* Fix toggle position - paksa center sempurna */
@@ -3233,7 +3233,7 @@ with st.sidebar:
         justify-content: center !important;
         align-items: center !important;
         height: auto !important;
-        margin: 6px 0 !important;
+        margin: 6px auto !important;
         padding: 0 !important;
         width: 100% !important;
         pointer-events: auto !important;
@@ -3300,9 +3300,11 @@ with st.sidebar:
     [data-testid="stSidebar"][aria-expanded="false"] div.stElementContainer:has(.sidebar-user-card) {{
         display: flex !important;
         justify-content: center !important;
+        align-items: center !important;
         height: auto !important;
-        margin: 2px 0 4px 0 !important;
+        margin: 2px auto 4px auto !important;
         padding: 0 !important;
+        width: 100% !important;
     }}
     [data-testid="stSidebar"][aria-expanded="false"] .sidebar-user-card {{
         background: transparent !important;
