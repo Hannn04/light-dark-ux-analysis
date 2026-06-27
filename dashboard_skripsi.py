@@ -2900,21 +2900,25 @@ with st.sidebar:
     @media (min-width: 768px) {{
         /* Keep collapsed sidebar visible as 70px dock instead of translation off-screen */
         [data-testid="stSidebar"][aria-expanded="false"] {{
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        margin-left: 0px !important;
-        left: 0px !important;
-        transform: translate3d(0px, 0px, 0px) !important;
-        min-width: 70px !important;
-        max-width: 70px !important;
-        width: 70px !important;
-        transition: all 0.2s ease !important;
-        border-right: 1px solid rgba(128,128,128,0.15) !important;
-        background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
-        z-index: 100000 !important;
-        position: relative !important;
-    }}
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            margin-left: 0px !important;
+            left: 0px !important;
+            transform: translate3d(0px, 0px, 0px) !important;
+            min-width: 70px !important;
+            max-width: 70px !important;
+            width: 70px !important;
+            transition: all 0.2s ease !important;
+            border-right: 1px solid rgba(128,128,128,0.15) !important;
+            background-color: {'#0f172a' if is_dark else '#f8fafc'} !important;
+            z-index: 100000 !important;
+            position: relative !important;
+            overflow-x: hidden !important;
+        }}
+        [data-testid="stSidebar"][aria-expanded="false"] * {{
+            overflow-x: hidden !important;
+        }}
     
     /* Invisible drag-to-expand handle on the right edge of the collapsed sidebar */
     [data-testid="stSidebar"][aria-expanded="false"]::after {{
