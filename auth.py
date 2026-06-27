@@ -291,36 +291,38 @@ def render_auth_page():
     }}
 
     /* Hapus display:flex yang memblokir natural flow */
-    html, body {{
+    html:has(.login-card-marker), html:has(.login-card-marker) body {{
         display: block !important;
     }}
 
-    [data-testid="stAppViewContainer"] {{
+    html:has(.login-card-marker) [data-testid="stAppViewContainer"] {{
         display: block !important;
     }}
     
-    header, footer {{
+    html:has(.login-card-marker) header, 
+    html:has(.login-card-marker) footer {{
         display: none !important;
     }}
     
     /* Hide sidebar and sidebar collapse button completely on login screen */
-    [data-testid="stSidebar"], [data-testid="stSidebarCollapseButton"] {{
+    html:has(.login-card-marker) [data-testid="stSidebar"], 
+    html:has(.login-card-marker) [data-testid="stSidebarCollapseButton"] {{
         display: none !important;
     }}
 
     /* Reset margins/paddings that Streamlit calculates for the sidebar */
-    [data-testid="stMainViewContainer"] {{
+    html:has(.login-card-marker) [data-testid="stMainViewContainer"] {{
         margin-left: 0px !important;
         padding-left: 0px !important;
         width: 100% !important;
     }}
 
-    [data-testid="stElementContainer"] {{
+    html:has(.login-card-marker) [data-testid="stElementContainer"] {{
         margin-bottom: 0px !important;
     }}
     
     /* Center Card styling directly on block-container with top spacing */
-    [data-testid="stMain"] .block-container {{
+    html:has(.login-card-marker) [data-testid="stMain"] .block-container {{
         width: 100% !important;
         max-width: 420px !important;
         margin-top: 20px !important;
@@ -988,7 +990,7 @@ def render_auth_page():
 
     /* Responsive adjustments */
     @media (max-width: 768px) {{
-        [data-testid="stMain"] .block-container {{
+        html:has(.login-card-marker) [data-testid="stMain"] .block-container {{
             max-width: 100% !important;
             margin: 0 !important;
             border-radius: 16px !important;
@@ -998,7 +1000,7 @@ def render_auth_page():
         }}
         
         /* Logo area lebih compact di mobile */
-        div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
+        html:has(.login-card-marker) div[data-testid="stColumn"]:has(.theme-toggle-marker) {{
             top: 32px !important;
             right: 22px !important;
         }}
@@ -1048,16 +1050,16 @@ def render_auth_page():
     }}
 
     @media (max-width: 400px) {{
-        [data-testid="stMain"] .block-container {{
+        html:has(.login-card-marker) [data-testid="stMain"] .block-container {{
             padding: 20px 14px !important;
         }}
         
-        div[data-testid="stFormSubmitButton"] button {{
+        html:has(.login-card-marker) div[data-testid="stFormSubmitButton"] button {{
             font-size: 13px !important;
         }}
         
         /* Tab buttons smaller on very small screens */
-        div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button {{
+        html:has(.login-card-marker) div[data-testid="stHorizontalBlock"]:has(.auth-tab) div[data-testid="stButton"] button {{
             font-size: 12px !important;
             height: 36px !important;
         }}

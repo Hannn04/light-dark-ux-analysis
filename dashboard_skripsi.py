@@ -2165,27 +2165,9 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
 }
 
 /* ====================================================
-   GLOBAL MOBILE ANTI-OVERFLOW
-   Prevents horizontal scrolling on narrow screens
+   MOBILE ANTI-OVERFLOW FIXES
    ==================================================== */
 @media (max-width: 767px) {
-    /* Prevent horizontal overflow on the entire viewport */
-    body, html {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-    }
-    
-    /* Streamlit app container must never exceed viewport */
-    .stApp, [data-testid="stAppViewContainer"] {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-    }
-    
-    /* Main content area: no overflow */
-    [data-testid="stMain"] {
-        overflow-x: hidden !important;
-    }
-    
     /* All inline HTML div wrappers with overflow-x:auto get touch scrolling */
     div[style*="overflow-x"] {
         -webkit-overflow-scrolling: touch !important;
