@@ -1103,7 +1103,13 @@ if theme == "dark":
     }
 
     /* 10. DataFrames & tables */
-    [data-testid="stDataFrame"]{
+    [data-testid="stDataFrame"],
+    [data-testid="stTable"],
+    .stDataFrame,
+    .stTable,
+    div[data-component-name="st.dataframe"],
+    div[data-component-name="st.data_editor"] {
+        filter: invert(0.9) hue-rotate(180deg) !important;
         background:#0f172a !important;
     }
 
