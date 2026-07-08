@@ -2599,11 +2599,10 @@ with st .sidebar :
         color: {text_soft } !important;
     }}
     /* Hide default radio circle icon */
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]),
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]) *,
     [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label input[type="radio"],
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div[data-testid="stMarkdownContainer"]:empty,
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label > div:first-child {{
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]) {{
         display: none !important;
         width: 0 !important;
         height: 0 !important;
@@ -3160,9 +3159,9 @@ with st .sidebar :
         height: 20px !important;
     }}
     /* Hide radio circle indicator in collapsed sidebar */
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child *,
-    [data-testid="stSidebar"][aria-expanded="false"] .stRadio div[role="radiogroup"] label > div:first-child {{
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]),
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]) *,
+    [data-testid="stSidebar"][aria-expanded="false"] .stRadio div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]) {{
         display: none !important;
         width: 0 !important;
         height: 0 !important;
