@@ -1,3 +1,6 @@
+# ==========================================
+# IMPORT LIBRARY & KONFIGURASI HALAMAN
+# ==========================================
 import streamlit as st
 from PIL import Image
 icon =Image .open ("assets/icon.png")
@@ -42,6 +45,9 @@ pref_exists
 
 from auth import render_auth_page ,logout ,render_settings_page ,load_users ,get_cookie_controller
 
+# ==========================================
+# SESSION STATE & COOKIE AUTO-LOGIN
+# ==========================================
 _controller =get_cookie_controller ()
 if not st .session_state .get ("logged_in")and not st .session_state .get ("logged_out"):
     if not st .session_state .get ("_cookie_ready"):
@@ -72,6 +78,9 @@ if "show_reset_confirm"not in st .session_state :
     st .session_state .show_reset_confirm =False
 
 
+# ==========================================
+# HELPER FUNCTIONS (UEQ INTERPRETATION)
+# ==========================================
 def interpret_ueq (score ):
     if score >0.8 :return "Positive"
     elif score >=-0.8 :return "Neutral"

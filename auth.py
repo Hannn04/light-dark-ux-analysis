@@ -17,6 +17,9 @@ HEADERS = {
 }
 
 
+# ==========================================
+# COOKIE CONTROLLER & PASSWORD HASHING
+# ==========================================
 def get_cookie_controller():
     if "cookie_controller" not in st.session_state:
         st.session_state["cookie_controller"] = CookieController()
@@ -27,6 +30,9 @@ def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
 
+# ==========================================
+# DATABASE - CRUD AKUN PENGGUNA (SUPABASE)
+# ==========================================
 def load_users() -> dict:
     try:
         res = requests.get(
@@ -60,6 +66,9 @@ def delete_user_from_db(username: str):
     )
 
 
+# ==========================================
+# REGISTER & LOGIN VALIDATION
+# ==========================================
 def register_user(username: str, password: str):
     users = load_users()
     username = username.strip().lower()
@@ -109,6 +118,9 @@ def delete_account(username: str, password: str):
     return True, "Akun berhasil dihapus."
 
 
+# ==========================================
+# USER SESSION LOGOUT
+# ==========================================
 def logout():
     controller = get_cookie_controller()
     controller.remove("session_user")
@@ -122,6 +134,9 @@ def logout():
     st.rerun()
 
 
+# ==========================================
+# HALAMAN SETTINGS (GANTI PASSWORD & HAPUS AKUN)
+# ==========================================
 def render_settings_page():
     current_user = st.session_state.get("current_user", "")
 
@@ -174,6 +189,9 @@ def render_settings_page():
                     st.error(msg)
 
 
+# ==========================================
+# HALAMAN LOGIN & REGISTER
+# ==========================================
 def render_auth_page():
     controller = get_cookie_controller()
     if "app_theme" not in st.session_state:
@@ -889,21 +907,45 @@ def render_auth_page():
         box-shadow: none !important;
     }}
 
-    /* Visibility show/hide password buttons color */
+    /* Password visibility toggle — hide text, keep clickable */
     div[data-testid="stForm"] div.stTextInput button,
     div[data-testid="stForm"] div[data-testid*="Input"] button,
     div[data-testid="stForm"] [data-testid="stInputWidgetLink"] button,
-    div[data-testid="stForm"] [data-baseweb="input"] button,
-    div[data-testid="stForm"] div.stTextInput button svg,
-    div[data-testid="stForm"] div[data-testid*="Input"] button svg,
-    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] button svg,
-    div[data-testid="stForm"] [data-baseweb="input"] button svg {{
+    div[data-testid="stForm"] [data-baseweb="input"] button {{
         background-color: transparent !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
+        font-size: 0px !important;
+        color: transparent !important;
+        overflow: hidden !important;
+        width: 40px !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        position: relative !important;
+    }}
+    div[data-testid="stForm"] div.stTextInput button svg,
+    div[data-testid="stForm"] div[data-testid*="Input"] button svg,
+    div[data-testid="stForm"] [data-testid="stInputWidgetLink"] button svg,
+    div[data-testid="stForm"] [data-baseweb="input"] button svg {{
+        width: 20px !important;
+        height: 20px !important;
         color: {text_secondary} !important;
-        fill: currentColor !important;
+        fill: {text_secondary} !important;
+        flex-shrink: 0 !important;
+    }}
+    div[data-testid="stForm"] div.stTextInput button span,
+    div[data-testid="stForm"] div[data-testid*="Input"] button span,
+    div[data-testid="stForm"] [data-baseweb="input"] button span {{
+        font-size: 0px !important;
+        line-height: 0 !important;
+        display: none !important;
     }}
     
     div[data-testid="stForm"] input::placeholder {{
