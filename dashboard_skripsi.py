@@ -1932,7 +1932,7 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     margin-bottom: 20px !important;
 }
 .kpi-title {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: #94A3B8;
     text-transform: uppercase;
@@ -1940,20 +1940,20 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     margin-bottom: 16px;
 }
 .kpi-label {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-color);
     display: flex;
     align-items: center;
     gap: 6px;
-    opacity: 0.8;
+    opacity: 0.85;
 }
 .kpi-value-light {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     color: #6366F1 !important;
 }
 .kpi-value-dark {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--text-color) !important;
 }
@@ -1962,14 +1962,14 @@ section[data-testid="stSidebar"] [data-baseweb="select"] input {
     background: rgba(128, 128, 128, 0.15);
 }
 .pref-value-text {
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--text-color) !important;
     margin-bottom: 8px;
 }
 .pref-badge {
     display: inline-block;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     background: rgba(128, 128, 128, 0.15);
     color: var(--text-color);
@@ -3385,6 +3385,23 @@ with st .sidebar :
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
+    /* Responsive layout for KPI cards and Donut sections using markers */
+    div:has(> .kpi-group-marker) + div[data-testid="stHorizontalBlock"] {{
+        flex-wrap: wrap !important;
+        gap: 16px 12px !important;
+    }}
+    div:has(> .kpi-group-marker) + div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {{
+        min-width: 220px !important;
+        flex: 1 1 18% !important;
+    }}
+    
+    div:has(> .donut-group-marker) + div[data-testid="stHorizontalBlock"] {{
+        flex-wrap: wrap !important;
+        gap: 16px !important;
+    }}
+    div:has(> .donut-group-marker) + div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {{
+        min-width: 320px !important;
+        flex: 1 1 45% !important;
     }}
     }}
     </style>
@@ -4170,6 +4187,7 @@ if menu =="Overview":
             </div>
         </div>"""
 
+    st .markdown ('<div class="kpi-group-marker"></div>',unsafe_allow_html =True )
     col_a ,col_b ,col_c ,col_d ,col_e =st .columns (5 )
 
     with col_a :
@@ -4195,11 +4213,11 @@ if menu =="Overview":
     with col_e :
         st .markdown (f"""
         <div class="kpi-card" style="background: linear-gradient(135deg, #6366F1, #4f46e5) !important; color: white !important;">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;
                 letter-spacing:0.08em;margin-bottom:16px;opacity:0.7;color: white !important;">Objek Studi</div>
-            <div style="font-size:20px;font-weight:700;margin-bottom:6px;color: white !important;">{app }</div>
-            <div style="font-size:11px;opacity:0.7;color: white !important;">N = {n } responden</div>
-            <div style="font-size:11px;opacity:0.7;color: white !important;">3 tugas per mode</div>
+            <div style="font-size:24px;font-weight:700;margin-bottom:6px;color: white !important;">{app }</div>
+            <div style="font-size:13px;opacity:0.7;color: white !important;">N = {n } responden</div>
+            <div style="font-size:13px;opacity:0.7;color: white !important;">3 tugas per mode</div>
         </div>
         """,unsafe_allow_html =True )
 
@@ -4283,6 +4301,7 @@ if menu =="Overview":
         letter-spacing:0.08em;margin-bottom:12px;">Distribusi Preferensi</div>
     """,unsafe_allow_html =True )
 
+    st .markdown ('<div class="donut-group-marker"></div>',unsafe_allow_html =True )
     col_p1 ,col_p2 =st .columns (2 )
 
     def _donut_section (col ,label ,percent_dict ,palette ):
@@ -4293,42 +4312,40 @@ if menu =="Overview":
                     margin-bottom:12px;">{label }</div>
                 """,unsafe_allow_html =True )
                 if any (v >0 for v in percent_dict .values ()):
-                    c_left ,c_right =st .columns ([1.3 ,1 ])
-                    with c_left :
-                        fig =go .Figure (data =[go .Pie (
-                        labels =list (percent_dict .keys ()),
-                        values =list (percent_dict .values ()),
-                        hole =0.62 ,
-                        marker =dict (colors =palette ,line =dict (color ="#FFFFFF",width =2 )),
-                        textinfo ="none",
-                        showlegend =False ,
-                        hoverinfo ="label+percent",
-                        )])
-                        fig .update_layout (
-                        margin =dict (t =0 ,b =0 ,l =0 ,r =0 ),
-                        height =160 ,
-                        paper_bgcolor ="rgba(0,0,0,0)",
-                        plot_bgcolor ="rgba(0,0,0,0)",
-                        )
-                        st .plotly_chart (fig ,use_container_width =True ,
-                        config ={"displayModeBar":False })
-                    with c_right :
-                        legend =""
-                        for i ,(name ,val )in enumerate (percent_dict .items ()):
-                            c =palette [i %len (palette )]
-                            legend +=f"""
-                            <div style="display:flex;justify-content:space-between;
-                                align-items:center;margin-bottom:7px;">
-                                <div style="display:flex;align-items:center;gap:7px;">
-                                    <div style="width:7px;height:7px;border-radius:50%;
-                                        background:{c };flex-shrink:0;"></div>
-                                    <span style="font-size:11px;color:{text_soft };">{name }</span>
-                                </div>
-                                <span style="font-size:11px;font-weight:600;color:{text_main };">
-                                    {round (val ,1 )}%
-                                </span>
-                            </div>"""
-                        st .markdown (legend ,unsafe_allow_html =True )
+                    fig =go .Figure (data =[go .Pie (
+                    labels =list (percent_dict .keys ()),
+                    values =list (percent_dict .values ()),
+                    hole =0.62 ,
+                    marker =dict (colors =palette ,line =dict (color ="#FFFFFF",width =2 )),
+                    textinfo ="none",
+                    showlegend =False ,
+                    hoverinfo ="label+percent",
+                    )])
+                    fig .update_layout (
+                    margin =dict (t =0 ,b =0 ,l =0 ,r =0 ),
+                    height =160 ,
+                    paper_bgcolor ="rgba(0,0,0,0)",
+                    plot_bgcolor ="rgba(0,0,0,0)",
+                    )
+                    st .plotly_chart (fig ,use_container_width =True ,
+                    config ={"displayModeBar":False })
+                    
+                    legend = f'<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 16px; padding: 0 10px;">'
+                    for i ,(name ,val )in enumerate (percent_dict .items ()):
+                        c =palette [i %len (palette )]
+                        legend +=f"""
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div style="display:flex;align-items:center;gap:7px;overflow:hidden;">
+                                <div style="width:7px;height:7px;border-radius:50%;
+                                    background:{c };flex-shrink:0;"></div>
+                                <span style="font-size:11px;color:{text_soft };white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">{name }</span>
+                            </div>
+                            <span style="font-size:11px;font-weight:600;color:{text_main };margin-left:4px;flex-shrink:0;">
+                                {round (val ,1 )}%
+                            </span>
+                        </div>"""
+                    legend += '</div>'
+                    st .markdown (legend ,unsafe_allow_html =True )
                 else :
                     st .caption ("Data belum tersedia.")
 

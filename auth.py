@@ -945,7 +945,11 @@ def render_auth_page():
     div[data-testid="stForm"] [data-baseweb="input"] button span {{
         font-size: 0px !important;
         line-height: 0 !important;
-        display: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
     }}
     
     div[data-testid="stForm"] input::placeholder {{
