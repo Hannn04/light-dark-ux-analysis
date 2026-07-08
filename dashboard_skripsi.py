@@ -2590,8 +2590,19 @@ with st .sidebar :
         color: {text_soft } !important;
     }}
     /* Hide default radio circle icon */
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label input[type="radio"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label [data-testid="stRadioDot"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])),
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child *,
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])) {{
         display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        pointer-events: none !important;
     }}
     /* Style radio text */
     [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
@@ -3139,6 +3150,20 @@ with st .sidebar :
         margin-right: 0 !important;
         width: 20px !important;
         height: 20px !important;
+    }}
+    /* Hide default radio circle icon in collapsed sidebar */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label [data-testid="stRadioDot"],
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])),
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child *,
+    [data-testid="stSidebar"][aria-expanded="false"] .stRadio div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])) {{
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        pointer-events: none !important;
     }}
 
     /* Reset padding for all element containers inside the collapsed sidebar to prevent offsets */
