@@ -3159,6 +3159,18 @@ with st .sidebar :
         width: 20px !important;
         height: 20px !important;
     }}
+    /* Hide radio circle indicator in collapsed sidebar */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child *,
+    [data-testid="stSidebar"][aria-expanded="false"] .stRadio div[role="radiogroup"] label > div:first-child {{
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        pointer-events: none !important;
+    }}
 
     /* Reset padding for all element containers inside the collapsed sidebar to prevent offsets */
     [data-testid="stSidebar"][aria-expanded="false"] div.element-container,
