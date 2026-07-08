@@ -2,6 +2,9 @@ import pandas as pd
 import streamlit as st
 import requests
 
+# ==========================================
+# KONFIGURASI SUPABASE & HEADER KONEKSI
+# ==========================================
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 HEADERS = {
@@ -21,19 +24,16 @@ PREF_COLS = [
     "ED1","ED2","ED3","ED4",
 ]
 
-# ======================
-# APP LIST
-# ======================
-
+# ==========================================
+# MANAJEMEN DAFTAR APLIKASI (RESEARCH OBJECT)
+# ==========================================
 def load_app_list(username):
     try:
         res = requests.get(
             f"{SUPABASE_URL}/rest/v1/app_list?select=app_name&username=eq.{username}",
             headers=HEADERS
         )
-
         res.raise_for_status()
-
         return [row["app_name"] for row in res.json()]
     except Exception:
         return []
@@ -44,7 +44,6 @@ def save_app_list(username, app_list):
             f"{SUPABASE_URL}/rest/v1/app_list?username=eq.{username}",
             headers=HEADERS
         )
-
         res.raise_for_status()
         if app_list:
             rows = [{"username": username, "app_name": name} for name in app_list]
@@ -53,15 +52,13 @@ def save_app_list(username, app_list):
                 headers=HEADERS,
                 json=rows
             )
-
             res.raise_for_status()
     except Exception as e:
         st.error(f"Gagal simpan app list: {e}")
 
-# ======================
-# DATA TOT & ERROR
-# ======================
-
+# ==========================================
+# OPERASI DATA TIME ON TASK & ERROR RATE
+# ==========================================
 def load_data(table, username, app):
     try:
         res = requests.get(
@@ -97,10 +94,8 @@ def save_data(table, username, app, df):
             f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
-
         res.raise_for_status()
         df_copy = df.copy()
-        # Hanya ambil kolom yang relevan
         cols_keep = ["Responden","Light_T1","Light_T2","Light_T3","Dark_T1","Dark_T2","Dark_T3"]
         df_copy = df_copy[[c for c in cols_keep if c in df_copy.columns]]
         df_copy.columns = [c.lower() for c in df_copy.columns]
@@ -113,17 +108,15 @@ def save_data(table, username, app, df):
                 headers=HEADERS,
                 json=records
             )
-
             res.raise_for_status()
         return True
     except Exception as e:
         st.exception(e)
         return False
 
-# ======================
-# DATA UEQ
-# ======================
-
+# ==========================================
+# OPERASI DATA UEQ (USER EXPERIENCE QUESTIONNAIRE)
+# ==========================================
 def load_ueq(table, username, app, n):
     try:
         res = requests.get(
@@ -136,7 +129,6 @@ def load_ueq(table, username, app, n):
             return pd.DataFrame(4, index=range(n), columns=ITEMS)
         df = pd.DataFrame(data)
         df = df.drop(columns=["id", "username", "app", "responden"], errors="ignore")
-        # Rename kolom i1->I1, i2->I2, dst
         rename_map = {}
         for c in df.columns:
             if c.lower().startswith("i") and c[1:].isdigit():
@@ -155,7 +147,6 @@ def save_ueq(table, username, app, df):
             f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
-
         res.raise_for_status()
         df_copy = df.copy()
         df_copy.columns = [c.lower() for c in df_copy.columns]
@@ -169,17 +160,15 @@ def save_ueq(table, username, app, df):
                 headers=HEADERS,
                 json=records
             )
-
             res.raise_for_status()
         return True
     except Exception as e:
         st.error(f"Gagal simpan UEQ: {e}")
         return False
 
-# ======================
-# DATA PREFERENSI
-# ======================
-
+# ==========================================
+# OPERASI DATA PREFERENSI RESPONDEN
+# ==========================================
 def load_pref(table, username, app, n):
     try:
         res = requests.get(
@@ -219,7 +208,6 @@ def save_pref(table, username, app, df):
             f"{SUPABASE_URL}/rest/v1/{table}?username=eq.{username}&app=eq.{app}",
             headers=HEADERS
         )
-
         res.raise_for_status()
         df_copy = df.copy()
         df_copy.columns = [c.lower() for c in df_copy.columns]
@@ -232,7 +220,6 @@ def save_pref(table, username, app, df):
                 headers=HEADERS,
                 json=records
             )
-
             res.raise_for_status()
         return True
     except Exception as e:
