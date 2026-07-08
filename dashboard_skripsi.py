@@ -984,6 +984,7 @@ if theme =="dark":
         --primary-color: #6366f1 !important;
         --secondary-color: #818cf8 !important;
         --secondary-text-hover-color: #0f172a !important;
+        --border-color: #334155 !important;
     }
 
     /* 2. App & main background */
@@ -1463,7 +1464,7 @@ st .markdown ("""
     --secondary-background-color: #ffffff;
     --text-color: #111827;
     --text-soft: #6b7280;
-    --border-color: #e5e7eb;
+    --border-color: #cbd5e1;
 }
 
 .stButton > button[kind="secondary"] {
@@ -1667,7 +1668,8 @@ details > div,
 [data-testid="stExpander"] [data-baseweb="select"] > div {
     background: var(--background-color) !important;
     color: var(--text-color) !important;
-    border-color: rgba(128,128,128,0.3) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
 }
 
 div[data-testid="stSidebar"] details {
@@ -1713,7 +1715,16 @@ div[data-testid="stSidebar"] details summary {
 [data-testid="stSidebar"] div[data-baseweb="select"] > div {
     background-color: var(--background-color) !important;
     color: var(--text-color) !important;
-    border: 1px solid rgba(128, 128, 128, 0.2) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+[data-testid="stSidebar"] div[data-baseweb="select"] > div:hover {
+    border-color: var(--text-soft) !important;
+}
+[data-testid="stSidebar"] div[data-baseweb="select"] > div:focus-within {
+    border-color: var(--secondary-color) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
 }
 
 .metric-footer {
