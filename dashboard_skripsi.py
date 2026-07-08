@@ -2599,8 +2599,18 @@ with st .sidebar :
         color: {text_soft } !important;
     }}
     /* Hide default radio circle icon */
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label input[type="radio"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div[data-testid="stMarkdownContainer"]:empty,
+    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label > div:first-child {{
         display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        pointer-events: none !important;
     }}
     /* Style radio text */
     [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
