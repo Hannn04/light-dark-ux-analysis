@@ -2406,6 +2406,24 @@ with st .sidebar :
         gap: 10px !important;
     }}
 
+    /* Polished, clean Selectbox styling for both Light & Dark modes */
+    [data-baseweb="select"] > div,
+    [data-testid="stSidebar"] [data-baseweb="select"] > div {{
+        background-color: {'#1e293b'if is_dark else '#ffffff'} !important;
+        border: 1px solid {'#334155'if is_dark else '#cbd5e1'} !important;
+        border-radius: 8px !important;
+        transition: all 0.2s ease-in-out !important;
+    }}
+    [data-baseweb="select"] > div:hover,
+    [data-testid="stSidebar"] [data-baseweb="select"] > div:hover {{
+        border-color: {'#475569'if is_dark else '#94a3b8'} !important;
+    }}
+    [data-baseweb="select"] > div:focus-within,
+    [data-testid="stSidebar"] [data-baseweb="select"] > div:focus-within {{
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+    }}
+
     /* Polished, clean Number Input styling for both Light & Dark modes */
     [data-testid="stNumberInput"] > div {{
         background-color: {'#1e293b'if is_dark else '#ffffff'} !important;
