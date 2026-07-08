@@ -1,6 +1,3 @@
-# ==========================================
-# IMPORT LIBRARY & KONFIGURASI HALAMAN
-# ==========================================
 import streamlit as st
 from PIL import Image
 icon =Image .open ("assets/icon.png")
@@ -45,9 +42,6 @@ pref_exists
 
 from auth import render_auth_page ,logout ,render_settings_page ,load_users ,get_cookie_controller
 
-# ==========================================
-# SESSION STATE & COOKIE AUTO-LOGIN
-# ==========================================
 _controller =get_cookie_controller ()
 if not st .session_state .get ("logged_in")and not st .session_state .get ("logged_out"):
     if not st .session_state .get ("_cookie_ready"):
@@ -78,9 +72,6 @@ if "show_reset_confirm"not in st .session_state :
     st .session_state .show_reset_confirm =False
 
 
-# ==========================================
-# HELPER FUNCTIONS (UEQ INTERPRETATION)
-# ==========================================
 def interpret_ueq (score ):
     if score >0.8 :return "Positive"
     elif score >=-0.8 :return "Neutral"
@@ -2599,19 +2590,8 @@ with st .sidebar :
         color: {text_soft } !important;
     }}
     /* Hide default radio circle icon */
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label input[type="radio"],
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label [data-testid="stRadioDot"],
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])),
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child,
-    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child *,
-    [data-testid="stSidebar"] .stRadio div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])) {{
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{
         display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        opacity: 0 !important;
-        position: absolute !important;
-        pointer-events: none !important;
     }}
     /* Style radio text */
     [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label p {{
@@ -3159,20 +3139,6 @@ with st .sidebar :
         margin-right: 0 !important;
         width: 20px !important;
         height: 20px !important;
-    }}
-    /* Hide radio circle indicator in collapsed sidebar */
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label [data-testid="stRadioDot"],
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])),
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child,
-    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stRadio"] div[role="radiogroup"] label > div > div:first-child *,
-    [data-testid="stSidebar"][aria-expanded="false"] .stRadio div[role="radiogroup"] label > div:not([data-testid="stMarkdownContainer"]):not(:has([data-testid="stMarkdownContainer"])) {{
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        opacity: 0 !important;
-        position: absolute !important;
-        pointer-events: none !important;
     }}
 
     /* Reset padding for all element containers inside the collapsed sidebar to prevent offsets */
