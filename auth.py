@@ -927,6 +927,20 @@ def render_auth_page ():
         fill: currentColor !important;
     }}
 
+    /* Hide 'visibility' text on password toggle — show icon only */
+    div[data-testid="stForm"] [data-baseweb="input"] button {{
+        font-size: 0px !important;
+        color: transparent !important;
+        overflow: hidden !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        padding: 0 8px !important;
+    }}
+    div[data-testid="stForm"] [data-baseweb="input"] button svg {{
+        width: 18px !important;
+        height: 18px !important;
+    }}
+
     div[data-testid="stForm"] input::placeholder {{
         color: #cbd5e1 !important;
     }}
