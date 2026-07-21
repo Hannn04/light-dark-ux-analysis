@@ -1836,14 +1836,25 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 
 /* Universal Selectbox Styling */
-div[data-baseweb="select"],
-div[data-baseweb="select"] > div,
+div[data-testid="stSelectbox"] > div,
 div[data-testid="stSelectbox"] [data-baseweb="select"],
 div[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div:first-child,
+div[data-baseweb="select"],
+div[data-baseweb="select"] > div,
+div[data-baseweb="select"] > div:first-child,
+div[data-baseweb="select"] [role="combobox"],
 section[data-testid="stSidebar"] div[data-baseweb="select"],
 section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
     margin-top: 4px;
-    border: 1px solid var(--border-color, #cbd5e1) !important;
+    border: 1px solid #94a3b8 !important;
+    border-color: #94a3b8 !important;
+    border-style: solid !important;
+    border-width: 1px !important;
+    border-top-color: #94a3b8 !important;
+    border-bottom-color: #94a3b8 !important;
+    border-left-color: #94a3b8 !important;
+    border-right-color: #94a3b8 !important;
     border-radius: 8px !important;
     background-color: var(--secondary-background-color, #ffffff) !important;
     transition: all 0.2s ease-in-out !important;
@@ -1855,7 +1866,7 @@ div[data-testid="stSelectbox"] [data-baseweb="select"]:hover,
 div[data-testid="stSelectbox"] [data-baseweb="select"] > div:hover,
 section[data-testid="stSidebar"] div[data-baseweb="select"]:hover,
 section[data-testid="stSidebar"] div[data-baseweb="select"] > div:hover {
-    border-color: #94a3b8 !important;
+    border-color: #64748b !important;
 }
 
 div[data-baseweb="select"]:focus-within,
@@ -2451,14 +2462,25 @@ with st .sidebar :
     }}
 
     /* Polished, clean Selectbox styling for both Light & Dark modes */
-    [data-baseweb="select"],
-    [data-baseweb="select"] > div,
+    [data-testid="stSelectbox"] > div,
     [data-testid="stSelectbox"] [data-baseweb="select"],
     [data-testid="stSelectbox"] [data-baseweb="select"] > div,
+    [data-testid="stSelectbox"] [data-baseweb="select"] > div:first-child,
+    [data-baseweb="select"],
+    [data-baseweb="select"] > div,
+    [data-baseweb="select"] > div:first-child,
+    [data-baseweb="select"] [role="combobox"],
     [data-testid="stSidebar"] [data-baseweb="select"],
     [data-testid="stSidebar"] [data-baseweb="select"] > div {{
         background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
-        border: 1px solid {'#475569' if is_dark else '#cbd5e1'} !important;
+        border: 1px solid {'#475569' if is_dark else '#94a3b8'} !important;
+        border-color: {'#475569' if is_dark else '#94a3b8'} !important;
+        border-style: solid !important;
+        border-width: 1px !important;
+        border-top-color: {'#475569' if is_dark else '#94a3b8'} !important;
+        border-bottom-color: {'#475569' if is_dark else '#94a3b8'} !important;
+        border-left-color: {'#475569' if is_dark else '#94a3b8'} !important;
+        border-right-color: {'#475569' if is_dark else '#94a3b8'} !important;
         border-radius: 8px !important;
         transition: all 0.2s ease-in-out !important;
     }}
