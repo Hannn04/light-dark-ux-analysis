@@ -1664,11 +1664,15 @@ details > div,
     color: var(--text-color) !important;
 }
 
-/* Selectbox inside expander */
+/* Selectbox global & inside expander */
+div[data-baseweb="select"],
+div[data-baseweb="select"] > div,
+[data-testid="stSelectbox"] [data-baseweb="select"],
+[data-testid="stSelectbox"] [data-baseweb="select"] > div,
 [data-testid="stExpander"] [data-baseweb="select"] > div {
-    background: var(--background-color) !important;
+    background: var(--secondary-background-color) !important;
     color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
+    border: 1px solid var(--border-color, #cbd5e1) !important;
     border-radius: 8px !important;
 }
 
@@ -1831,8 +1835,37 @@ section[data-testid="stSidebar"] > div:first-child {
 
 }
 
-div[data-baseweb="select"] {
+/* Universal Selectbox Styling */
+div[data-baseweb="select"],
+div[data-baseweb="select"] > div,
+div[data-testid="stSelectbox"] [data-baseweb="select"],
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+section[data-testid="stSidebar"] div[data-baseweb="select"],
+section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
     margin-top: 4px;
+    border: 1px solid var(--border-color, #cbd5e1) !important;
+    border-radius: 8px !important;
+    background-color: var(--secondary-background-color, #ffffff) !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+div[data-baseweb="select"]:hover,
+div[data-baseweb="select"] > div:hover,
+div[data-testid="stSelectbox"] [data-baseweb="select"]:hover,
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div:hover,
+section[data-testid="stSidebar"] div[data-baseweb="select"]:hover,
+section[data-testid="stSidebar"] div[data-baseweb="select"] > div:hover {
+    border-color: #94a3b8 !important;
+}
+
+div[data-baseweb="select"]:focus-within,
+div[data-baseweb="select"] > div:focus-within,
+div[data-testid="stSelectbox"] [data-baseweb="select"]:focus-within,
+div[data-testid="stSelectbox"] [data-baseweb="select"] > div:focus-within,
+section[data-testid="stSidebar"] div[data-baseweb="select"]:focus-within,
+section[data-testid="stSidebar"] div[data-baseweb="select"] > div:focus-within {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
 }
 
 /* Fix jarak label ke input */
@@ -2418,18 +2451,30 @@ with st .sidebar :
     }}
 
     /* Polished, clean Selectbox styling for both Light & Dark modes */
+    [data-baseweb="select"],
     [data-baseweb="select"] > div,
+    [data-testid="stSelectbox"] [data-baseweb="select"],
+    [data-testid="stSelectbox"] [data-baseweb="select"] > div,
+    [data-testid="stSidebar"] [data-baseweb="select"],
     [data-testid="stSidebar"] [data-baseweb="select"] > div {{
-        background-color: {'#1e293b'if is_dark else '#ffffff'} !important;
-        border: 1px solid {'#334155'if is_dark else '#cbd5e1'} !important;
+        background-color: {'#1e293b' if is_dark else '#ffffff'} !important;
+        border: 1px solid {'#475569' if is_dark else '#cbd5e1'} !important;
         border-radius: 8px !important;
         transition: all 0.2s ease-in-out !important;
     }}
+    [data-baseweb="select"]:hover,
     [data-baseweb="select"] > div:hover,
+    [data-testid="stSelectbox"] [data-baseweb="select"]:hover,
+    [data-testid="stSelectbox"] [data-baseweb="select"] > div:hover,
+    [data-testid="stSidebar"] [data-baseweb="select"]:hover,
     [data-testid="stSidebar"] [data-baseweb="select"] > div:hover {{
-        border-color: {'#475569'if is_dark else '#94a3b8'} !important;
+        border-color: {'#64748b' if is_dark else '#94a3b8'} !important;
     }}
+    [data-baseweb="select"]:focus-within,
     [data-baseweb="select"] > div:focus-within,
+    [data-testid="stSelectbox"] [data-baseweb="select"]:focus-within,
+    [data-testid="stSelectbox"] [data-baseweb="select"] > div:focus-within,
+    [data-testid="stSidebar"] [data-baseweb="select"]:focus-within,
     [data-testid="stSidebar"] [data-baseweb="select"] > div:focus-within {{
         border-color: #6366f1 !important;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
